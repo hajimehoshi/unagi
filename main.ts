@@ -354,7 +354,9 @@ class MapEditorTiles extends HTMLElement {
         this.addEventListener('wheel', (e: WheelEvent) => {
             e.preventDefault();
             // TODO: Configure the wheel direction
-            Dispatcher.onTilesWheel(-e.deltaX, -e.deltaY);
+            Dispatcher.onTilesCursorPositionChanged(void(0), void(0));
+            let canvas = this.canvas;
+            Dispatcher.onTilesWheel(-e.deltaX, -e.deltaY, this.scale_, canvas.width, canvas.height);
         });
     }
 
@@ -399,6 +401,12 @@ class MapEditorTiles extends HTMLElement {
         }
         if (this.selectedTiles_ && this.cursorPositionX_ !== void(0) && this.cursorPositionY_ !== void(0)) {
             const ratio = window.devicePixelRatio;
+            if (this.cursorPositionX_ < 0 || this.cursorPositionY_ < 0) {
+                return;
+            }
+            if (this.map_.xNum <= this.cursorPositionX_ || this.map_.yNum <= this.cursorPositionY_) {
+                return;
+            }
             let x = this.cursorPositionX_ * MapEditorMain.tileWidth * this.scale_ * ratio + this.offsetX_ * ratio;
             let y = this.cursorPositionY_ * MapEditorMain.tileHeight * this.scale_ * ratio + this.offsetY_ * ratio;
             this.selectedTiles_.renderFrameAt(context, x, y);

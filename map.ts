@@ -23,6 +23,14 @@ class Map {
         this.tiles_ = new Int32Array(xNum * yNum);
     }
 
+    public get xNum(): number {
+        return this.xNum_;
+    }
+
+    public get yNum(): number {
+        return this.yNum_;
+    }
+
     public tilePosition(x: number, y: number, scale: number): {x: number, y: number} {
         let tileX = (((x / MapEditorMain.tileWidth)|0) / scale)|0;
         let tileY = (((y / MapEditorMain.tileHeight)|0) / scale)|0;

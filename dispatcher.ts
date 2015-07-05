@@ -54,9 +54,19 @@ class Store {
         this.mapEditorMain_.render();
     }
 
-    public moveTilesOffset(x: number, y: number): void {
+    public moveTilesOffset(x: number, y: number, scale: number, canvasWidth: number, canvasHeight: number): void {
+        const ratio = window.devicePixelRatio;
+        const marginX = 128;
+        const marginY = 128;
+
         this.tilesOffsetX_ += x;
         this.tilesOffsetY_ += y;
+        let minX = -(this.map_.xNum * MapEditorMain.tileWidth * scale - canvasWidth / ratio) - marginX;
+        let minY = -(this.map_.yNum * MapEditorMain.tileHeight * scale - canvasHeight / ratio) - marginY;
+        let maxX = marginX;
+        let maxY = marginY;
+        this.tilesOffsetX_ = Math.min(Math.max(this.tilesOffsetX_, minX), maxX);
+        this.tilesOffsetY_ = Math.min(Math.max(this.tilesOffsetY_, minY), maxY);
         this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
     }
 }
@@ -84,7 +94,7 @@ class Dispatcher {
         Dispatcher.store_.drawTiles();
     }
 
-    public static onTilesWheel(dx: number, dy: number): void {
-        Dispatcher.store_.moveTilesOffset(dx, dy);
+    public static onTilesWheel(dx: number, dy: number, scale: number, canvasWidth: number, canvasHeight: number): void {
+        Dispatcher.store_.moveTilesOffset(dx, dy, scale, canvasWidth, canvasHeight);
     }
 }
