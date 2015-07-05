@@ -50,8 +50,9 @@ class Map {
         }
     }
 
-    public renderAt(context: CanvasRenderingContext2D, tileSetImage: HTMLImageElement, scale: number): void {
-        const actualScale = scale * window.devicePixelRatio;
+    public renderAt(context: CanvasRenderingContext2D, tileSetImage: HTMLImageElement, scale: number, offsetX: number, offsetY: number): void {
+        const ratio = window.devicePixelRatio;
+        const actualScale = scale * ratio;
         for (let j = 0; j < this.yNum_; j++) {
             for (let i = 0; i < this.xNum_; i++) {
                 let tile = this.tiles_[i + j * this.xNum_];
@@ -59,8 +60,8 @@ class Map {
                 let srcY = ((tile / MapEditorPalette.tileXNum)|0) * MapEditorMain.tileHeight;
                 let srcWidth = MapEditorMain.tileWidth;
                 let srcHeight = MapEditorMain.tileHeight;
-                let dstX = i * MapEditorMain.tileWidth * actualScale;
-                let dstY = j * MapEditorMain.tileHeight * actualScale;
+                let dstX = i * MapEditorMain.tileWidth * actualScale + offsetX * ratio;
+                let dstY = j * MapEditorMain.tileHeight * actualScale + offsetY * ratio;
                 let dstWidth = MapEditorMain.tileWidth * actualScale;
                 let dstHeight = MapEditorMain.tileHeight * actualScale;
                 context.drawImage(tileSetImage, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight);

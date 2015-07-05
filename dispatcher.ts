@@ -17,12 +17,14 @@ class Store {
     private selectedTiles_: SelectedTiles;
     private tilesCursorX_: number;
     private tilesCursorY_: number;
+    private tilesOffsetX_: number;
+    private tilesOffsetY_: number;
     private map_: Map;
 
     public constructor(mapEditorMain: MapEditorMain) {
         this.mapEditorMain_ = mapEditorMain;
-        this.tilesCursorX_ = -1;
-        this.tilesCursorY_ = -1;
+        this.tilesOffsetX_ = 0;
+        this.tilesOffsetY_ = 0;
     }
 
     public updateMap(map: Map): void {
@@ -51,6 +53,12 @@ class Store {
         this.map_.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
         this.mapEditorMain_.render();
     }
+
+    public moveTilesOffset(x: number, y: number): void {
+        this.tilesOffsetX_ += x;
+        this.tilesOffsetY_ += y;
+        this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
+    }
 }
 
 class Dispatcher {
@@ -74,5 +82,9 @@ class Dispatcher {
 
     public static onDrawingTiles(): void {
         Dispatcher.store_.drawTiles();
+    }
+
+    public static onTilesWheel(dx: number, dy: number): void {
+        Dispatcher.store_.moveTilesOffset(dx, dy);
     }
 }

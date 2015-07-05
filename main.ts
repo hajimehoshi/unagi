@@ -81,8 +81,12 @@ class MapEditorMain extends HTMLElement {
         this.tiles.selectedTiles = s;
     }
 
-    public updateTilesCursorPosition(x: number, y: number) {
+    public updateTilesCursorPosition(x: number, y: number): void {
         this.tiles.updateCursorPosition(x, y);
+    }
+
+    public updateTilesOffset(x: number, y: number): void {
+        this.tiles.updateOffset(x, y);
     }
 }
 
@@ -295,11 +299,14 @@ class MapEditorTiles extends HTMLElement {
     private scale_: number;
     private cursorPositionX_: number;
     private cursorPositionY_: number;
+    private isDrawing_: boolean;
+    private offsetX_: number;
+    private offsetY_: number;
 
     private createdCallback(): void {
         this.scale_ = 2;
-        this.cursorPositionX_ = -1;
-        this.cursorPositionY_ = -1;
+        this.offsetX_ = 0;
+        this.offsetY_ = 0;
 
         let template = <HTMLTemplateElement>document.getElementById('mapeditor-tiles-template');
         let clone = document.importNode(template.content, true);
@@ -320,22 +327,34 @@ class MapEditorTiles extends HTMLElement {
             if (!e.buttons) {
                 return;
             }
+            this.isDrawing_ = true;
             Dispatcher.onDrawingTiles();
         });
 
         this.addEventListener('mousemove', (e: MouseEvent) => {
-            let x = e.offsetX + this.scrollLeft;
-            let y = e.offsetY + this.scrollTop;
+            let x = e.offsetX + this.scrollLeft - this.offsetX_;
+            let y = e.offsetY + this.scrollTop - this.offsetY_;
             let tilePosition = this.map_.tilePosition(x, y, this.scale_);
             Dispatcher.onTilesCursorPositionChanged(tilePosition.x, tilePosition.y);
-
+            if (!this.isDrawing_) {
+                return;
+            }
             if (!e.buttons) {
                 return;
             }
             Dispatcher.onDrawingTiles();
-        })
+        });
+        this.addEventListener('mouseup', (e: MouseEvent) => {
+            this.isDrawing_ = false;
+        });
         this.addEventListener('mouseleave', (e: MouseEvent) => {
-            Dispatcher.onTilesCursorPositionChanged(-1, -1);
+            Dispatcher.onTilesCursorPositionChanged(void(0), void(0));
+        });
+
+        this.addEventListener('wheel', (e: WheelEvent) => {
+            e.preventDefault();
+            // TODO: Configure the wheel direction
+            Dispatcher.onTilesWheel(-e.deltaX, -e.deltaY);
         });
     }
 
@@ -364,18 +383,24 @@ class MapEditorTiles extends HTMLElement {
         this.render();
     }
 
+    public updateOffset(x: number, y: number): void {
+        this.offsetX_ = x;
+        this.offsetY_ = y;
+        this.render();
+    }
+
     public render(): void {
         let canvas = this.canvas;
         let context = canvas.getContext('2d');
         (<any>context).imageSmoothingEnabled = false;
         context.clearRect(0, 0, canvas.width, canvas.height);
         if (this.tileSetImage_ && this.tileSetImage_.dataset['loaded'] === 'true' && this.map_) {
-            this.map_.renderAt(context, this.tileSetImage_, this.scale_);
+            this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_);
         }
-        if (this.selectedTiles_ && 0 <= this.cursorPositionX_ && 0 <= this.cursorPositionY_) {
+        if (this.selectedTiles_ && this.cursorPositionX_ !== void(0) && this.cursorPositionY_ !== void(0)) {
             const ratio = window.devicePixelRatio;
-            let x = this.cursorPositionX_ * MapEditorMain.tileWidth * this.scale_ * ratio;
-            let y = this.cursorPositionY_ * MapEditorMain.tileHeight * this.scale_ * ratio;
+            let x = this.cursorPositionX_ * MapEditorMain.tileWidth * this.scale_ * ratio + this.offsetX_ * ratio;
+            let y = this.cursorPositionY_ * MapEditorMain.tileHeight * this.scale_ * ratio + this.offsetY_ * ratio;
             this.selectedTiles_.renderFrameAt(context, x, y);
         }
     }
@@ -390,6 +415,6 @@ class MapEditorTiles extends HTMLElement {
         let mapEditorMain = <MapEditorMain>document.querySelector('mapeditor-main');
         let store = new Store(mapEditorMain);
         Dispatcher.store = store;
-        Dispatcher.onMapChanged(new Map(15, 10));
+        Dispatcher.onMapChanged(new Map(100, 100));
     });
 })();
