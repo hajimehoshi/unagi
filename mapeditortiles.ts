@@ -133,3 +133,7 @@ class MapEditorTiles extends HTMLElement {
         }
     }
 }
+
+(() => {
+    (<HTMLDocumentES6>document).registerElement('mapeditor-tiles', MapEditorTiles);
+})();

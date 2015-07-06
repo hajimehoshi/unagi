@@ -97,3 +97,7 @@ class MapEditorPalette extends HTMLElement {
         }
     }
 }
+
+(() => {
+    (<HTMLDocumentES6>document).registerElement('mapeditor-palette', MapEditorPalette);
+})();

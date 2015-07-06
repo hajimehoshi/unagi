@@ -208,8 +208,6 @@ class TilesSelectingState {
 
 (() => {
     (<HTMLDocumentES6>document).registerElement('mapeditor-main', MapEditorMain);
-    (<HTMLDocumentES6>document).registerElement('mapeditor-palette', MapEditorPalette);
-    (<HTMLDocumentES6>document).registerElement('mapeditor-tiles', MapEditorTiles);
 
     window.addEventListener('load', () => {
         let mapEditorMain = <MapEditorMain>document.querySelector('mapeditor-main');
