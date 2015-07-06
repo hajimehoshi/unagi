@@ -23,8 +23,9 @@ class Store {
 
     public constructor(mapEditorMain: MapEditorMain) {
         this.mapEditorMain_ = mapEditorMain;
-        this.tilesOffsetX_ = 0;
-        this.tilesOffsetY_ = 0;
+        this.tilesOffsetX_ = 16;
+        this.tilesOffsetY_ = 16;
+        this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
     }
 
     public updateMap(map: Map): void {
