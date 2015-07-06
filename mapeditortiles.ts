@@ -15,6 +15,7 @@
 class MapEditorTiles extends HTMLElement {
     private map_: Map;
     private selectedTiles_: SelectedTiles;
+    private tilesSelectingState_: TilesSelectingState;
     private tileSetImage_: HTMLImageElement;
     private scale_: number;
     private cursorPositionX_: number;
@@ -43,29 +44,66 @@ class MapEditorTiles extends HTMLElement {
             this.render();
         })
 
+        this.addEventListener('contextmenu', (e: MouseEvent) => {
+            e.preventDefault();
+        });
         this.addEventListener('mousedown', (e: MouseEvent) => {
             if (!e.buttons) {
                 return;
             }
-            this.isDrawing_ = true;
-            Dispatcher.onDrawingTiles();
+            if (e.buttons === 1) {
+                this.isDrawing_ = true;
+                Dispatcher.onDrawingTiles();
+            }
+            if (e.buttons === 2) {
+                let x = e.offsetX - this.offsetX_;
+                let y = e.offsetY - this.offsetY_;
+                let tx = (((x / MapEditorMain.tileWidth)|0) / this.scale_)|0;
+                let ty = (((y / MapEditorMain.tileHeight)|0) / this.scale_)|0;
+                this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
+                Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
+            }
         });
 
         this.addEventListener('mousemove', (e: MouseEvent) => {
-            let x = e.offsetX + this.scrollLeft - this.offsetX_;
-            let y = e.offsetY + this.scrollTop - this.offsetY_;
-            let tilePosition = this.map_.tilePosition(x, y, this.scale_);
-            Dispatcher.onTilesCursorPositionChanged(tilePosition.x, tilePosition.y);
-            if (!this.isDrawing_) {
-                return;
+            if (e.buttons !== 2) {
+                let x = e.offsetX - this.offsetX_;
+                let y = e.offsetY - this.offsetY_;
+                let tilePosition = this.map_.tilePosition(x, y, this.scale_);
+                Dispatcher.onTilesCursorPositionChanged(tilePosition.x, tilePosition.y);
             }
-            if (!e.buttons) {
-                return;
+            if (e.buttons === 1) {
+                if (!this.isDrawing_) {
+                    return;
+                }
+                Dispatcher.onDrawingTiles();
             }
-            Dispatcher.onDrawingTiles();
+            if (e.buttons === 2) {
+                if (!this.tilesSelectingState_) {
+                    return;
+                }
+                let x = e.offsetX - this.offsetX_;
+                let y = e.offsetY - this.offsetY_;
+                let tx = (((x / MapEditorMain.tileWidth)|0) / this.scale_)|0;
+                let ty = (((y / MapEditorMain.tileHeight)|0) / this.scale_)|0;
+                this.tilesSelectingState_.moveTo(tx, ty);
+                Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
+            }
         });
         this.addEventListener('mouseup', (e: MouseEvent) => {
             this.isDrawing_ = false;
+            if (e.buttons === 2) {
+                if (!this.tilesSelectingState_) {
+                    return;
+                }
+                let x = e.offsetX - this.offsetX_;
+                let y = e.offsetY - this.offsetY_;
+                let tx = (((x / MapEditorMain.tileWidth)|0) / this.scale_)|0;
+                let ty = (((y / MapEditorMain.tileHeight)|0) / this.scale_)|0;
+                this.tilesSelectingState_.moveTo(tx, ty);
+                Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
+                this.tilesSelectingState_ = null;
+            }
         });
         this.addEventListener('mouseleave', (e: MouseEvent) => {
             Dispatcher.onTilesCursorPositionChanged(void(0), void(0));

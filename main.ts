@@ -173,36 +173,73 @@ class SelectedTiles {
 }
 
 class TilesSelectingState {
-    private startTile_: number;
-    private endTile_: number;
+    private startX_: number;
+    private startY_: number;
+    private endX_: number;
+    private endY_: number;
 
-    constructor(tile: number) {
-        this.startTile_ = tile;
-        this.endTile_ = tile;
+    constructor(x: number, y: number) {
+        this.startX_ = x;
+        this.startY_ = y;
+        this.endX_ = x;
+        this.endY_ = y;
     }
 
-    public moveTo(tile: number): void {
-        this.endTile_ = tile;
+    public moveTo(x: number, y: number): void {
+        this.endX_ = x;
+        this.endY_ = y;
     }
 
-    public toSelectedTiles(): SelectedTiles {
-        let x1 = this.startTile_ % MapEditorPalette.tileXNum;
-        let x2 = this.endTile_ % MapEditorPalette.tileXNum;
-        let y1 = (this.startTile_ / MapEditorPalette.tileXNum)|0;
-        let y2 = (this.endTile_ / MapEditorPalette.tileXNum)|0;
-        let xMin = Math.min(x1, x2);
-        let xMax = Math.max(x1, x2);
-        let yMin = Math.min(y1, y2);
-        let yMax = Math.max(y1, y2);
-        let width = xMax - xMin + 1;
-        let height = yMax - yMin + 1;
+    private get xMin(): number {
+        return Math.min(this.startX_, this.endX_);
+    }
+
+    private get yMin(): number {
+        return Math.min(this.startY_, this.endY_);
+    }
+
+    private get xMax(): number {
+        return Math.max(this.startX_, this.endX_);
+    }
+
+    private get yMax(): number {
+        return Math.max(this.startY_, this.endY_);
+    }
+
+    private get width(): number {
+        return this.xMax - this.xMin + 1;
+    }
+
+    private get height(): number {
+        return this.yMax - this.yMin + 1;
+    }
+
+    public toSelectedTilesInPalette(): SelectedTiles {
+        let xMin = this.xMin;
+        let xMax = this.xMax;
+        let yMin = this.yMin;
+        let yMax = this.yMax;
         let tiles: Array<number> = [];
         for (let j = yMin; j <= yMax; j++) {
             for (let i = xMin; i <= xMax; i++) {
                 tiles.push(i + j * MapEditorPalette.tileXNum)
             }
         }
-        return new SelectedTiles(tiles, width, height, true);
+        return new SelectedTiles(tiles, this.width, this.height, true);
+    }
+
+    public toSelectedTilesInTiles(map: Map): SelectedTiles {
+        let xMin = this.xMin;
+        let xMax = this.xMax;
+        let yMin = this.yMin;
+        let yMax = this.yMax;
+        let tiles: Array<number> = [];
+        for (let j = yMin; j <= yMax; j++) {
+            for (let i = xMin; i <= xMax; i++) {
+                tiles.push(map.at(i, j))
+            }
+        }
+        return new SelectedTiles(tiles, this.width, this.height, false);
     }
 }
 

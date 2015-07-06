@@ -31,6 +31,10 @@ class Map {
         return this.yNum_;
     }
 
+    public at(x: number, y: number): number {
+        return this.tiles_[x + y * this.xNum_];
+    }
+
     public tilePosition(x: number, y: number, scale: number): {x: number, y: number} {
         let tileX = (((x / MapEditorMain.tileWidth)|0) / scale)|0;
         let tileY = (((y / MapEditorMain.tileHeight)|0) / scale)|0;

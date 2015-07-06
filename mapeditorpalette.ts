@@ -38,9 +38,10 @@ class MapEditorPalette extends HTMLElement {
         this.addEventListener('mousedown', (e: MouseEvent) => {
             let x = e.offsetX + this.scrollLeft;
             let y = e.offsetY + this.scrollTop;
-            let tile = this.positionToTile(x, y);
-            this.tilesSelectingState_ = new TilesSelectingState(tile);
-            Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTiles());
+            let tx = (((x / MapEditorMain.tileWidth)|0) / MapEditorPalette.scale)|0;
+            let ty = (((y / MapEditorMain.tileHeight)|0) / MapEditorPalette.scale)|0;
+            this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
+            Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
         })
         this.addEventListener('mousemove', (e: MouseEvent) => {
             if (!this.tilesSelectingState_) {
@@ -52,9 +53,10 @@ class MapEditorPalette extends HTMLElement {
             }
             let x = e.offsetX + this.scrollLeft;
             let y = e.offsetY + this.scrollTop;
-            let tile = this.positionToTile(x, y);
-            this.tilesSelectingState_.moveTo(tile);
-            Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTiles());
+            let tx = (((x / MapEditorMain.tileWidth)|0) / MapEditorPalette.scale)|0;
+            let ty = (((y / MapEditorMain.tileHeight)|0) / MapEditorPalette.scale)|0;
+            this.tilesSelectingState_.moveTo(tx, ty);
+            Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
         })
         this.addEventListener('mouseup', (e: MouseEvent) => {
             if (!this.tilesSelectingState_) {
@@ -62,9 +64,10 @@ class MapEditorPalette extends HTMLElement {
             }
             let x = e.offsetX + this.scrollLeft;
             let y = e.offsetY + this.scrollTop;
-            let tile = this.positionToTile(x, y);
-            this.tilesSelectingState_.moveTo(tile);
-            Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTiles());
+            let tx = (((x / MapEditorMain.tileWidth)|0) / MapEditorPalette.scale)|0;
+            let ty = (((y / MapEditorMain.tileHeight)|0) / MapEditorPalette.scale)|0;
+            this.tilesSelectingState_.moveTo(tx, ty);
+            Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
             this.tilesSelectingState_ = null;
         })
     }
