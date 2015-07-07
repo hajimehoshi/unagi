@@ -190,6 +190,14 @@ class TilesSelectingState {
         this.endY_ = y;
     }
 
+    public get startX(): number {
+        return this.startX_;
+    }
+
+    public get startY(): number {
+        return this.startY_;
+    }
+
     private get xMin(): number {
         return Math.min(this.startX_, this.endX_);
     }

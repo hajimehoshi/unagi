@@ -35,6 +35,9 @@ class MapEditorPalette extends HTMLElement {
         canvas.style.width = (width * MapEditorPalette.scale) + 'px';
         canvas.style.height = (height * MapEditorPalette.scale) + 'px';
 
+        this.addEventListener('contextmenu', (e: MouseEvent) => {
+            e.preventDefault();
+        });
         this.addEventListener('mousedown', (e: MouseEvent) => {
             let x = e.offsetX + this.scrollLeft;
             let y = e.offsetY + this.scrollTop;

@@ -86,6 +86,9 @@ class MapEditorTiles extends HTMLElement {
                 let y = e.offsetY - this.offsetY_;
                 let tx = (((x / MapEditorMain.tileWidth)|0) / this.scale_)|0;
                 let ty = (((y / MapEditorMain.tileHeight)|0) / this.scale_)|0;
+                let px = Math.min(tx, this.tilesSelectingState_.startX);
+                let py = Math.min(ty, this.tilesSelectingState_.startY)
+                Dispatcher.onTilesCursorPositionChanged(px, py);
                 this.tilesSelectingState_.moveTo(tx, ty);
                 Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
             }
