@@ -104,7 +104,7 @@ class Canvas {
                      y + lineWidth / 2,
                      width - lineWidth / 2 * 2,
                      height - lineWidth / 2 * 2);
-        context.strokeStyle = '#000';
+        context.strokeStyle = '#212121';
         context.stroke();
 
         lineWidth = 2 * ratio;
@@ -114,7 +114,7 @@ class Canvas {
                      y + 1 * ratio + lineWidth / 2,
                      width - 2 * ratio - lineWidth / 2 * 2,
                      height - 2 * ratio - lineWidth / 2 * 2);
-        context.strokeStyle = '#fff';
+        context.strokeStyle = '#f5f5f5';
         context.stroke();
     }
 }
