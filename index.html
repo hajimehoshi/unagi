@@ -4,6 +4,7 @@
     mapeditor-toolbar {
       height: 32px;
       margin-bottom: 1px;
+      z-index: 0;
     }
     mapeditor-palette {
       display: inline-block;
@@ -13,6 +14,7 @@
       padding: 0;
       position: absolute;
       width: 256px;
+      z-index: 0;
     }
     mapeditor-tiles {
       display: inline-block;
@@ -22,11 +24,30 @@
       padding: 0;
       position: absolute;
       width: calc(100% - 256px - 1px);
+      z-index: 0;
+    }
+    #game {
+      background-color: rgba(0, 0, 0, 0.54);
+      display: none;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+    }
+    #game iframe {
+      background-color: #000000;
+      border-color: #9e9e9e;
+      border-style: solid;
+      border-width: 1px;
     }
   </style>
   <mapeditor-toolbar></mapeditor-toolbar>
   <mapeditor-palette></mapeditor-palette>
   <mapeditor-tiles></mapeditor-tiles>
+  <div id="game">
+    <iframe src="./game.html"></iframe>
+  </div>
 </template>
 <template id="mapeditor-toolbar-template">
   <style>
@@ -52,15 +73,27 @@
       cursor: pointer;
       padding: 6px;
     }
-    menu menuitem img:hover {
+    img:hover {
       background-color: #fff176;
+    }
+    img:active {
+      background-color: #fdc02d;
+    }
+    input[type=radio] {
+      position: absolute;
+      visibility: hidden;
+    }
+    input[type=radio]:checked + img {
+      background-color: #fdc02d;
     }
   </style>
   <menu>
     <menuitem><img src="./images/icons/iconmonstr-undo-icon.svg" width="20" height="20"></menuitem>
     <menuitem></menuitem>
-    <menuitem><img src="./images/icons/iconmonstr-pencil-10-icon.svg" width="20" height="20"></menuitem>
-    <menuitem><img src="./images/icons/iconmonstr-paintbrush-3-icon.svg" width="20" height="20"></menuitem>
+    <menuitem><label><input type="radio" name="drawing" value="pen"><img src="./images/icons/iconmonstr-pencil-10-icon.svg" width="20" height="20"></label></menuitem>
+    <menuitem><label><input type="radio" name="drawing" value="fill"><img src="./images/icons/iconmonstr-paintbrush-3-icon.svg" width="20" height="20"></label></menuitem>
+    <menuitem></menuitem>
+    <menuitem id="play"><img src="./images/icons/play-icon.svg" width="20" height="20"></menuitem>
   </menu>
 </template>
 <template id="mapeditor-palette-template">

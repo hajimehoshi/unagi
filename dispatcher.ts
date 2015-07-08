@@ -20,12 +20,14 @@ class Store {
     private tilesOffsetX_: number;
     private tilesOffsetY_: number;
     private map_: Map;
+    private isPlayingGame_: boolean;
 
     public constructor(mapEditorMain: MapEditorMain) {
         this.mapEditorMain_ = mapEditorMain;
         this.tilesOffsetX_ = 16;
         this.tilesOffsetY_ = 16;
         this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
+        this.isPlayingGame_ = false;
     }
 
     public updateMap(map: Map): void {
@@ -70,6 +72,16 @@ class Store {
         this.tilesOffsetY_ = Math.min(Math.max(this.tilesOffsetY_, minY), maxY);
         this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
     }
+
+    public playGame(): void {
+        this.isPlayingGame_ = true;
+        this.mapEditorMain_.playGame();
+    }
+
+    public stopGame(): void {
+        this.isPlayingGame_ = false;
+        this.mapEditorMain_.stopGame();
+    }
 }
 
 class Dispatcher {
@@ -97,5 +109,13 @@ class Dispatcher {
 
     public static onTilesWheel(dx: number, dy: number, scale: number, canvasWidth: number, canvasHeight: number): void {
         Dispatcher.store_.moveTilesOffset(dx, dy, scale, canvasWidth, canvasHeight);
+    }
+
+    public static onPlayGame() {
+        Dispatcher.store_.playGame();
+    }
+
+    public static onStopGame() {
+        Dispatcher.store_.stopGame();
     }
 }

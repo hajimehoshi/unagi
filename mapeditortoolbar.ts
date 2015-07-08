@@ -16,7 +16,13 @@ class MapEditorToolbar extends HTMLElement {
     private createdCallback(): void {
         let template = <HTMLTemplateElement>document.getElementById('mapeditor-toolbar-template');
         let clone = document.importNode(template.content, true);
-        (<HTMLElementES6><any>this).createShadowRoot().appendChild(clone);
+        let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
+        shadowRoot.appendChild(clone);
+
+        let img = shadowRoot.querySelector('#play img');
+        img.addEventListener('click', () => {
+            Dispatcher.onPlayGame();
+        });
     }
 }
 

@@ -55,6 +55,11 @@ class MapEditorMain extends HTMLElement {
                 this.render();
             });
         })
+
+        let game = shadowRoot.querySelector('#game');
+        game.addEventListener('click', () => {
+            Dispatcher.onStopGame();
+        });
     }
 
     public render(): void {
@@ -87,6 +92,18 @@ class MapEditorMain extends HTMLElement {
 
     public updateTilesOffset(x: number, y: number): void {
         this.tiles.updateOffset(x, y);
+    }
+
+    public playGame(): void {
+        let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+        let game = <HTMLElement>shadowRoot.querySelector('#game');
+        game.style.display = 'block';
+    }
+
+    public stopGame(): void {
+        let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+        let game = <HTMLElement>shadowRoot.querySelector('#game');
+        game.style.display = 'none';
     }
 }
 
