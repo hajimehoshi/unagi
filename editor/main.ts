@@ -57,8 +57,8 @@ module editor {
                 });
             })
 
-            let game = shadowRoot.querySelector('#game');
-            game.addEventListener('click', () => {
+            let player = shadowRoot.querySelector('#player');
+            player.addEventListener('click', () => {
                 Dispatcher.onStopGame();
             });
         }
@@ -97,14 +97,14 @@ module editor {
 
         public playGame(): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let game = <HTMLElement>shadowRoot.querySelector('#game');
-            game.style.display = 'block';
+            let player = <HTMLElement>shadowRoot.querySelector('#player');
+            player.style.display = 'block';
         }
 
         public stopGame(): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let game = <HTMLElement>shadowRoot.querySelector('#game');
-            game.style.display = 'none';
+            let player = <HTMLElement>shadowRoot.querySelector('#player');
+            player.style.display = 'none';
         }
     }
 

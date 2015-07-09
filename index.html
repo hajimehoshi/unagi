@@ -26,7 +26,7 @@
       width: calc(100% - 256px - 1px);
       z-index: 0;
     }
-    #game {
+    #player {
       background-color: rgba(0, 0, 0, 0.54);
       display: none;
       height: 100%;
@@ -35,7 +35,7 @@
       width: 100%;
       z-index: 1;
     }
-    #game iframe {
+    #player iframe {
       background-color: #000000;
       border-color: #9e9e9e;
       border-style: solid;
@@ -51,8 +51,8 @@
   <mapeditor-toolbar></mapeditor-toolbar>
   <mapeditor-palette></mapeditor-palette>
   <mapeditor-tiles></mapeditor-tiles>
-  <div id="game">
-    <iframe src="./game.html"></iframe>
+  <div id="player">
+    <iframe src="./player.html"></iframe>
   </div>
 </template>
 <template id="mapeditor-toolbar-template">
@@ -124,7 +124,7 @@
   </style>
   <canvas></canvas>
 </template>
-<title>Map Editor</title>
+<title>Unagi - RPG Editor</title>
 <style>
   html, body {
     height: 100%;
