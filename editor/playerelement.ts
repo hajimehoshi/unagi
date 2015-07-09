@@ -20,6 +20,10 @@ module editor {
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
 
+            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
+            // TODO: Change the URL to be more appropriate.
+            iframe.src = '//' + window.location.hostname + ':8788/player.html';
+
             this.addEventListener('click', () => {
                 Dispatcher.onStopGame();
             });
