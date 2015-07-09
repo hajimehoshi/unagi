@@ -39,7 +39,7 @@ class MapEditorMain extends HTMLElement {
 
         window.addEventListener('load', () => {
             let tileSetImage = new Image();
-            tileSetImage.src = 'tileset.png';
+            tileSetImage.src = './images/tileset.png';
             tileSetImage.addEventListener('load', () => {
                 tileSetImage.dataset['loaded'] = 'true';
             });
