@@ -26,8 +26,7 @@
       width: calc(100% - 256px - 1px);
       z-index: 0;
     }
-    #player {
-      background-color: rgba(0, 0, 0, 0.54);
+    unagi-player {
       display: none;
       height: 100%;
       position: absolute;
@@ -35,25 +34,11 @@
       width: 100%;
       z-index: 1;
     }
-    #player iframe {
-      background-color: #000000;
-      border-color: #9e9e9e;
-      border-style: solid;
-      border-width: 1px;
-      height: 480px;
-      position: relative;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      left: 50%;
-      width: 640px;
-    }
   </style>
   <unagi-toolbar></unagi-toolbar>
   <unagi-palette></unagi-palette>
   <unagi-tiles></unagi-tiles>
-  <div id="player">
-    <iframe src="./player.html"></iframe>
-  </div>
+  <unagi-player></unagi-player>
 </template>
 <template id="unagi-toolbar-template">
   <style>
@@ -124,6 +109,30 @@
   </style>
   <canvas></canvas>
 </template>
+<template id="unagi-player-template">
+  <style>
+    div {
+      background-color: rgba(0, 0, 0, 0.54);
+      height: 100%;
+      width: 100%;
+    }
+    iframe {
+      background-color: #000000;
+      border-color: #9e9e9e;
+      border-style: solid;
+      border-width: 1px;
+      height: 480px;
+      position: relative;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      left: 50%;
+      width: 640px;
+    }
+  </style>
+  <div>
+    <iframe src="./player.html"></iframe>
+  </div>
+</template>
 <title>Unagi - RPG Editor</title>
 <style>
   html, body {
@@ -137,4 +146,4 @@
   }
 </style>
 <unagi-main></unagi-main>
-<script src="main.js"></script>
+<script src="editor.js"></script>

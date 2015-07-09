@@ -41,11 +41,6 @@ module editor {
                     this.render();
                 });
             })
-
-            let player = shadowRoot.querySelector('#player');
-            player.addEventListener('click', () => {
-                Dispatcher.onStopGame();
-            });
         }
 
         public render(): void {
@@ -82,14 +77,12 @@ module editor {
 
         public playGame(): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let player = <HTMLElement>shadowRoot.querySelector('#player');
-            player.style.display = 'block';
+            (<PlayerElement>shadowRoot.querySelector('unagi-player')).playGame();
         }
 
         public stopGame(): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let player = <HTMLElement>shadowRoot.querySelector('#player');
-            player.style.display = 'none';
+            (<PlayerElement>shadowRoot.querySelector('unagi-player')).stopGame();
         }
     }
 }
