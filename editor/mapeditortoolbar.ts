@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-class MapEditorToolbar extends HTMLElement {
-    private createdCallback(): void {
-        let template = <HTMLTemplateElement>document.getElementById('mapeditor-toolbar-template');
-        let clone = document.importNode(template.content, true);
-        let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
-        shadowRoot.appendChild(clone);
+module editor {
+    export class MapEditorToolbar extends HTMLElement {
+        private createdCallback(): void {
+            let template = <HTMLTemplateElement>document.getElementById('mapeditor-toolbar-template');
+            let clone = document.importNode(template.content, true);
+            let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
+            shadowRoot.appendChild(clone);
 
-        let img = shadowRoot.querySelector('#play img');
-        img.addEventListener('click', () => {
-            Dispatcher.onPlayGame();
-        });
+            let img = shadowRoot.querySelector('#play img');
+            img.addEventListener('click', () => {
+                Dispatcher.onPlayGame();
+            });
+        }
     }
 }
 
 (() => {
-    (<HTMLDocumentES6>document).registerElement('mapeditor-toolbar', MapEditorToolbar);
+    (<editor.HTMLDocumentES6>document).registerElement('mapeditor-toolbar', editor.MapEditorToolbar);
 })();
-

@@ -12,110 +12,112 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-class Store {
-    private mapEditorMain_: MapEditorMain;
-    private selectedTiles_: SelectedTiles;
-    private tilesCursorX_: number;
-    private tilesCursorY_: number;
-    private tilesOffsetX_: number;
-    private tilesOffsetY_: number;
-    private map_: Map;
-    private isPlayingGame_: boolean;
+module editor {
+    export class Store {
+        private mapEditorMain_: MapEditorMain;
+        private selectedTiles_: SelectedTiles;
+        private tilesCursorX_: number;
+        private tilesCursorY_: number;
+        private tilesOffsetX_: number;
+        private tilesOffsetY_: number;
+        private map_: Map;
+        private isPlayingGame_: boolean;
 
-    public constructor(mapEditorMain: MapEditorMain) {
-        this.mapEditorMain_ = mapEditorMain;
-        this.tilesOffsetX_ = 16;
-        this.tilesOffsetY_ = 16;
-        this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
-        this.isPlayingGame_ = false;
-    }
-
-    public updateMap(map: Map): void {
-        this.map_ = map;
-        this.mapEditorMain_.updateMap(map);
-    }
-
-    public updateSelectedTiles(s: SelectedTiles): void {
-        this.selectedTiles_ = s;
-        this.mapEditorMain_.updateSelectedTiles(s);
-    }
-
-    public updateTilesCursorPosition(x: number, y: number): void {
-        this.tilesCursorX_ = x;
-        this.tilesCursorY_ = y;
-        this.mapEditorMain_.updateTilesCursorPosition(x, y);
-    }
-
-    public drawTiles(): void {
-        if (!this.map_) {
-            return;
+        public constructor(mapEditorMain: MapEditorMain) {
+            this.mapEditorMain_ = mapEditorMain;
+            this.tilesOffsetX_ = 16;
+            this.tilesOffsetY_ = 16;
+            this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
+            this.isPlayingGame_ = false;
         }
-        if (!this.selectedTiles_) {
-            return;
+
+        public updateMap(map: Map): void {
+            this.map_ = map;
+            this.mapEditorMain_.updateMap(map);
         }
-        this.map_.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
-        this.mapEditorMain_.render();
+
+        public updateSelectedTiles(s: SelectedTiles): void {
+            this.selectedTiles_ = s;
+            this.mapEditorMain_.updateSelectedTiles(s);
+        }
+
+        public updateTilesCursorPosition(x: number, y: number): void {
+            this.tilesCursorX_ = x;
+            this.tilesCursorY_ = y;
+            this.mapEditorMain_.updateTilesCursorPosition(x, y);
+        }
+
+        public drawTiles(): void {
+            if (!this.map_) {
+                return;
+            }
+            if (!this.selectedTiles_) {
+                return;
+            }
+            this.map_.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
+            this.mapEditorMain_.render();
+        }
+
+        public moveTilesOffset(x: number, y: number, scale: number, canvasWidth: number, canvasHeight: number): void {
+            const ratio = window.devicePixelRatio;
+            const marginX = 128;
+            const marginY = 128;
+
+            this.tilesOffsetX_ += x;
+            this.tilesOffsetY_ += y;
+            let minX = -(this.map_.xNum * MapEditorMain.tileWidth * scale - canvasWidth / ratio) - marginX;
+            let minY = -(this.map_.yNum * MapEditorMain.tileHeight * scale - canvasHeight / ratio) - marginY;
+            let maxX = marginX;
+            let maxY = marginY;
+            this.tilesOffsetX_ = Math.min(Math.max(this.tilesOffsetX_, minX), maxX);
+            this.tilesOffsetY_ = Math.min(Math.max(this.tilesOffsetY_, minY), maxY);
+            this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
+        }
+
+        public playGame(): void {
+            this.isPlayingGame_ = true;
+            this.mapEditorMain_.playGame();
+        }
+
+        public stopGame(): void {
+            this.isPlayingGame_ = false;
+            this.mapEditorMain_.stopGame();
+        }
     }
 
-    public moveTilesOffset(x: number, y: number, scale: number, canvasWidth: number, canvasHeight: number): void {
-        const ratio = window.devicePixelRatio;
-        const marginX = 128;
-        const marginY = 128;
+    export class Dispatcher {
+        private static store_: Store;
 
-        this.tilesOffsetX_ += x;
-        this.tilesOffsetY_ += y;
-        let minX = -(this.map_.xNum * MapEditorMain.tileWidth * scale - canvasWidth / ratio) - marginX;
-        let minY = -(this.map_.yNum * MapEditorMain.tileHeight * scale - canvasHeight / ratio) - marginY;
-        let maxX = marginX;
-        let maxY = marginY;
-        this.tilesOffsetX_ = Math.min(Math.max(this.tilesOffsetX_, minX), maxX);
-        this.tilesOffsetY_ = Math.min(Math.max(this.tilesOffsetY_, minY), maxY);
-        this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
-    }
+        public static set store(store: Store) {
+            Dispatcher.store_ = store;
+        }
 
-    public playGame(): void {
-        this.isPlayingGame_ = true;
-        this.mapEditorMain_.playGame();
-    }
+        public static onMapChanged(map: Map): void {
+            Dispatcher.store_.updateMap(map);
+        }
 
-    public stopGame(): void {
-        this.isPlayingGame_ = false;
-        this.mapEditorMain_.stopGame();
-    }
-}
+        public static onSelectedTilesChanged(s: SelectedTiles): void {
+            Dispatcher.store_.updateSelectedTiles(s);
+        }
 
-class Dispatcher {
-    private static store_: Store;
+        public static onTilesCursorPositionChanged(x: number, y: number): void {
+            Dispatcher.store_.updateTilesCursorPosition(x, y);
+        }
 
-    public static set store(store: Store) {
-        Dispatcher.store_ = store;
-    }
+        public static onDrawingTiles(): void {
+            Dispatcher.store_.drawTiles();
+        }
 
-    public static onMapChanged(map: Map): void {
-        Dispatcher.store_.updateMap(map);
-    }
+        public static onTilesWheel(dx: number, dy: number, scale: number, canvasWidth: number, canvasHeight: number): void {
+            Dispatcher.store_.moveTilesOffset(dx, dy, scale, canvasWidth, canvasHeight);
+        }
 
-    public static onSelectedTilesChanged(s: SelectedTiles): void {
-        Dispatcher.store_.updateSelectedTiles(s);
-    }
+        public static onPlayGame() {
+            Dispatcher.store_.playGame();
+        }
 
-    public static onTilesCursorPositionChanged(x: number, y: number): void {
-        Dispatcher.store_.updateTilesCursorPosition(x, y);
-    }
-
-    public static onDrawingTiles(): void {
-        Dispatcher.store_.drawTiles();
-    }
-
-    public static onTilesWheel(dx: number, dy: number, scale: number, canvasWidth: number, canvasHeight: number): void {
-        Dispatcher.store_.moveTilesOffset(dx, dy, scale, canvasWidth, canvasHeight);
-    }
-
-    public static onPlayGame() {
-        Dispatcher.store_.playGame();
-    }
-
-    public static onStopGame() {
-        Dispatcher.store_.stopGame();
+        public static onStopGame() {
+            Dispatcher.store_.stopGame();
+        }
     }
 }

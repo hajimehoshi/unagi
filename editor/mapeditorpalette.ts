@@ -12,98 +12,100 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-class MapEditorPalette extends HTMLElement {
-    public static get tileXNum(): number { return 8; }
-    public static get tileYNum(): number { return 32; }
-    public static get scale(): number { return 2; }
+module editor {
+    export class MapEditorPalette extends HTMLElement {
+        public static get tileXNum(): number { return 8; }
+        public static get tileYNum(): number { return 32; }
+        public static get scale(): number { return 2; }
 
-    private selectedTiles_: SelectedTiles;
-    private tileSetImage_: HTMLImageElement;
-    private tilesSelectingState_: TilesSelectingState;
+        private selectedTiles_: SelectedTiles;
+        private tileSetImage_: HTMLImageElement;
+        private tilesSelectingState_: TilesSelectingState;
 
-    private createdCallback(): void {
-        let template = <HTMLTemplateElement>document.getElementById('mapeditor-palette-template');
-        let clone = document.importNode(template.content, true);
-        (<HTMLElementES6><any>this).createShadowRoot().appendChild(clone);
+        private createdCallback(): void {
+            let template = <HTMLTemplateElement>document.getElementById('mapeditor-palette-template');
+            let clone = document.importNode(template.content, true);
+            (<HTMLElementES6><any>this).createShadowRoot().appendChild(clone);
 
-        let canvas = <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
-        let width = MapEditorPalette.tileXNum * MapEditorMain.tileWidth;
-        let height = MapEditorPalette.tileYNum * MapEditorMain.tileHeight;
-        let actualScale = MapEditorPalette.scale * window.devicePixelRatio;;
-        canvas.width = width * actualScale;
-        canvas.height = height * actualScale;
-        canvas.style.width = (width * MapEditorPalette.scale) + 'px';
-        canvas.style.height = (height * MapEditorPalette.scale) + 'px';
+            let canvas = <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
+            let width = MapEditorPalette.tileXNum * MapEditorMain.tileWidth;
+            let height = MapEditorPalette.tileYNum * MapEditorMain.tileHeight;
+            let actualScale = MapEditorPalette.scale * window.devicePixelRatio;;
+            canvas.width = width * actualScale;
+            canvas.height = height * actualScale;
+            canvas.style.width = (width * MapEditorPalette.scale) + 'px';
+            canvas.style.height = (height * MapEditorPalette.scale) + 'px';
 
-        this.addEventListener('contextmenu', (e: MouseEvent) => {
-            e.preventDefault();
-        });
-        this.addEventListener('mousedown', (e: MouseEvent) => {
-            let x = e.offsetX + this.scrollLeft;
-            let y = e.offsetY + this.scrollTop;
-            let tx = (((x / MapEditorMain.tileWidth)|0) / MapEditorPalette.scale)|0;
-            let ty = (((y / MapEditorMain.tileHeight)|0) / MapEditorPalette.scale)|0;
-            this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
-            Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
-        })
-        this.addEventListener('mousemove', (e: MouseEvent) => {
-            if (!this.tilesSelectingState_) {
-                return;
-            }
-            if (!e.buttons) {
+            this.addEventListener('contextmenu', (e: MouseEvent) => {
+                e.preventDefault();
+            });
+            this.addEventListener('mousedown', (e: MouseEvent) => {
+                let x = e.offsetX + this.scrollLeft;
+                let y = e.offsetY + this.scrollTop;
+                let tx = (((x / MapEditorMain.tileWidth)|0) / MapEditorPalette.scale)|0;
+                let ty = (((y / MapEditorMain.tileHeight)|0) / MapEditorPalette.scale)|0;
+                this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
+                Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
+            })
+            this.addEventListener('mousemove', (e: MouseEvent) => {
+                if (!this.tilesSelectingState_) {
+                    return;
+                }
+                if (!e.buttons) {
+                    this.tilesSelectingState_ = null;
+                    return;
+                }
+                let x = e.offsetX + this.scrollLeft;
+                let y = e.offsetY + this.scrollTop;
+                let tx = (((x / MapEditorMain.tileWidth)|0) / MapEditorPalette.scale)|0;
+                let ty = (((y / MapEditorMain.tileHeight)|0) / MapEditorPalette.scale)|0;
+                this.tilesSelectingState_.moveTo(tx, ty);
+                Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
+            })
+            this.addEventListener('mouseup', (e: MouseEvent) => {
+                if (!this.tilesSelectingState_) {
+                    return;
+                }
+                let x = e.offsetX + this.scrollLeft;
+                let y = e.offsetY + this.scrollTop;
+                let tx = (((x / MapEditorMain.tileWidth)|0) / MapEditorPalette.scale)|0;
+                let ty = (((y / MapEditorMain.tileHeight)|0) / MapEditorPalette.scale)|0;
+                this.tilesSelectingState_.moveTo(tx, ty);
+                Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
                 this.tilesSelectingState_ = null;
-                return;
-            }
-            let x = e.offsetX + this.scrollLeft;
-            let y = e.offsetY + this.scrollTop;
-            let tx = (((x / MapEditorMain.tileWidth)|0) / MapEditorPalette.scale)|0;
-            let ty = (((y / MapEditorMain.tileHeight)|0) / MapEditorPalette.scale)|0;
-            this.tilesSelectingState_.moveTo(tx, ty);
-            Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
-        })
-        this.addEventListener('mouseup', (e: MouseEvent) => {
-            if (!this.tilesSelectingState_) {
-                return;
-            }
-            let x = e.offsetX + this.scrollLeft;
-            let y = e.offsetY + this.scrollTop;
-            let tx = (((x / MapEditorMain.tileWidth)|0) / MapEditorPalette.scale)|0;
-            let ty = (((y / MapEditorMain.tileHeight)|0) / MapEditorPalette.scale)|0;
-            this.tilesSelectingState_.moveTo(tx, ty);
-            Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
-            this.tilesSelectingState_ = null;
-        })
-    }
-
-    private positionToTile(px: number, py: number): number {
-        let x = (px / (MapEditorMain.tileWidth * MapEditorPalette.scale))|0;
-        let y = (py / (MapEditorMain.tileHeight * MapEditorPalette.scale))|0;
-        return x + y * MapEditorPalette.tileXNum;
-    }
-
-    public set selectedTiles(s: SelectedTiles) {
-        this.selectedTiles_ = s;
-        this.render();
-    }
-
-    public set tileSetImage(tileSetImage: HTMLImageElement) {
-        this.tileSetImage_ = tileSetImage;
-        this.render();
-    }
-
-    public render(): void {
-        let canvas = <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
-        let context = canvas.getContext('2d');
-        (<any>context).imageSmoothingEnabled = false;
-        if (this.tileSetImage_ && this.tileSetImage_.dataset['loaded'] === 'true') {
-            context.drawImage(this.tileSetImage_, 0, 0, canvas.width, canvas.height);
+            })
         }
-        if (this.selectedTiles_) {
-            this.selectedTiles_.renderFrameInPalette(context);
+
+        private positionToTile(px: number, py: number): number {
+            let x = (px / (MapEditorMain.tileWidth * MapEditorPalette.scale))|0;
+            let y = (py / (MapEditorMain.tileHeight * MapEditorPalette.scale))|0;
+            return x + y * MapEditorPalette.tileXNum;
+        }
+
+        public set selectedTiles(s: SelectedTiles) {
+            this.selectedTiles_ = s;
+            this.render();
+        }
+
+        public set tileSetImage(tileSetImage: HTMLImageElement) {
+            this.tileSetImage_ = tileSetImage;
+            this.render();
+        }
+
+        public render(): void {
+            let canvas = <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
+            let context = canvas.getContext('2d');
+            (<any>context).imageSmoothingEnabled = false;
+            if (this.tileSetImage_ && this.tileSetImage_.dataset['loaded'] === 'true') {
+                context.drawImage(this.tileSetImage_, 0, 0, canvas.width, canvas.height);
+            }
+            if (this.selectedTiles_) {
+                this.selectedTiles_.renderFrameInPalette(context);
+            }
         }
     }
 }
 
 (() => {
-    (<HTMLDocumentES6>document).registerElement('mapeditor-palette', MapEditorPalette);
+    (<editor.HTMLDocumentES6>document).registerElement('mapeditor-palette', editor.MapEditorPalette);
 })();
