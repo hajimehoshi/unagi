@@ -28,86 +28,6 @@ module editor {
         registerElement(name: string, proto: Object);
     }
 
-    export class Main extends HTMLElement {
-        public static get tileWidth(): number { return 16; }
-        public static get tileHeight(): number { return 16; }
-
-        private createdCallback(): void {
-            let template = <HTMLTemplateElement>document.getElementById('unagi-main-template');
-            let clone = document.importNode(template.content, true);
-            let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
-            shadowRoot.appendChild(clone);
-
-            window.addEventListener('load', () => {
-                let tileSetImage = new Image();
-                tileSetImage.src = './images/tileset.png';
-                tileSetImage.addEventListener('load', () => {
-                    tileSetImage.dataset['loaded'] = 'true';
-                });
-
-                let palette = this.palette;
-                palette.tileSetImage = tileSetImage;
-
-                let tiles = this.tiles;
-                tiles.tileSetImage = tileSetImage;
-
-                // TODO: ?
-                tileSetImage.addEventListener('load', () => {
-                    this.render();
-                });
-            })
-
-            let player = shadowRoot.querySelector('#player');
-            player.addEventListener('click', () => {
-                Dispatcher.onStopGame();
-            });
-        }
-
-        public render(): void {
-            this.palette.render();
-            this.tiles.render();
-        }
-
-        private get palette(): Palette {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <Palette>shadowRoot.querySelector('unagi-palette');
-        }
-
-        private get tiles(): Tiles {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <Tiles>shadowRoot.querySelector('unagi-tiles');
-        }
-
-        public updateMap(map: Map) {
-            this.tiles.map = map;
-        }
-
-        public updateSelectedTiles(s: SelectedTiles) {
-            this.palette.selectedTiles = s;
-            this.tiles.selectedTiles = s;
-        }
-
-        public updateTilesCursorPosition(x: number, y: number): void {
-            this.tiles.updateCursorPosition(x, y);
-        }
-
-        public updateTilesOffset(x: number, y: number): void {
-            this.tiles.updateOffset(x, y);
-        }
-
-        public playGame(): void {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let player = <HTMLElement>shadowRoot.querySelector('#player');
-            player.style.display = 'block';
-        }
-
-        public stopGame(): void {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let player = <HTMLElement>shadowRoot.querySelector('#player');
-            player.style.display = 'none';
-        }
-    }
-
     class Canvas {
         public static drawFrame(context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): void {
             const ratio = window.devicePixelRatio;
@@ -157,8 +77,8 @@ module editor {
             const ratio = window.devicePixelRatio;
 
             let tile = this.tiles_[0];
-            let x = (tile % Palette.tileXNum) * Main.tileWidth * Palette.scale * ratio;
-            let y = ((tile / Palette.tileXNum)|0) * Main.tileHeight * Palette.scale * ratio;
+            let x = (tile % PaletteElement.tileXNum) * MainElement.tileWidth * PaletteElement.scale * ratio;
+            let y = ((tile / PaletteElement.tileXNum)|0) * MainElement.tileHeight * PaletteElement.scale * ratio;
 
             Canvas.drawFrame(context, x, y, this.width, this.height);
         }
@@ -181,12 +101,12 @@ module editor {
 
         private get width(): number {
             const ratio = window.devicePixelRatio;
-            return this.xNum_ * Main.tileWidth * Palette.scale * ratio;
+            return this.xNum_ * MainElement.tileWidth * PaletteElement.scale * ratio;
         }
 
         private get height(): number {
             const ratio = window.devicePixelRatio;
-            return this.yNum_ * Main.tileHeight * Palette.scale * ratio;
+            return this.yNum_ * MainElement.tileHeight * PaletteElement.scale * ratio;
         }
     }
 
@@ -248,7 +168,7 @@ module editor {
             let tiles: Array<number> = [];
             for (let j = yMin; j <= yMax; j++) {
                 for (let i = xMin; i <= xMax; i++) {
-                    tiles.push(i + j * Palette.tileXNum)
+                    tiles.push(i + j * PaletteElement.tileXNum)
                 }
             }
             return new SelectedTiles(tiles, this.width, this.height, true);
@@ -271,11 +191,9 @@ module editor {
 }
 
 (() => {
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-main', editor.Main);
-
     window.addEventListener('load', () => {
-        let mapEditorMain = <editor.Main>document.querySelector('unagi-main');
-        let store = new editor.Store(mapEditorMain);
+        let main = <editor.MainElement>document.querySelector('unagi-main');
+        let store = new editor.Store(main);
         editor.Dispatcher.store = store;
         editor.Dispatcher.onMapChanged(new editor.Map(100, 100));
     });

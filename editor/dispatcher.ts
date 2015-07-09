@@ -14,7 +14,7 @@
 
 module editor {
     export class Store {
-        private mapEditorMain_: Main;
+        private mainElement_: MainElement;
         private selectedTiles_: SelectedTiles;
         private tilesCursorX_: number;
         private tilesCursorY_: number;
@@ -23,28 +23,28 @@ module editor {
         private map_: Map;
         private isPlayingGame_: boolean;
 
-        public constructor(mapEditorMain: Main) {
-            this.mapEditorMain_ = mapEditorMain;
+        public constructor(mapEditorMain: MainElement) {
+            this.mainElement_ = mapEditorMain;
             this.tilesOffsetX_ = 16;
             this.tilesOffsetY_ = 16;
-            this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
+            this.mainElement_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
             this.isPlayingGame_ = false;
         }
 
         public updateMap(map: Map): void {
             this.map_ = map;
-            this.mapEditorMain_.updateMap(map);
+            this.mainElement_.updateMap(map);
         }
 
         public updateSelectedTiles(s: SelectedTiles): void {
             this.selectedTiles_ = s;
-            this.mapEditorMain_.updateSelectedTiles(s);
+            this.mainElement_.updateSelectedTiles(s);
         }
 
         public updateTilesCursorPosition(x: number, y: number): void {
             this.tilesCursorX_ = x;
             this.tilesCursorY_ = y;
-            this.mapEditorMain_.updateTilesCursorPosition(x, y);
+            this.mainElement_.updateTilesCursorPosition(x, y);
         }
 
         public drawTiles(): void {
@@ -55,7 +55,7 @@ module editor {
                 return;
             }
             this.map_.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
-            this.mapEditorMain_.render();
+            this.mainElement_.render();
         }
 
         public moveTilesOffset(x: number, y: number, scale: number, canvasWidth: number, canvasHeight: number): void {
@@ -65,23 +65,23 @@ module editor {
 
             this.tilesOffsetX_ += x;
             this.tilesOffsetY_ += y;
-            let minX = -(this.map_.xNum * Main.tileWidth * scale - canvasWidth / ratio) - marginX;
-            let minY = -(this.map_.yNum * Main.tileHeight * scale - canvasHeight / ratio) - marginY;
+            let minX = -(this.map_.xNum * MainElement.tileWidth * scale - canvasWidth / ratio) - marginX;
+            let minY = -(this.map_.yNum * MainElement.tileHeight * scale - canvasHeight / ratio) - marginY;
             let maxX = marginX;
             let maxY = marginY;
             this.tilesOffsetX_ = Math.min(Math.max(this.tilesOffsetX_, minX), maxX);
             this.tilesOffsetY_ = Math.min(Math.max(this.tilesOffsetY_, minY), maxY);
-            this.mapEditorMain_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
+            this.mainElement_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
         }
 
         public playGame(): void {
             this.isPlayingGame_ = true;
-            this.mapEditorMain_.playGame();
+            this.mainElement_.playGame();
         }
 
         public stopGame(): void {
             this.isPlayingGame_ = false;
-            this.mapEditorMain_.stopGame();
+            this.mainElement_.stopGame();
         }
     }
 

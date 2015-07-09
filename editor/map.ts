@@ -37,8 +37,8 @@ module editor {
         }
 
         public tilePosition(x: number, y: number, scale: number): {x: number, y: number} {
-            let tileX = (((x / Main.tileWidth)|0) / scale)|0;
-            let tileY = (((y / Main.tileHeight)|0) / scale)|0;
+            let tileX = (((x / MainElement.tileWidth)|0) / scale)|0;
+            let tileY = (((y / MainElement.tileHeight)|0) / scale)|0;
             return {x: tileX, y: tileY};
         }
 
@@ -69,14 +69,14 @@ module editor {
             for (let j = 0; j < this.yNum_; j++) {
                 for (let i = 0; i < this.xNum_; i++) {
                     let tile = this.tiles_[i + j * this.xNum_];
-                    let srcX = tile % Palette.tileXNum * Main.tileWidth;
-                    let srcY = ((tile / Palette.tileXNum)|0) * Main.tileHeight;
-                    let srcWidth = Main.tileWidth;
-                    let srcHeight = Main.tileHeight;
-                    let dstX = i * Main.tileWidth * actualScale + offsetX * ratio;
-                    let dstY = j * Main.tileHeight * actualScale + offsetY * ratio;
-                    let dstWidth = Main.tileWidth * actualScale;
-                    let dstHeight = Main.tileHeight * actualScale;
+                    let srcX = tile % PaletteElement.tileXNum * MainElement.tileWidth;
+                    let srcY = ((tile / PaletteElement.tileXNum)|0) * MainElement.tileHeight;
+                    let srcWidth = MainElement.tileWidth;
+                    let srcHeight = MainElement.tileHeight;
+                    let dstX = i * MainElement.tileWidth * actualScale + offsetX * ratio;
+                    let dstY = j * MainElement.tileHeight * actualScale + offsetY * ratio;
+                    let dstWidth = MainElement.tileWidth * actualScale;
+                    let dstHeight = MainElement.tileHeight * actualScale;
                     context.drawImage(tileSetImage, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight);
                 }
             }

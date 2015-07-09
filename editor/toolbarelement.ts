@@ -13,7 +13,7 @@
 // limitations under the License.
 
 module editor {
-    export class Toolbar extends HTMLElement {
+    export class ToolbarElement extends HTMLElement {
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-toolbar-template');
             let clone = document.importNode(template.content, true);
@@ -26,8 +26,9 @@ module editor {
             });
         }
     }
+
 }
 
 (() => {
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-toolbar', editor.Toolbar);
+    (<editor.HTMLDocumentES6>document).registerElement('unagi-toolbar', editor.ToolbarElement);
 })();
