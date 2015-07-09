@@ -28,12 +28,12 @@ module editor {
         registerElement(name: string, proto: Object);
     }
 
-    export class MapEditorMain extends HTMLElement {
+    export class Main extends HTMLElement {
         public static get tileWidth(): number { return 16; }
         public static get tileHeight(): number { return 16; }
 
         private createdCallback(): void {
-            let template = <HTMLTemplateElement>document.getElementById('mapeditor-main-template');
+            let template = <HTMLTemplateElement>document.getElementById('unagi-main-template');
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
@@ -68,14 +68,14 @@ module editor {
             this.tiles.render();
         }
 
-        private get palette(): MapEditorPalette {
+        private get palette(): Palette {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <MapEditorPalette>shadowRoot.querySelector('mapeditor-palette');
+            return <Palette>shadowRoot.querySelector('unagi-palette');
         }
 
-        private get tiles(): MapEditorTiles {
+        private get tiles(): Tiles {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <MapEditorTiles>shadowRoot.querySelector('mapeditor-tiles');
+            return <Tiles>shadowRoot.querySelector('unagi-tiles');
         }
 
         public updateMap(map: Map) {
@@ -157,8 +157,8 @@ module editor {
             const ratio = window.devicePixelRatio;
 
             let tile = this.tiles_[0];
-            let x = (tile % MapEditorPalette.tileXNum) * MapEditorMain.tileWidth * MapEditorPalette.scale * ratio;
-            let y = ((tile / MapEditorPalette.tileXNum)|0) * MapEditorMain.tileHeight * MapEditorPalette.scale * ratio;
+            let x = (tile % Palette.tileXNum) * Main.tileWidth * Palette.scale * ratio;
+            let y = ((tile / Palette.tileXNum)|0) * Main.tileHeight * Palette.scale * ratio;
 
             Canvas.drawFrame(context, x, y, this.width, this.height);
         }
@@ -181,12 +181,12 @@ module editor {
 
         private get width(): number {
             const ratio = window.devicePixelRatio;
-            return this.xNum_ * MapEditorMain.tileWidth * MapEditorPalette.scale * ratio;
+            return this.xNum_ * Main.tileWidth * Palette.scale * ratio;
         }
 
         private get height(): number {
             const ratio = window.devicePixelRatio;
-            return this.yNum_ * MapEditorMain.tileHeight * MapEditorPalette.scale * ratio;
+            return this.yNum_ * Main.tileHeight * Palette.scale * ratio;
         }
     }
 
@@ -248,7 +248,7 @@ module editor {
             let tiles: Array<number> = [];
             for (let j = yMin; j <= yMax; j++) {
                 for (let i = xMin; i <= xMax; i++) {
-                    tiles.push(i + j * MapEditorPalette.tileXNum)
+                    tiles.push(i + j * Palette.tileXNum)
                 }
             }
             return new SelectedTiles(tiles, this.width, this.height, true);
@@ -271,10 +271,10 @@ module editor {
 }
 
 (() => {
-    (<editor.HTMLDocumentES6>document).registerElement('mapeditor-main', editor.MapEditorMain);
+    (<editor.HTMLDocumentES6>document).registerElement('unagi-main', editor.Main);
 
     window.addEventListener('load', () => {
-        let mapEditorMain = <editor.MapEditorMain>document.querySelector('mapeditor-main');
+        let mapEditorMain = <editor.Main>document.querySelector('unagi-main');
         let store = new editor.Store(mapEditorMain);
         editor.Dispatcher.store = store;
         editor.Dispatcher.onMapChanged(new editor.Map(100, 100));

@@ -13,9 +13,9 @@
 // limitations under the License.
 
 module editor {
-    export class MapEditorToolbar extends HTMLElement {
+    export class Toolbar extends HTMLElement {
         private createdCallback(): void {
-            let template = <HTMLTemplateElement>document.getElementById('mapeditor-toolbar-template');
+            let template = <HTMLTemplateElement>document.getElementById('unagi-toolbar-template');
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
@@ -29,5 +29,5 @@ module editor {
 }
 
 (() => {
-    (<editor.HTMLDocumentES6>document).registerElement('mapeditor-toolbar', editor.MapEditorToolbar);
+    (<editor.HTMLDocumentES6>document).registerElement('unagi-toolbar', editor.Toolbar);
 })();

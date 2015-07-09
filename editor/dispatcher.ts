@@ -14,7 +14,7 @@
 
 module editor {
     export class Store {
-        private mapEditorMain_: MapEditorMain;
+        private mapEditorMain_: Main;
         private selectedTiles_: SelectedTiles;
         private tilesCursorX_: number;
         private tilesCursorY_: number;
@@ -23,7 +23,7 @@ module editor {
         private map_: Map;
         private isPlayingGame_: boolean;
 
-        public constructor(mapEditorMain: MapEditorMain) {
+        public constructor(mapEditorMain: Main) {
             this.mapEditorMain_ = mapEditorMain;
             this.tilesOffsetX_ = 16;
             this.tilesOffsetY_ = 16;
@@ -65,8 +65,8 @@ module editor {
 
             this.tilesOffsetX_ += x;
             this.tilesOffsetY_ += y;
-            let minX = -(this.map_.xNum * MapEditorMain.tileWidth * scale - canvasWidth / ratio) - marginX;
-            let minY = -(this.map_.yNum * MapEditorMain.tileHeight * scale - canvasHeight / ratio) - marginY;
+            let minX = -(this.map_.xNum * Main.tileWidth * scale - canvasWidth / ratio) - marginX;
+            let minY = -(this.map_.yNum * Main.tileHeight * scale - canvasHeight / ratio) - marginY;
             let maxX = marginX;
             let maxY = marginY;
             this.tilesOffsetX_ = Math.min(Math.max(this.tilesOffsetX_, minX), maxX);
