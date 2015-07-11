@@ -54,13 +54,13 @@
       line-height: 0;
       opacity: 0.54;
     }
-    menu menuitem:first-child {
+    menuitem:first-child {
       margin-left: 256px;
     }
-    menu menuitem:empty {
+    menuitem:empty {
       width: 16px;
     }
-    menu menuitem img {
+    menuitem img {
       cursor: pointer;
       padding: 6px;
     }
@@ -83,6 +83,8 @@
     <menuitem></menuitem>
     <menuitem><label><input type="radio" name="drawing" value="pen"><img src="./images/icons/iconmonstr-pencil-10-icon.svg" width="20" height="20"></label></menuitem>
     <menuitem><label><input type="radio" name="drawing" value="fill"><img src="./images/icons/iconmonstr-paintbrush-3-icon.svg" width="20" height="20"></label></menuitem>
+    <menuitem></menuitem>
+    <menuitem id="script"><img src="./images/icons/iconmonstr-script-4-icon.svg" width="20" height="20"></menuitem>
     <menuitem></menuitem>
     <menuitem id="play"><img src="./images/icons/play-icon.svg" width="20" height="20"></menuitem>
   </menu>
@@ -130,7 +132,7 @@
     }
   </style>
   <div>
-    <iframe></iframe>
+    <iframe sandbox="allow-scripts"></iframe>
   </div>
 </template>
 <title>Unagi - RPG Editor</title>

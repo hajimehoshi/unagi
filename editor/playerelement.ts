@@ -20,21 +20,23 @@ module editor {
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
 
-            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
-            // TODO: Change the URL to be more appropriate.
-            iframe.src = '//' + window.location.hostname + ':8788/player.html';
-
             this.addEventListener('click', () => {
                 Dispatcher.onStopGame();
             });
         }
 
         public playGame() {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
+            iframe.src = './player.html';
             this.style.display = 'block';
         }
 
         public stopGame() {
             this.style.display = 'none';
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
+            iframe.src = '';
         }
     }
 }
