@@ -12,6 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+class Game {
+    private static width_ = 320;
+    private static height_ = 240;
+    private static scale_ = 2;
+
+    public static run(f: (CanvasRenderingContext2D) => void): void {
+        let canvas = <HTMLCanvasElement>window.document.querySelector('canvas');
+        canvas.width = Game.width_ * Game.scale_ * window.devicePixelRatio;
+        canvas.height = Game.height_ * Game.scale_ * window.devicePixelRatio;
+        let context = canvas.getContext('2d');
+        (<any>context).imageSmoothingEnabled = false;
+
+        let offscreenCanvas = <HTMLCanvasElement>document.createElement('canvas');
+        offscreenCanvas.width = Game.width_;
+        offscreenCanvas.height = Game.height_;
+
+        let loop = () => {
+            let offscreenContext = offscreenCanvas.getContext('2d');
+            offscreenContext.clearRect(0, 0, Game.width_, Game.height_);
+            f(offscreenContext);
+
+            context.drawImage(offscreenCanvas, 0, 0, canvas.width, canvas.height);
+
+            window.requestAnimationFrame(loop);
+        };
+        loop();
+    }
+}
+
 (() => {
     window.addEventListener('message', (e) => {
         eval(e.data.source);

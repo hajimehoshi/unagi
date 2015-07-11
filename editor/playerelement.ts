@@ -31,7 +31,7 @@ module editor {
                 }
                 iframe.contentWindow.postMessage({
                     // TODO: Let's have an editor
-                    source: 'console.log("Hello in player");',
+                    source: this.source,
                 }, '*');
             });
         }
@@ -48,6 +48,18 @@ module editor {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
             iframe.src = 'about:blank';
+        }
+
+        private get source(): string {
+            return `
+            function run(context) {
+                context.strokeStyle = 'rgb(0, 128, 255)';
+                //context.fillStyle = 'rgb(0, 128, 255)';
+                //context.fillRect(0, 0, 320, 240);
+                context.strokeRect(0, 0, 320, 240);
+            }
+            Game.run(run);
+            `;
         }
     }
 }
