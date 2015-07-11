@@ -23,6 +23,17 @@ module editor {
             this.addEventListener('click', () => {
                 Dispatcher.onStopGame();
             });
+
+            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
+            iframe.addEventListener('load', (e) => {
+                if (iframe.src === 'about:blank') {
+                    return;
+                }
+                iframe.contentWindow.postMessage({
+                    // TODO: Let's have an editor
+                    source: 'console.log("Hello in player");',
+                }, '*');
+            });
         }
 
         public playGame() {
@@ -36,7 +47,7 @@ module editor {
             this.style.display = 'none';
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
-            iframe.src = '';
+            iframe.src = 'about:blank';
         }
     }
 }

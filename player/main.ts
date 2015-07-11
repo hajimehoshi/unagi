@@ -12,13 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
-
-import (
-	"net/http"
-)
-
-func main() {
-	http.Handle("/", http.FileServer(http.Dir(".")))
-	http.ListenAndServe(":8787", nil)
-}
+(() => {
+    window.addEventListener('message', (e) => {
+        eval(e.data.source);
+    });
+})();
