@@ -15,10 +15,14 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 )
 
 func main() {
+	port := 8787
+	fmt.Printf("http://localhost:%d/\n", port)
 	http.Handle("/", http.FileServer(http.Dir(".")))
-	http.ListenAndServe(":8787", nil)
+	http.ListenAndServe(":" + strconv.Itoa(port), nil)
 }
