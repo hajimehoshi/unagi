@@ -12,53 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-declare type MapObject = {
-    xNum: number,
-    yNum: number,
-};
-
-class Map {
-    private tiles_: number[]
-    private xNum_: number;
-    private yNum_: number;
-
-    public fromObject(obj: MapObject): void {
-        //this.tiles_ = json.tiles;
-        this.xNum_ = obj.xNum;
-        this.yNum_ = obj.yNum;
-    }
-}
-
-declare type GameObject = {
-    title: string,
-    maps: MapObject[],
-    script: string,
-};
-
-class Game {
-    private title_: string;
-    private maps_: Map[];
-    private script_: string;
-
-    constructor() {
-        this.maps_ = [];
-    }
-
-    public fromObject(obj: GameObject): void {
-        this.title_ = obj.title;
-        for (let mapObj of obj.maps) {
-            let map = new Map();
-            map.fromObject(mapObj)
-            this.maps_.push(map);
-        }
-        this.script_ = obj.script;
-    }
-
-    public run(): void {
-        (0, eval)(this.script_);
-    }
-}
-
 class GameMain {
     private static width_ = 320;
     private static height_ = 240;
@@ -90,8 +43,8 @@ class GameMain {
 
 (() => {
     window.addEventListener('message', (e) => {
-        let game = new Game();
-        game.fromObject(<GameObject>e.data);
+        let game = new data.Game();
+        game.fromObject(<data.GameObject>e.data);
         game.run();
     });
 })();

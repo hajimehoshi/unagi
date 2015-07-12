@@ -13,78 +13,6 @@
 // limitations under the License.
 
 module editor {
-    export class Store {
-        private mainElement_: MainElement;
-        private selectedTiles_: SelectedTiles;
-        private tilesCursorX_: number;
-        private tilesCursorY_: number;
-        private tilesOffsetX_: number;
-        private tilesOffsetY_: number;
-        private map_: Map;
-        private isPlayingGame_: boolean;
-
-        public constructor(mapEditorMain: MainElement) {
-            this.mainElement_ = mapEditorMain;
-            this.tilesOffsetX_ = 16;
-            this.tilesOffsetY_ = 16;
-            this.mainElement_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
-            this.isPlayingGame_ = false;
-        }
-
-        public updateMap(map: Map): void {
-            this.map_ = map;
-            this.mainElement_.updateMap(map);
-        }
-
-        public updateSelectedTiles(s: SelectedTiles): void {
-            this.selectedTiles_ = s;
-            this.mainElement_.updateSelectedTiles(s);
-        }
-
-        public updateTilesCursorPosition(x: number, y: number): void {
-            this.tilesCursorX_ = x;
-            this.tilesCursorY_ = y;
-            this.mainElement_.updateTilesCursorPosition(x, y);
-        }
-
-        public drawTiles(): void {
-            if (!this.map_) {
-                return;
-            }
-            if (!this.selectedTiles_) {
-                return;
-            }
-            this.map_.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
-            this.mainElement_.render();
-        }
-
-        public moveTilesOffset(x: number, y: number, scale: number, canvasWidth: number, canvasHeight: number): void {
-            const ratio = window.devicePixelRatio;
-            const marginX = 128;
-            const marginY = 128;
-
-            this.tilesOffsetX_ += x;
-            this.tilesOffsetY_ += y;
-            let minX = -(this.map_.xNum * MainElement.tileWidth * scale - canvasWidth / ratio) - marginX;
-            let minY = -(this.map_.yNum * MainElement.tileHeight * scale - canvasHeight / ratio) - marginY;
-            let maxX = marginX;
-            let maxY = marginY;
-            this.tilesOffsetX_ = Math.min(Math.max(this.tilesOffsetX_, minX), maxX);
-            this.tilesOffsetY_ = Math.min(Math.max(this.tilesOffsetY_, minY), maxY);
-            this.mainElement_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
-        }
-
-        public playGame(): void {
-            this.isPlayingGame_ = true;
-            this.mainElement_.playGame();
-        }
-
-        public stopGame(): void {
-            this.isPlayingGame_ = false;
-            this.mainElement_.stopGame();
-        }
-    }
-
     export class Dispatcher {
         private static store_: Store;
 
@@ -92,8 +20,8 @@ module editor {
             Dispatcher.store_ = store;
         }
 
-        public static onMapChanged(map: Map): void {
-            Dispatcher.store_.updateMap(map);
+        public static onGameChanged(game: data.Game): void {
+            Dispatcher.store_.updateGame(game);
         }
 
         public static onSelectedTilesChanged(s: SelectedTiles): void {

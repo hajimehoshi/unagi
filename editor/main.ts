@@ -182,7 +182,7 @@ module editor {
             let tiles: Array<number> = [];
             for (let j = yMin; j <= yMax; j++) {
                 for (let i = xMin; i <= xMax; i++) {
-                    tiles.push(map.at(i, j))
+                    tiles.push(map.tileAt(i, j))
                 }
             }
             return new SelectedTiles(tiles, this.width, this.height, false);
@@ -195,6 +195,9 @@ module editor {
         let main = <editor.MainElement>document.querySelector('unagi-main');
         let store = new editor.Store(main);
         editor.Dispatcher.store = store;
-        editor.Dispatcher.onMapChanged(new editor.Map(100, 100));
+
+        let game = new data.Game();
+        game.appendMap(new data.Map(100, 100))
+        editor.Dispatcher.onGameChanged(game);
     });
 })();

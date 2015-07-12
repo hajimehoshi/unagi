@@ -14,26 +14,22 @@
 
 module editor {
     export class Map {
-        private tiles_: Int32Array;
-        private xNum_: number;
-        private yNum_: number;
+        private data_: data.Map;
 
-        constructor(xNum: number, yNum: number) {
-            this.xNum_ = xNum;
-            this.yNum_ = yNum;
-            this.tiles_ = new Int32Array(xNum * yNum);
+        constructor(data: data.Map) {
+            this.data_ = data;
         }
 
         public get xNum(): number {
-            return this.xNum_;
+            return this.data_.xNum;
         }
 
         public get yNum(): number {
-            return this.yNum_;
+            return this.data_.yNum;
         }
 
-        public at(x: number, y: number): number {
-            return this.tiles_[x + y * this.xNum_];
+        public tileAt(x: number, y: number): number {
+            return this.data_.tileAt(x, y);
         }
 
         public tilePosition(x: number, y: number, scale: number): {x: number, y: number} {
@@ -52,13 +48,13 @@ module editor {
                     if (y + j < 0) {
                         continue;
                     }
-                    if (this.xNum_ <= x + i) {
+                    if (this.xNum <= x + i) {
                         continue;
                     }
-                    if (this.yNum_ <= y + j) {
+                    if (this.yNum <= y + j) {
                         continue;
                     }
-                    this.tiles_[(x + i) + (y + j) * this.xNum_] = tile;
+                    this.data_.setTileAt(tile, x + i, y + j);
                 }
             }
         }
@@ -66,9 +62,9 @@ module editor {
         public renderAt(context: CanvasRenderingContext2D, tileSetImage: HTMLImageElement, scale: number, offsetX: number, offsetY: number): void {
             const ratio = window.devicePixelRatio;
             const actualScale = scale * ratio;
-            for (let j = 0; j < this.yNum_; j++) {
-                for (let i = 0; i < this.xNum_; i++) {
-                    let tile = this.tiles_[i + j * this.xNum_];
+            for (let j = 0; j < this.yNum; j++) {
+                for (let i = 0; i < this.xNum; i++) {
+                    let tile = this.tileAt(i, j);
                     let srcX = tile % PaletteElement.tileXNum * MainElement.tileWidth;
                     let srcY = ((tile / PaletteElement.tileXNum)|0) * MainElement.tileHeight;
                     let srcWidth = MainElement.tileWidth;
