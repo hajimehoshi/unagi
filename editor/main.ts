@@ -191,6 +191,13 @@ module editor {
 }
 
 (() => {
+    let script = `
+    function run(context) {
+        context.strokeStyle = 'rgb(0, 128, 255)';
+        context.strokeRect(0, 0, 320, 240);
+    }
+    GameMain.run(run);`
+
     window.addEventListener('load', () => {
         let main = <editor.MainElement>document.querySelector('unagi-main');
         let store = new editor.Store(main);
@@ -198,6 +205,7 @@ module editor {
 
         let game = new data.Game();
         game.appendMap(new data.Map(100, 100))
+        game.script = script;
         editor.Dispatcher.onGameChanged(game);
     });
 })();

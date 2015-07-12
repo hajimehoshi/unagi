@@ -75,9 +75,9 @@ module editor {
             this.tiles.updateOffset(x, y);
         }
 
-        public playGame(): void {
+        public playGame(game: data.Game): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            (<PlayerElement>shadowRoot.querySelector('unagi-player')).playGame();
+            (<PlayerElement>shadowRoot.querySelector('unagi-player')).playGame(game);
         }
 
         public stopGame(): void {

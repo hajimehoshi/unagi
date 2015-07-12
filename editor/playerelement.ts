@@ -14,6 +14,8 @@
 
 module editor {
     export class PlayerElement extends HTMLElement {
+        private game_: data.Game;
+
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-player-template');
             let clone = document.importNode(template.content, true);
@@ -29,16 +31,12 @@ module editor {
                 if (iframe.src === 'about:blank') {
                     return;
                 }
-                iframe.contentWindow.postMessage({
-                    // TODO: Let's have an editor
-                    title: 'test',
-                    maps: [],
-                    script: this.script,
-                }, '*');
+                iframe.contentWindow.postMessage(this.game_.toObject(), '*');
             });
         }
 
-        public playGame() {
+        public playGame(game: data.Game) {
+            this.game_ = game;
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
             iframe.src = './player.html';
@@ -46,20 +44,11 @@ module editor {
         }
 
         public stopGame() {
+            this.game_ = null;
             this.style.display = 'none';
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
             iframe.src = 'about:blank';
-        }
-
-        private get script(): string {
-            return `
-            function run(context) {
-                context.strokeStyle = 'rgb(0, 128, 255)';
-                context.strokeRect(0, 0, 320, 240);
-            }
-            GameMain.run(run);
-            `;
         }
     }
 }

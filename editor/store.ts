@@ -34,6 +34,7 @@ module editor {
 
         public updateGame(game: data.Game): void {
             this.game_ = game;
+            // TODO: What if no map exists?
             this.currentMap_ = new Map(this.game_.mapAt(0));
             this.mainElement_.updateMap(this.currentMap_);
         }
@@ -78,7 +79,7 @@ module editor {
 
         public playGame(): void {
             this.isPlayingGame_ = true;
-            this.mainElement_.playGame();
+            this.mainElement_.playGame(this.game_);
         }
 
         public stopGame(): void {
