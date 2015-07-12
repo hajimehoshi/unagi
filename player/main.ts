@@ -12,25 +12,72 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+declare type MapObject = {
+    xNum: number,
+    yNum: number,
+};
+
+class Map {
+    private tiles_: number[]
+    private xNum_: number;
+    private yNum_: number;
+
+    public fromObject(obj: MapObject): void {
+        //this.tiles_ = json.tiles;
+        this.xNum_ = obj.xNum;
+        this.yNum_ = obj.yNum;
+    }
+}
+
+declare type GameObject = {
+    title: string,
+    maps: MapObject[],
+    script: string,
+};
+
 class Game {
+    private title_: string;
+    private maps_: Map[];
+    private script_: string;
+
+    constructor() {
+        this.maps_ = [];
+    }
+
+    public fromObject(obj: GameObject): void {
+        this.title_ = obj.title;
+        for (let mapObj of obj.maps) {
+            let map = new Map();
+            map.fromObject(mapObj)
+            this.maps_.push(map);
+        }
+        this.script_ = obj.script;
+    }
+
+    public run(): void {
+        (0, eval)(this.script_);
+    }
+}
+
+class GameMain {
     private static width_ = 320;
     private static height_ = 240;
     private static scale_ = 2;
 
     public static run(f: (CanvasRenderingContext2D) => void): void {
         let canvas = <HTMLCanvasElement>window.document.querySelector('canvas');
-        canvas.width = Game.width_ * Game.scale_ * window.devicePixelRatio;
-        canvas.height = Game.height_ * Game.scale_ * window.devicePixelRatio;
+        canvas.width = GameMain.width_ * GameMain.scale_ * window.devicePixelRatio;
+        canvas.height = GameMain.height_ * GameMain.scale_ * window.devicePixelRatio;
         let context = canvas.getContext('2d');
         (<any>context).imageSmoothingEnabled = false;
 
         let offscreenCanvas = <HTMLCanvasElement>document.createElement('canvas');
-        offscreenCanvas.width = Game.width_;
-        offscreenCanvas.height = Game.height_;
+        offscreenCanvas.width = GameMain.width_;
+        offscreenCanvas.height = GameMain.height_;
 
         let loop = () => {
             let offscreenContext = offscreenCanvas.getContext('2d');
-            offscreenContext.clearRect(0, 0, Game.width_, Game.height_);
+            offscreenContext.clearRect(0, 0, GameMain.width_, GameMain.height_);
             f(offscreenContext);
 
             context.drawImage(offscreenCanvas, 0, 0, canvas.width, canvas.height);
@@ -43,6 +90,8 @@ class Game {
 
 (() => {
     window.addEventListener('message', (e) => {
-        eval(e.data.source);
+        let game = new Game();
+        game.fromObject(<GameObject>e.data);
+        game.run();
     });
 })();

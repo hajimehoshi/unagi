@@ -31,7 +31,9 @@ module editor {
                 }
                 iframe.contentWindow.postMessage({
                     // TODO: Let's have an editor
-                    source: this.source,
+                    title: 'test',
+                    maps: [],
+                    script: this.script,
                 }, '*');
             });
         }
@@ -50,15 +52,13 @@ module editor {
             iframe.src = 'about:blank';
         }
 
-        private get source(): string {
+        private get script(): string {
             return `
             function run(context) {
                 context.strokeStyle = 'rgb(0, 128, 255)';
-                //context.fillStyle = 'rgb(0, 128, 255)';
-                //context.fillRect(0, 0, 320, 240);
                 context.strokeRect(0, 0, 320, 240);
             }
-            Game.run(run);
+            GameMain.run(run);
             `;
         }
     }
