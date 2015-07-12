@@ -13,45 +13,6 @@
 // limitations under the License.
 
 module data {
-    export declare type MapObject = {
-        xNum: number,
-        yNum: number,
-    };
-
-    export class Map {
-        private tiles_: Int32Array;
-        private xNum_: number;
-        private yNum_: number;
-
-        constructor(xNum: number, yNum: number) {
-            this.xNum_ = xNum;
-            this.yNum_ = yNum;
-            this.tiles_ = new Int32Array(xNum * yNum);
-        }
-
-        public fromObject(obj: MapObject): void {
-            //this.tiles_ = json.tiles;
-            this.xNum_ = obj.xNum;
-            this.yNum_ = obj.yNum;
-        }
-
-        public get xNum(): number {
-            return this.xNum_;
-        }
-
-        public get yNum(): number {
-            return this.yNum_;
-        }
-
-        public tileAt(x: number, y: number): number {
-            return this.tiles_[x + y * this.xNum_];
-        }
-
-        public setTileAt(tile: number, x: number, y: number): void {
-            this.tiles_[x + y * this.xNum_] = tile;
-        }
-    }
-
     export declare type GameObject = {
         title: string,
         maps: MapObject[],
@@ -65,6 +26,19 @@ module data {
 
         constructor() {
             this.maps_ = [];
+        }
+
+        public toObject(): GameObject {
+            let maps: MapObject[] = [];
+            for (let map of this.maps_) {
+                maps.push(map.toObject())
+            }
+            let obj: GameObject = {
+                title: this.title_,
+                maps: maps,
+                script: this.script_,
+            };
+            return obj;
         }
 
         public fromObject(obj: GameObject): void {
@@ -83,6 +57,10 @@ module data {
 
         public mapAt(i: number): Map {
             return this.maps_[i];
+        }
+
+        public set script(script: string) {
+            this.script_ = script;
         }
 
         public run(): void {
