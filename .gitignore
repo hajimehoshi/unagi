@@ -1,3 +1,5 @@
 *~
 .DS_Store
 *.js
+editor/defaultscript.ts
+!editor/defaultscript.js
