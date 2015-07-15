@@ -59,13 +59,12 @@ module data {
             return this.maps_[i];
         }
 
-        public set script(script: string) {
-            this.script_ = script;
+        public get script(): string {
+            return this.script_;
         }
 
-        public run(): void {
-            // Call 'eval' indirectly so that 'this' variable will be a global window.
-            (0, eval)(this.script_);
+        public set script(script: string) {
+            this.script_ = script;
         }
     }
 }
