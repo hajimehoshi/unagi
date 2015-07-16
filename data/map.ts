@@ -14,30 +14,32 @@
 
 module data {
     export declare type MapObject = {
+        tiles: Int16Array,
         xNum: number,
         yNum: number,
     };
 
     export class Map {
-        private tiles_: Int32Array;
+        private tiles_: Int16Array;
         private xNum_: number;
         private yNum_: number;
 
         constructor(xNum: number, yNum: number) {
             this.xNum_ = xNum;
             this.yNum_ = yNum;
-            this.tiles_ = new Int32Array(xNum * yNum);
+            this.tiles_ = new Int16Array(xNum * yNum);
         }
 
         public toObject(): MapObject {
             return {
+                tiles: this.tiles_,
                 xNum: this.xNum_,
                 yNum: this.yNum_,
             };
         }
 
         public fromObject(obj: MapObject): void {
-            //this.tiles_ = json.tiles;
+            this.tiles_ = obj.tiles;
             this.xNum_ = obj.xNum;
             this.yNum_ = obj.yNum;
         }

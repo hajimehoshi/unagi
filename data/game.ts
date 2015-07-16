@@ -45,7 +45,7 @@ module data {
             this.title_ = obj.title;
             for (let mapObj of obj.maps) {
                 let map = new Map(0, 0);
-                map.fromObject(mapObj)
+                map.fromObject(mapObj);
                 this.maps_.push(map);
             }
             this.script_ = obj.script;
