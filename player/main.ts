@@ -106,6 +106,12 @@ class Env {
 let $game: data.Game;
 
 (() => {
+    document.body.addEventListener('click', (e) => {
+        if (e.target !== document.body) {
+            return;
+        }
+        window.parent.postMessage('quit', '*');
+    });
     window.addEventListener('message', (e) => {
         let game = new data.Game();
         game.fromObject(<data.GameObject>e.data);

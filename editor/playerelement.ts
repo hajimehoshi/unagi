@@ -22,11 +22,12 @@ module editor {
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
 
-            this.addEventListener('click', () => {
-                Dispatcher.onStopGame();
-            });
-
             let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
+            window.addEventListener('message', (e: MessageEvent) => {
+                if (e.data === 'quit') {
+                    Dispatcher.onStopGame();
+                }
+            });
             iframe.addEventListener('load', (e) => {
                 if (iframe.src === 'about:blank') {
                     return;
