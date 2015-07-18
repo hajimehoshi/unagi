@@ -79,9 +79,10 @@ module editor {
             if (!grid) {
                 return;
             }
+
+            context.save();
             context.lineWidth = 2 * ratio;
             context.strokeStyle = 'rgba(0, 0, 0, 0.26)';
-            context.save();
 
             context.beginPath();
             let minX = offsetX * ratio;

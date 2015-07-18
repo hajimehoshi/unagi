@@ -21,6 +21,7 @@ module editor {
         private selectedTiles_: SelectedTiles;
         private tileSetImage_: HTMLImageElement;
         private tilesSelectingState_: TilesSelectingState;
+        private tilesEditingMode_: TilesEditingMode;
 
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-palette-template');
@@ -51,6 +52,9 @@ module editor {
                 if (!this.tilesSelectingState_) {
                     return;
                 }
+                if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+                    return;
+                }
                 if (!e.buttons) {
                     this.tilesSelectingState_ = null;
                     return;
@@ -64,6 +68,9 @@ module editor {
             })
             this.addEventListener('mouseup', (e: MouseEvent) => {
                 if (!this.tilesSelectingState_) {
+                    return;
+                }
+                if (this.tilesEditingMode_ != TilesEditingMode.Map) {
                     return;
                 }
                 let x = e.offsetX + this.scrollLeft;
@@ -89,6 +96,11 @@ module editor {
 
         public set tileSetImage(tileSetImage: HTMLImageElement) {
             this.tileSetImage_ = tileSetImage;
+            this.render();
+        }
+
+        public set tilesEditingMode(tilesEditingMode: TilesEditingMode) {
+            this.tilesEditingMode_ = tilesEditingMode;
             this.render();
         }
 

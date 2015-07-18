@@ -64,6 +64,9 @@ module editor {
             if (!this.selectedTiles_) {
                 return;
             }
+            if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+                return;
+            }
             this.currentMap_.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
             this.mainElement_.render();
         }
@@ -97,6 +100,11 @@ module editor {
         public updateTilesEditingMode(tilesEditingMode: TilesEditingMode): void {
             this.tilesEditingMode_ = tilesEditingMode;
             this.mainElement_.updateTilesEditingMode(tilesEditingMode);
+
+            if (this.tilesEditingMode_ == TilesEditingMode.Event && this.selectedTiles_) {
+                this.selectedTiles_.shrink();
+                this.updateSelectedTiles(this.selectedTiles_);
+            }
         }
     }
 }

@@ -91,6 +91,7 @@ module editor {
 
         public updateTilesEditingMode(tilesEditingMode: TilesEditingMode): void {
             this.toolbar.tilesEditingMode = tilesEditingMode;
+            this.palette.tilesEditingMode = tilesEditingMode;
             this.tiles.tilesEditingMode = tilesEditingMode;
         }
     }

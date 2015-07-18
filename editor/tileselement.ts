@@ -57,6 +57,9 @@ module editor {
                     this.isDrawing_ = true;
                     Dispatcher.onDrawingTiles();
                 }
+                if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+                    return;
+                }
                 if (e.buttons === 2) {
                     let x = e.offsetX - this.offsetX_;
                     let y = e.offsetY - this.offsetY_;
@@ -79,6 +82,9 @@ module editor {
                     }
                     Dispatcher.onDrawingTiles();
                 }
+                if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+                    return;
+                }
                 if (e.buttons === 2) {
                     if (!this.tilesSelectingState_) {
                         return;
@@ -96,6 +102,9 @@ module editor {
             });
             this.addEventListener('mouseup', (e: MouseEvent) => {
                 this.isDrawing_ = false;
+                if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+                    return;
+                }
                 if (e.buttons === 2) {
                     if (!this.tilesSelectingState_) {
                         return;

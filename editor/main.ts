@@ -87,6 +87,12 @@ module editor {
             Canvas.drawFrame(context, x, y, this.width, this.height);
         }
 
+        public shrink(): void {
+            this.tiles_ = [this.tiles_[0]];
+            this.xNum_ = 1;
+            this.yNum_ = 1;
+        }
+
         public get xNum(): number {
             return this.xNum_;
         }
