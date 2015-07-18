@@ -47,5 +47,9 @@ module editor {
         public static onStopGame() {
             Dispatcher.store_.stopGame();
         }
+
+        public static onTilesEditingModeChanged(tilesEditingMode: TilesEditingMode): void {
+            Dispatcher.store_.updateTilesEditingMode(tilesEditingMode);
+        }
     }
 }

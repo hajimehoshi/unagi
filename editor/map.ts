@@ -59,7 +59,7 @@ module editor {
             }
         }
 
-        public renderAt(context: CanvasRenderingContext2D, tileSetImage: HTMLImageElement, scale: number, offsetX: number, offsetY: number): void {
+        public renderAt(context: CanvasRenderingContext2D, tileSetImage: HTMLImageElement, scale: number, offsetX: number, offsetY: number, grid: boolean): void {
             const ratio = window.devicePixelRatio;
             const actualScale = scale * ratio;
             for (let j = 0; j < this.yNum; j++) {
@@ -76,6 +76,40 @@ module editor {
                     context.drawImage(tileSetImage, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight);
                 }
             }
+            if (!grid) {
+                return;
+            }
+            context.lineWidth = 2 * ratio;
+            context.strokeStyle = 'rgba(0, 0, 0, 0.26)';
+            context.save();
+
+            context.beginPath();
+            let minX = offsetX * ratio;
+            let maxX = this.xNum * MainElement.tileWidth * actualScale + offsetX * ratio;
+            let minY = offsetY * ratio;
+            let maxY = this.yNum * MainElement.tileHeight * actualScale + offsetY * ratio;
+            context.moveTo(minX, minY);
+            context.lineTo(maxX, minY);
+            context.lineTo(maxX, maxY);
+            context.lineTo(minX, maxY);
+            context.lineTo(minX, minY);
+            context.closePath();
+            context.clip();
+
+            context.beginPath();
+            for (let j = 0; j < this.yNum + 1; j++) {
+                let y = j * MainElement.tileHeight * actualScale + offsetY * ratio;
+                context.moveTo(minX, y);
+                context.lineTo(maxX, y);
+            }
+            for (let i = 0; i < this.xNum + 1; i++) {
+                let x = i * MainElement.tileWidth * actualScale + offsetX * ratio;
+                context.moveTo(x, minY);
+                context.lineTo(x, maxY);
+            }
+            context.closePath();
+            context.stroke();
+            context.restore();
         }
     }
 }

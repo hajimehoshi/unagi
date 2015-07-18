@@ -13,6 +13,11 @@
 // limitations under the License.
 
 module editor {
+    export enum TilesEditingMode {
+        Map,
+        Event,
+    }
+
     export class Store {
         private mainElement_: MainElement;
         private game_: data.Game;
@@ -23,6 +28,7 @@ module editor {
         private tilesOffsetX_: number;
         private tilesOffsetY_: number;
         private isPlayingGame_: boolean;
+        private tilesEditingMode_: TilesEditingMode;
 
         public constructor(mapEditorMain: MainElement) {
             this.mainElement_ = mapEditorMain;
@@ -30,6 +36,7 @@ module editor {
             this.tilesOffsetY_ = 16;
             this.mainElement_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
             this.isPlayingGame_ = false;
+            this.updateTilesEditingMode(TilesEditingMode.Map);
         }
 
         public updateGame(game: data.Game): void {
@@ -85,6 +92,11 @@ module editor {
         public stopGame(): void {
             this.isPlayingGame_ = false;
             this.mainElement_.stopGame();
+        }
+
+        public updateTilesEditingMode(tilesEditingMode: TilesEditingMode): void {
+            this.tilesEditingMode_ = tilesEditingMode;
+            this.mainElement_.updateTilesEditingMode(tilesEditingMode);
         }
     }
 }

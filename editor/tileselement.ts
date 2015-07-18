@@ -18,6 +18,7 @@ module editor {
         private selectedTiles_: SelectedTiles;
         private tilesSelectingState_: TilesSelectingState;
         private tileSetImage_: HTMLImageElement;
+        private tilesEditingMode_: TilesEditingMode;
         private scale_: number;
         private cursorPositionX_: number;
         private cursorPositionY_: number;
@@ -65,7 +66,6 @@ module editor {
                     Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
                 }
             });
-
             this.addEventListener('mousemove', (e: MouseEvent) => {
                 if (e.buttons !== 2) {
                     let x = e.offsetX - this.offsetX_;
@@ -118,6 +118,7 @@ module editor {
                 // TODO: Configure the wheel direction
                 Dispatcher.onTilesCursorPositionChanged(void(0), void(0));
                 let canvas = this.canvas;
+                // TODO: delta should be positive?
                 Dispatcher.onTilesWheel(-e.deltaX, -e.deltaY, this.scale_, canvas.width, canvas.height);
             });
         }
@@ -141,6 +142,11 @@ module editor {
             this.render();
         }
 
+        public set tilesEditingMode(tilesEditingMode: TilesEditingMode) {
+            this.tilesEditingMode_ = tilesEditingMode;
+            this.render();
+        }
+
         public updateCursorPosition(x: number, y: number): void {
             this.cursorPositionX_ = x;
             this.cursorPositionY_ = y;
@@ -158,9 +164,11 @@ module editor {
             let context = canvas.getContext('2d');
             (<any>context).imageSmoothingEnabled = false;
             context.clearRect(0, 0, canvas.width, canvas.height);
+
             if (this.tileSetImage_ && this.tileSetImage_.dataset['loaded'] === 'true' && this.map_) {
-                this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_);
+                this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_, this.tilesEditingMode_ == TilesEditingMode.Event);
             }
+
             if (this.selectedTiles_ && this.cursorPositionX_ !== void(0) && this.cursorPositionY_ !== void(0)) {
                 const ratio = window.devicePixelRatio;
                 if (this.cursorPositionX_ < 0 || this.cursorPositionY_ < 0) {

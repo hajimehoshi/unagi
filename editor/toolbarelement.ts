@@ -24,9 +24,41 @@ module editor {
             img.addEventListener('click', () => {
                 Dispatcher.onPlayGame();
             });
+
+            let cond = `input[type=radio][name=tilesEditingMode]`;
+            let radioButtons = shadowRoot.querySelectorAll(cond);
+            [].forEach.call(radioButtons, (radioButton: HTMLInputElement) => {
+                radioButton.addEventListener('change', () => {
+                    let mode: TilesEditingMode;
+                    switch (radioButton.value) {
+                    case 'map':
+                        mode = TilesEditingMode.Map;
+                        break;
+                    case 'event':
+                        mode = TilesEditingMode.Event;
+                        break;
+                    }
+                    Dispatcher.onTilesEditingModeChanged(mode);
+                })
+            });
+        }
+
+        public set tilesEditingMode(tilesEditingMode: TilesEditingMode) {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let value = '';
+            switch (tilesEditingMode) {
+            case TilesEditingMode.Map:
+                value = 'map';
+                break;
+            case TilesEditingMode.Event:
+                value = 'event';
+                break;
+            }
+            let cond = `input[type=radio][name=tilesEditingMode][value=${ value }]`;
+            let radioButton = <HTMLInputElement>shadowRoot.querySelector(cond);
+            radioButton.checked = true;
         }
     }
-
 }
 
 (() => {

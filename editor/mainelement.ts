@@ -36,7 +36,6 @@ module editor {
                 let tiles = this.tiles;
                 tiles.tileSetImage = tileSetImage;
 
-                // TODO: ?
                 tileSetImage.addEventListener('load', () => {
                     this.render();
                 });
@@ -46,6 +45,11 @@ module editor {
         public render(): void {
             this.palette.render();
             this.tiles.render();
+        }
+
+        private get toolbar(): ToolbarElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return <ToolbarElement>shadowRoot.querySelector('unagi-toolbar');
         }
 
         private get palette(): PaletteElement {
@@ -83,6 +87,11 @@ module editor {
         public stopGame(): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             (<PlayerElement>shadowRoot.querySelector('unagi-player')).stopGame();
+        }
+
+        public updateTilesEditingMode(tilesEditingMode: TilesEditingMode): void {
+            this.toolbar.tilesEditingMode = tilesEditingMode;
+            this.tiles.tilesEditingMode = tilesEditingMode;
         }
     }
 }

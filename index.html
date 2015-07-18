@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <template id="unagi-main-template">
   <style>
+    :host {
+      font-size: 0;
+    }
     unagi-toolbar {
       height: 32px;
       margin-bottom: 1px;
@@ -29,6 +32,9 @@
     unagi-player {
       display: none;
       height: 100%;
+      left: 0;
+      margin: 0;
+      padding: 0;
       position: absolute;
       top: 0;
       width: 100%;
@@ -50,7 +56,7 @@
     }
     menu menuitem {
       display: inline-block;
-      font-size: 20px;
+      font-size: 16px;
       line-height: 0;
       opacity: 0.54;
     }
@@ -64,18 +70,24 @@
       cursor: pointer;
       padding: 6px;
     }
-    img:hover {
+    menuitem span {
+      position: relative;
+      top: -10px;
+      padding: 8px 6px 6px 6px;
+      vertical-align: bottom;
+    }
+    img:hover, span:hover {
       background-color: #fff176;
     }
-    img:active {
-      background-color: #fdc02d;
+    img:active, span:active {
+      background-color: #fdd835;
     }
     input[type=radio] {
       position: absolute;
       visibility: hidden;
     }
-    input[type=radio]:checked + img {
-      background-color: #fdc02d;
+    input[type=radio]:checked + * {
+      background-color: #fbc02d;
     }
   </style>
   <menu>
@@ -83,6 +95,9 @@
     <menuitem></menuitem>
     <menuitem><label><input type="radio" name="drawing" value="pen"><img src="./images/icons/iconmonstr-pencil-10-icon.svg" width="20" height="20"></label></menuitem>
     <menuitem><label><input type="radio" name="drawing" value="fill"><img src="./images/icons/iconmonstr-paintbrush-3-icon.svg" width="20" height="20"></label></menuitem>
+    <menuitem></menuitem>
+    <menuitem><label><input type="radio" name="tilesEditingMode" value="map"><span>Map</span></label></menuitem>
+    <menuitem><label><input type="radio" name="tilesEditingMode" value="event"><span>Event</span></label></menuitem>
     <menuitem></menuitem>
     <menuitem id="script"><img src="./images/icons/iconmonstr-script-4-icon.svg" width="20" height="20"></menuitem>
     <menuitem></menuitem>
@@ -116,7 +131,10 @@
     iframe {
       background-color: transparent;
       border-style: none;
+      border-width: 0;
       height: 100%;
+      margin: 0;
+      padding: 0;
       width: 100%;
     }
   </style>
