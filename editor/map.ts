@@ -20,6 +20,14 @@ module editor {
             this.data_ = data;
         }
 
+        public get id(): string {
+            return this.data_.id;
+        }
+
+        public get name(): string {
+            return this.data_.name;
+        }
+
         public get xNum(): number {
             return this.data_.xNum;
         }

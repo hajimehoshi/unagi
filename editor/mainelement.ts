@@ -57,6 +57,11 @@ module editor {
             return <PaletteElement>shadowRoot.querySelector('unagi-palette');
         }
 
+        private get mapList(): MapListElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return <MapListElement>shadowRoot.querySelector('unagi-maplist');
+        }
+
         private get tiles(): TilesElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             return <TilesElement>shadowRoot.querySelector('unagi-tiles');
@@ -64,6 +69,10 @@ module editor {
 
         public updateMap(map: Map) {
             this.tiles.map = map;
+        }
+
+        public updateMapList(currentMapId: string, maps: data.Map[]) {
+            this.mapList.update(currentMapId, maps);
         }
 
         public updateSelectedTiles(s: SelectedTiles) {

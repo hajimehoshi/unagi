@@ -87,6 +87,7 @@ module editor {
             Canvas.drawFrame(context, x, y, this.width, this.height);
         }
 
+        // TODO: This class should be immutable?
         public shrink(): void {
             this.tiles_ = [this.tiles_[0]];
             this.xNum_ = 1;
@@ -203,8 +204,8 @@ module editor {
         editor.Dispatcher.store = store;
 
         let game = new data.Game();
-        game.appendMap(data.UUID.generate(), new data.Map(100, 100))
+        game.appendMap(new data.Map(data.UUID.generate(), 100, 100))
         game.script = editor.defaultScript;
-        editor.Dispatcher.onGameChanged(game);
+        editor.Dispatcher.onInitialized(game);
     });
 })();

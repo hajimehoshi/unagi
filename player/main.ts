@@ -106,9 +106,13 @@ class Env {
 let $game: data.Game;
 
 (() => {
-    document.body.addEventListener('click', (e) => {
-        if (e.target !== document.body) {
-            return;
+    let canvas = document.body.querySelector('canvas');
+    document.body.addEventListener('click', (e: MouseEvent) => {
+        let rect = canvas.getBoundingClientRect();
+        if (rect.left <= e.pageX && e.pageX < rect.right) {
+            if (rect.top <= e.pageY && e.pageY < rect.bottom) {
+                return;
+            }
         }
         window.parent.postMessage('quit', '*');
     });

@@ -20,7 +20,7 @@ module editor {
             Dispatcher.store_ = store;
         }
 
-        public static onGameChanged(game: data.Game): void {
+        public static onInitialized(game: data.Game): void {
             Dispatcher.store_.updateGame(game);
         }
 

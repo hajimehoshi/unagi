@@ -21,7 +21,7 @@ module editor {
     export class Store {
         private mainElement_: MainElement;
         private game_: data.Game;
-        private currentMap_: Map;
+        private currentMapId_: string;
         private selectedTiles_: SelectedTiles;
         private tilesCursorX_: number;
         private tilesCursorY_: number;
@@ -39,12 +39,16 @@ module editor {
             this.updateTilesEditingMode(TilesEditingMode.Map);
         }
 
+        private get currentMap(): Map {
+            return new Map(this.game_.mapAt(this.currentMapId_));
+        }
+
         public updateGame(game: data.Game): void {
             this.game_ = game;
             // TODO: What if no map exists?
-            let id = this.game_.mapIdAt(0);
-            this.currentMap_ = new Map(this.game_.mapAt(id));
-            this.mainElement_.updateMap(this.currentMap_);
+            this.currentMapId_ = this.game_.mapIdAt(0);
+            this.mainElement_.updateMap(this.currentMap);
+            this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
         }
 
         public updateSelectedTiles(s: SelectedTiles): void {
@@ -59,7 +63,7 @@ module editor {
         }
 
         public drawTiles(): void {
-            if (!this.currentMap_) {
+            if (!this.currentMapId_) {
                 return;
             }
             if (!this.selectedTiles_) {
@@ -68,7 +72,7 @@ module editor {
             if (this.tilesEditingMode_ != TilesEditingMode.Map) {
                 return;
             }
-            this.currentMap_.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
+            this.currentMap.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
             this.mainElement_.render();
         }
 
@@ -79,8 +83,8 @@ module editor {
 
             this.tilesOffsetX_ += x;
             this.tilesOffsetY_ += y;
-            let minX = -(this.currentMap_.xNum * MainElement.tileWidth * scale - canvasWidth / ratio) - marginX;
-            let minY = -(this.currentMap_.yNum * MainElement.tileHeight * scale - canvasHeight / ratio) - marginY;
+            let minX = -(this.currentMap.xNum * MainElement.tileWidth * scale - canvasWidth / ratio) - marginX;
+            let minY = -(this.currentMap.yNum * MainElement.tileHeight * scale - canvasHeight / ratio) - marginY;
             let maxX = marginX;
             let maxY = marginY;
             this.tilesOffsetX_ = Math.min(Math.max(this.tilesOffsetX_, minX), maxX);

@@ -15,8 +15,7 @@
 module data {
     export declare type GameObject = {
         title: string,
-        maps: {[key: string]: MapObject},
-        mapIds: string[];
+        maps: MapObject[],
         script: string,
     };
 
@@ -32,19 +31,14 @@ module data {
         }
 
         public toObject(): GameObject {
-            let maps: {[key: string]: MapObject} = {};
-            let mapIds: string[] = [];
-            for (let id in this.maps_) {
-                let map = this.maps_[id];
-                maps[id] = map.toObject();
-            }
+            let maps: MapObject[] = [];
             for (let id of this.mapIds_) {
-                mapIds.push(id);
+                let map = this.maps_[id];
+                maps.push(map.toObject());
             }
             let obj: GameObject = {
                 title: this.title_,
                 maps: maps,
-                mapIds: mapIds,
                 script: this.script_,
             };
             return obj;
@@ -53,21 +47,20 @@ module data {
         public fromObject(obj: GameObject): void {
             this.title_ = obj.title;
             this.maps_ = {};
-            for (let id in obj.maps) {
-                let map = new Map(0, 0);
-                map.fromObject(obj.maps[id]);
-                this.maps_[id] = map;
-            }
             this.mapIds_ = [];
-            for (let id of obj.mapIds) {
+            for (let mapObj of obj.maps) {
+                let id = mapObj.id;
+                let map = new Map(id, 0, 0);
+                map.fromObject(mapObj);
+                this.maps_[id] = map;
                 this.mapIds_.push(id);
             }
             this.script_ = obj.script;
         }
 
-        public appendMap(id: string, map: Map): void {
-            this.maps_[id] = map;
-            this.mapIds_.push(id);
+        public appendMap(map: Map): void {
+            this.maps_[map.id] = map;
+            this.mapIds_.push(map.id);
         }
 
         public mapIdAt(i: number): string {
@@ -76,6 +69,14 @@ module data {
 
         public mapAt(id: string): Map {
             return this.maps_[id];
+        }
+
+        public get maps(): Map[] {
+            let maps: Map[] = [];
+            for (let id of this.mapIds_) {
+                maps.push(this.maps_[id]);
+            }
+            return maps;
         }
 
         public get script(): string {

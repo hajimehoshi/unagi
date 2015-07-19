@@ -65,10 +65,10 @@
       padding: 0;
     }
     menu menuitem {
+      color: rgba(0, 0, 0, 0.54);
       display: inline-block;
       font-size: 16px;
       line-height: 0;
-      opacity: 0.54;
     }
     menuitem:first-child {
       margin-left: 256px;
@@ -77,12 +77,13 @@
       width: 16px;
     }
     menuitem img {
+      opacity: 0.54;
       padding: 6px;
     }
     menuitem span {
+      padding: 8px 6px 6px 6px;
       position: relative;
       top: -10px;
-      padding: 8px 6px 6px 6px;
       vertical-align: bottom;
     }
     input[type=radio] {
@@ -92,10 +93,10 @@
     input[type=radio] + *, img {
       cursor: pointer;
     }
-    input[type=radio] + *:hover, img:hover {
+    input[type=radio] + *:hover, menuitem:hover {
       background-color: #fff176;
     }
-    input[type=radio] + *:active, img:active {
+    input[type=radio] + *:active, menuitem:active {
       background-color: #fdd835;
     }
     input[type=radio]:checked + * {
@@ -106,9 +107,9 @@
   <menu>
     <menuitem><img src="./images/icons/iconmonstr-undo-icon.svg" width="20" height="20"></menuitem>
     <menuitem></menuitem>
-    <menuitem><label><input type="radio" name="drawing" value="pen"><img src="./images/icons/iconmonstr-pencil-10-icon.svg" width="20" height="20"></label></menuitem>
+    <!--menuitem><label><input type="radio" name="drawing" value="pen"><img src="./images/icons/iconmonstr-pencil-10-icon.svg" width="20" height="20"></label></menuitem>
     <menuitem><label><input type="radio" name="drawing" value="fill"><img src="./images/icons/iconmonstr-paintbrush-3-icon.svg" width="20" height="20"></label></menuitem>
-    <menuitem></menuitem>
+    <menuitem></menuitem-->
     <menuitem><label><input type="radio" name="tilesEditingMode" value="map"><span>Map</span></label></menuitem>
     <menuitem><label><input type="radio" name="tilesEditingMode" value="event"><span>Event</span></label></menuitem>
     <menuitem></menuitem>
@@ -143,6 +144,7 @@
     }
     li {
       display: block;
+      overflow: none;
       margin: 0;
       padding: 0;
     }
@@ -170,9 +172,6 @@
     }
   </style>
   <ul>
-    <li><label><input type="radio" name="selectedMap" value="1"><span>Map1</span></label></li>
-    <li><label><input type="radio" name="selectedMap" value="1"><span>Map2</span></label></li>
-    <li><label><input type="radio" name="selectedMap" value="1"><span>Map3</span></label></li>
   </ul>
 </template>
 <template id="unagi-tiles-template">
