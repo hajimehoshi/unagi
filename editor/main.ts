@@ -203,7 +203,7 @@ module editor {
         editor.Dispatcher.store = store;
 
         let game = new data.Game();
-        game.appendMap(new data.Map(100, 100))
+        game.appendMap(data.UUID.generate(), new data.Map(100, 100))
         game.script = editor.defaultScript;
         editor.Dispatcher.onGameChanged(game);
     });

@@ -15,7 +15,8 @@ class MapScene {
     }
 
     draw(context) {
-        let map = $game.mapAt(0);
+        let mapId = $game.mapIdAt(0);
+        let map = $game.mapAt(mapId);
         for (let j = 0; j < 15; j++) {
             for (let i = 0; i < 20; i++) {
                 let tile = map.tileAt(i, j);

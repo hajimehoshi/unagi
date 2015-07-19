@@ -42,7 +42,8 @@ module editor {
         public updateGame(game: data.Game): void {
             this.game_ = game;
             // TODO: What if no map exists?
-            this.currentMap_ = new Map(this.game_.mapAt(0));
+            let id = this.game_.mapIdAt(0);
+            this.currentMap_ = new Map(this.game_.mapAt(id));
             this.mainElement_.updateMap(this.currentMap_);
         }
 
