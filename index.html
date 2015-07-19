@@ -11,9 +11,18 @@
     }
     unagi-palette {
       display: inline-block;
-      height: calc(100% - 33px);
+      height: calc(100% - 33px - 256px - 1px);
       margin-top: 1px;
       overflow: auto;
+      padding: 0;
+      position: absolute;
+      width: 256px;
+      z-index: 0;
+    }
+    unagi-maplist {
+      bottom: 0;
+      display: inline-block;
+      height: 256px;
       padding: 0;
       position: absolute;
       width: 256px;
@@ -43,6 +52,7 @@
   </style>
   <unagi-toolbar></unagi-toolbar>
   <unagi-palette></unagi-palette>
+  <unagi-maplist></unagi-maplist>
   <unagi-tiles></unagi-tiles>
   <unagi-player></unagi-player>
 </template>
@@ -113,6 +123,13 @@
     }
   </style>
   <canvas></canvas>
+</template>
+<template id="unagi-maplist-template">
+  <style>
+    :host {
+      background-color: #f5f5f5;
+    }
+  </style>
 </template>
 <template id="unagi-tiles-template">
   <style>
