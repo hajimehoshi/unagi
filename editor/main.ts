@@ -205,6 +205,9 @@ module editor {
 
         let game = new data.Game();
         game.appendMap(new data.Map(data.UUID.generate(), 100, 100))
+        game.appendMap(new data.Map(data.UUID.generate(), 20, 15))
+        game.appendMap(new data.Map(data.UUID.generate(), 20, 15))
+
         game.script = editor.defaultScript;
         editor.Dispatcher.onInitialized(game);
     });

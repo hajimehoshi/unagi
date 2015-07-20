@@ -38,6 +38,13 @@ module editor {
                 if (map.id === currentMapId) {
                     input.checked = true;
                 }
+                input.addEventListener('change', (e) => {
+                    let input = <HTMLInputElement>e.target;
+                    if (!input.checked) {
+                        return;
+                    }
+                    Dispatcher.onCurrentMapChanged(input.value);
+                });
                 label.appendChild(input);
 
                 let span = document.createElement('span');

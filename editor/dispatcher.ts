@@ -40,16 +40,20 @@ module editor {
             Dispatcher.store_.moveTilesOffset(dx, dy, scale, canvasWidth, canvasHeight);
         }
 
-        public static onPlayGame() {
+        public static onPlayGame(): void {
             Dispatcher.store_.playGame();
         }
 
-        public static onStopGame() {
+        public static onStopGame(): void {
             Dispatcher.store_.stopGame();
         }
 
         public static onTilesEditingModeChanged(tilesEditingMode: TilesEditingMode): void {
             Dispatcher.store_.updateTilesEditingMode(tilesEditingMode);
+        }
+
+        public static onCurrentMapChanged(id: string): void {
+            Dispatcher.store_.updateCurrentMap(id);
         }
     }
 }

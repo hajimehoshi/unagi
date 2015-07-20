@@ -51,6 +51,12 @@ module editor {
             this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
         }
 
+        public updateCurrentMap(id: string): void {
+            this.currentMapId_ = id;
+            this.mainElement_.updateMap(this.currentMap);
+            this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
+        }
+
         public updateSelectedTiles(s: SelectedTiles): void {
             this.selectedTiles_ = s;
             this.mainElement_.updateSelectedTiles(s);
