@@ -25,18 +25,15 @@ module editor {
         private selectedTiles_: SelectedTiles;
         private tilesCursorX_: number;
         private tilesCursorY_: number;
-        private tilesOffsetX_: number;
-        private tilesOffsetY_: number;
+        private tilesOffset_: {[id: string]: {x: number, y: number}};
         private isPlayingGame_: boolean;
         private tilesEditingMode_: TilesEditingMode;
 
         public constructor(mapEditorMain: MainElement) {
             this.mainElement_ = mapEditorMain;
-            this.tilesOffsetX_ = 16;
-            this.tilesOffsetY_ = 16;
-            this.mainElement_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
             this.isPlayingGame_ = false;
             this.updateTilesEditingMode(TilesEditingMode.Map);
+            this.tilesOffset_ = {};
         }
 
         private get currentMap(): Map {
@@ -49,12 +46,21 @@ module editor {
             this.currentMapId_ = this.game_.mapIdAt(0);
             this.mainElement_.updateMap(this.currentMap);
             this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
+
+            for (let map of this.game_.maps) {
+                this.tilesOffset_[map.id] = {x: 16, y: 16};
+            }
+            let offset = this.tilesOffset_[this.currentMapId_];
+            this.mainElement_.updateTilesOffset(offset.x, offset.y);
         }
 
         public updateCurrentMap(id: string): void {
             this.currentMapId_ = id;
             this.mainElement_.updateMap(this.currentMap);
             this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
+
+            let offset = this.tilesOffset_[this.currentMapId_];
+            this.mainElement_.updateTilesOffset(offset.x, offset.y);
         }
 
         public updateSelectedTiles(s: SelectedTiles): void {
@@ -87,15 +93,16 @@ module editor {
             const marginX = 128;
             const marginY = 128;
 
-            this.tilesOffsetX_ += x;
-            this.tilesOffsetY_ += y;
+            let offset = this.tilesOffset_[this.currentMapId_];
+            offset.x += x;
+            offset.y += y;
             let minX = -(this.currentMap.xNum * MainElement.tileWidth * scale - canvasWidth / ratio) - marginX;
             let minY = -(this.currentMap.yNum * MainElement.tileHeight * scale - canvasHeight / ratio) - marginY;
             let maxX = marginX;
             let maxY = marginY;
-            this.tilesOffsetX_ = Math.min(Math.max(this.tilesOffsetX_, minX), maxX);
-            this.tilesOffsetY_ = Math.min(Math.max(this.tilesOffsetY_, minY), maxY);
-            this.mainElement_.updateTilesOffset(this.tilesOffsetX_, this.tilesOffsetY_);
+            offset.x = Math.min(Math.max(offset.x, minX), maxX);
+            offset.y = Math.min(Math.max(offset.y, minY), maxY);
+            this.mainElement_.updateTilesOffset(offset.x, offset.y);
         }
 
         public playGame(): void {
