@@ -77,8 +77,8 @@ module editor {
                     let srcY = ((tile / PaletteElement.tileXNum)|0) * MainElement.tileHeight;
                     let srcWidth = MainElement.tileWidth;
                     let srcHeight = MainElement.tileHeight;
-                    let dstX = i * MainElement.tileWidth * actualScale + offsetX * ratio;
-                    let dstY = j * MainElement.tileHeight * actualScale + offsetY * ratio;
+                    let dstX = i * MainElement.tileWidth * actualScale - offsetX * ratio;
+                    let dstY = j * MainElement.tileHeight * actualScale - offsetY * ratio;
                     let dstWidth = MainElement.tileWidth * actualScale;
                     let dstHeight = MainElement.tileHeight * actualScale;
                     context.drawImage(tileSetImage, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight);
@@ -93,10 +93,10 @@ module editor {
             context.strokeStyle = 'rgba(0, 0, 0, 0.26)';
 
             context.beginPath();
-            let minX = offsetX * ratio;
-            let maxX = this.xNum * MainElement.tileWidth * actualScale + offsetX * ratio;
-            let minY = offsetY * ratio;
-            let maxY = this.yNum * MainElement.tileHeight * actualScale + offsetY * ratio;
+            let minX = -offsetX * ratio;
+            let maxX = this.xNum * MainElement.tileWidth * actualScale - offsetX * ratio;
+            let minY = -offsetY * ratio;
+            let maxY = this.yNum * MainElement.tileHeight * actualScale - offsetY * ratio;
             context.moveTo(minX, minY);
             context.lineTo(maxX, minY);
             context.lineTo(maxX, maxY);
@@ -107,12 +107,12 @@ module editor {
 
             context.beginPath();
             for (let j = 0; j < this.yNum + 1; j++) {
-                let y = j * MainElement.tileHeight * actualScale + offsetY * ratio;
+                let y = j * MainElement.tileHeight * actualScale - offsetY * ratio;
                 context.moveTo(minX, y);
                 context.lineTo(maxX, y);
             }
             for (let i = 0; i < this.xNum + 1; i++) {
-                let x = i * MainElement.tileWidth * actualScale + offsetX * ratio;
+                let x = i * MainElement.tileWidth * actualScale - offsetX * ratio;
                 context.moveTo(x, minY);
                 context.lineTo(x, maxY);
             }

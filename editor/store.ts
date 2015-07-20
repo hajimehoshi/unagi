@@ -48,7 +48,7 @@ module editor {
             this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
 
             for (let map of this.game_.maps) {
-                this.tilesOffset_[map.id] = {x: 16, y: 16};
+                this.tilesOffset_[map.id] = {x: -16, y: -16};
             }
             let offset = this.tilesOffset_[this.currentMapId_];
             this.mainElement_.updateTilesOffset(offset.x, offset.y);
@@ -96,10 +96,10 @@ module editor {
             let offset = this.tilesOffset_[this.currentMapId_];
             offset.x += x;
             offset.y += y;
-            let minX = -(this.currentMap.xNum * MainElement.tileWidth * scale - canvasWidth / ratio) - marginX;
-            let minY = -(this.currentMap.yNum * MainElement.tileHeight * scale - canvasHeight / ratio) - marginY;
-            let maxX = marginX;
-            let maxY = marginY;
+            let minX = -marginX;
+            let minY = -marginY;
+            let maxX = (this.currentMap.xNum * MainElement.tileWidth * scale - canvasWidth / ratio) + marginX;
+            let maxY = (this.currentMap.yNum * MainElement.tileHeight * scale - canvasHeight / ratio) + marginY;
             offset.x = Math.min(Math.max(offset.x, minX), maxX);
             offset.y = Math.min(Math.max(offset.y, minY), maxY);
             this.mainElement_.updateTilesOffset(offset.x, offset.y);
