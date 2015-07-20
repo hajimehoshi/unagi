@@ -27,6 +27,8 @@ module util {
     });
 
     export function drawBitmapTextAt(context: CanvasRenderingContext2D, str: string, x: number, y: number): void {
+        context.save();
+
         const fullWidth = 12;
         const halfWidth = 6;
         const height = 16;
@@ -70,6 +72,7 @@ module util {
             context.drawImage(img, sx, sy, fullWidth, height, cx, cy, fullWidth, height);
             cx += fullWidth;
         }
+        context.restore();
     }
 }
 

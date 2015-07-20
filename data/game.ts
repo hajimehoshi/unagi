@@ -13,9 +13,16 @@
 // limitations under the License.
 
 module data {
+    export declare type Position = {
+        mapId: string,
+        x: number,
+        y: number,
+    }
+
     export declare type GameObject = {
         title: string,
         maps: MapObject[],
+        playerInitialPosition: Position,
         script: string,
     };
 
@@ -23,6 +30,7 @@ module data {
         private title_: string;
         private maps_: {[key: string]: Map};
         private mapIds_: string[];
+        private playerInitialPosition_: Position;
         private script_: string;
 
         constructor() {
@@ -39,6 +47,7 @@ module data {
             let obj: GameObject = {
                 title: this.title_,
                 maps: maps,
+                playerInitialPosition: this.playerInitialPosition_,
                 script: this.script_,
             };
             return obj;
@@ -55,6 +64,7 @@ module data {
                 this.maps_[id] = map;
                 this.mapIds_.push(id);
             }
+            this.playerInitialPosition_ = obj.playerInitialPosition;
             this.script_ = obj.script;
         }
 
@@ -77,6 +87,23 @@ module data {
                 maps.push(this.maps_[id]);
             }
             return maps;
+        }
+
+        public get playerInitialPosition(): Position {
+            let p = this.playerInitialPosition_;
+            return {
+                mapId: p.mapId,
+                x: p.x,
+                y: p.y,
+            }
+        }
+
+        public setPlayerInitialPosition(mapId: string, x: number, y: number) {
+            this.playerInitialPosition_ = {
+                mapId: mapId,
+                x: x,
+                y: y,
+            };
         }
 
         public get script(): string {
