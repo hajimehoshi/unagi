@@ -13,6 +13,8 @@
 // limitations under the License.
 
 module data {
+    export const gridSize = 16;
+
     export declare type Position = {
         mapId: string,
         x: number,
