@@ -41,8 +41,8 @@ module editor {
         }
 
         public tilePosition(x: number, y: number, scale: number): {x: number, y: number} {
-            let tileX = (((x / MainElement.tileWidth)|0) / scale)|0;
-            let tileY = (((y / MainElement.tileHeight)|0) / scale)|0;
+            let tileX = (((x / data.gridSize)|0) / scale)|0;
+            let tileY = (((y / data.gridSize)|0) / scale)|0;
             return {x: tileX, y: tileY};
         }
 
@@ -73,14 +73,14 @@ module editor {
             for (let j = 0; j < this.yNum; j++) {
                 for (let i = 0; i < this.xNum; i++) {
                     let tile = this.tileAt(i, j);
-                    let srcX = tile % PaletteElement.tileXNum * MainElement.tileWidth;
-                    let srcY = ((tile / PaletteElement.tileXNum)|0) * MainElement.tileHeight;
-                    let srcWidth = MainElement.tileWidth;
-                    let srcHeight = MainElement.tileHeight;
-                    let dstX = i * MainElement.tileWidth * actualScale - offsetX * ratio;
-                    let dstY = j * MainElement.tileHeight * actualScale - offsetY * ratio;
-                    let dstWidth = MainElement.tileWidth * actualScale;
-                    let dstHeight = MainElement.tileHeight * actualScale;
+                    let srcX = tile % PaletteElement.tileXNum * data.gridSize;
+                    let srcY = ((tile / PaletteElement.tileXNum)|0) * data.gridSize;
+                    let srcWidth = data.gridSize;
+                    let srcHeight = data.gridSize;
+                    let dstX = i * data.gridSize * actualScale - offsetX * ratio;
+                    let dstY = j * data.gridSize * actualScale - offsetY * ratio;
+                    let dstWidth = data.gridSize * actualScale;
+                    let dstHeight = data.gridSize * actualScale;
                     context.drawImage(tileSetImage, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight);
                 }
             }
@@ -94,9 +94,9 @@ module editor {
 
             context.beginPath();
             let minX = -offsetX * ratio;
-            let maxX = this.xNum * MainElement.tileWidth * actualScale - offsetX * ratio;
+            let maxX = this.xNum * data.gridSize * actualScale - offsetX * ratio;
             let minY = -offsetY * ratio;
-            let maxY = this.yNum * MainElement.tileHeight * actualScale - offsetY * ratio;
+            let maxY = this.yNum * data.gridSize * actualScale - offsetY * ratio;
             context.moveTo(minX, minY);
             context.lineTo(maxX, minY);
             context.lineTo(maxX, maxY);
@@ -107,12 +107,12 @@ module editor {
 
             context.beginPath();
             for (let j = 0; j < this.yNum + 1; j++) {
-                let y = j * MainElement.tileHeight * actualScale - offsetY * ratio;
+                let y = j * data.gridSize * actualScale - offsetY * ratio;
                 context.moveTo(minX, y);
                 context.lineTo(maxX, y);
             }
             for (let i = 0; i < this.xNum + 1; i++) {
-                let x = i * MainElement.tileWidth * actualScale - offsetX * ratio;
+                let x = i * data.gridSize * actualScale - offsetX * ratio;
                 context.moveTo(x, minY);
                 context.lineTo(x, maxY);
             }

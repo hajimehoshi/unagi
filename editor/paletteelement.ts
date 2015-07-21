@@ -29,8 +29,8 @@ module editor {
             (<HTMLElementES6><any>this).createShadowRoot().appendChild(clone);
 
             let canvas = <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
-            let width = PaletteElement.tileXNum * MainElement.tileWidth;
-            let height = PaletteElement.tileYNum * MainElement.tileHeight;
+            let width = PaletteElement.tileXNum * data.gridSize;
+            let height = PaletteElement.tileYNum * data.gridSize;
             let actualScale = PaletteElement.scale * window.devicePixelRatio;;
             canvas.width = width * actualScale;
             canvas.height = height * actualScale;
@@ -43,8 +43,8 @@ module editor {
             this.addEventListener('mousedown', (e: MouseEvent) => {
                 let x = e.offsetX + this.scrollLeft;
                 let y = e.offsetY + this.scrollTop;
-                let tx = (((x / MainElement.tileWidth)|0) / PaletteElement.scale)|0;
-                let ty = (((y / MainElement.tileHeight)|0) / PaletteElement.scale)|0;
+                let tx = (((x / data.gridSize)|0) / PaletteElement.scale)|0;
+                let ty = (((y / data.gridSize)|0) / PaletteElement.scale)|0;
                 this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
                 Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
             })
@@ -61,8 +61,8 @@ module editor {
                 }
                 let x = e.offsetX + this.scrollLeft;
                 let y = e.offsetY + this.scrollTop;
-                let tx = (((x / MainElement.tileWidth)|0) / PaletteElement.scale)|0;
-                let ty = (((y / MainElement.tileHeight)|0) / PaletteElement.scale)|0;
+                let tx = (((x / data.gridSize)|0) / PaletteElement.scale)|0;
+                let ty = (((y / data.gridSize)|0) / PaletteElement.scale)|0;
                 this.tilesSelectingState_.moveTo(tx, ty);
                 Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
             })
@@ -75,8 +75,8 @@ module editor {
                 }
                 let x = e.offsetX + this.scrollLeft;
                 let y = e.offsetY + this.scrollTop;
-                let tx = (((x / MainElement.tileWidth)|0) / PaletteElement.scale)|0;
-                let ty = (((y / MainElement.tileHeight)|0) / PaletteElement.scale)|0;
+                let tx = (((x / data.gridSize)|0) / PaletteElement.scale)|0;
+                let ty = (((y / data.gridSize)|0) / PaletteElement.scale)|0;
                 this.tilesSelectingState_.moveTo(tx, ty);
                 Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
                 this.tilesSelectingState_ = null;
@@ -84,8 +84,8 @@ module editor {
         }
 
         private positionToTile(px: number, py: number): number {
-            let x = (px / (MainElement.tileWidth * PaletteElement.scale))|0;
-            let y = (py / (MainElement.tileHeight * PaletteElement.scale))|0;
+            let x = (px / (data.gridSize * PaletteElement.scale))|0;
+            let y = (py / (data.gridSize * PaletteElement.scale))|0;
             return x + y * PaletteElement.tileXNum;
         }
 

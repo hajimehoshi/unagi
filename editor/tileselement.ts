@@ -63,8 +63,8 @@ module editor {
                 if (e.buttons === 2) {
                     let x = e.offsetX + this.offsetX_;
                     let y = e.offsetY + this.offsetY_;
-                    let tx = (((x / MainElement.tileWidth)|0) / this.scale_)|0;
-                    let ty = (((y / MainElement.tileHeight)|0) / this.scale_)|0;
+                    let tx = (((x / data.gridSize)|0) / this.scale_)|0;
+                    let ty = (((y / data.gridSize)|0) / this.scale_)|0;
                     this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
                     Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
                 }
@@ -91,8 +91,8 @@ module editor {
                     }
                     let x = e.offsetX + this.offsetX_;
                     let y = e.offsetY + this.offsetY_;
-                    let tx = (((x / MainElement.tileWidth)|0) / this.scale_)|0;
-                    let ty = (((y / MainElement.tileHeight)|0) / this.scale_)|0;
+                    let tx = (((x / data.gridSize)|0) / this.scale_)|0;
+                    let ty = (((y / data.gridSize)|0) / this.scale_)|0;
                     let px = Math.min(tx, this.tilesSelectingState_.startX);
                     let py = Math.min(ty, this.tilesSelectingState_.startY)
                     Dispatcher.onTilesCursorPositionChanged(px, py);
@@ -111,8 +111,8 @@ module editor {
                     }
                     let x = e.offsetX + this.offsetX_;
                     let y = e.offsetY + this.offsetY_;
-                    let tx = (((x / MainElement.tileWidth)|0) / this.scale_)|0;
-                    let ty = (((y / MainElement.tileHeight)|0) / this.scale_)|0;
+                    let tx = (((x / data.gridSize)|0) / this.scale_)|0;
+                    let ty = (((y / data.gridSize)|0) / this.scale_)|0;
                     this.tilesSelectingState_.moveTo(tx, ty);
                     Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
                     this.tilesSelectingState_ = null;
@@ -185,8 +185,8 @@ module editor {
                 if (this.map_.xNum <= this.cursorPositionX_ || this.map_.yNum <= this.cursorPositionY_) {
                     return;
                 }
-                let x = this.cursorPositionX_ * MainElement.tileWidth * this.scale_ * ratio - this.offsetX_ * ratio;
-                let y = this.cursorPositionY_ * MainElement.tileHeight * this.scale_ * ratio - this.offsetY_ * ratio;
+                let x = this.cursorPositionX_ * data.gridSize * this.scale_ * ratio - this.offsetX_ * ratio;
+                let y = this.cursorPositionY_ * data.gridSize * this.scale_ * ratio - this.offsetY_ * ratio;
                 this.selectedTiles_.renderFrameAt(context, x, y);
             }
         }

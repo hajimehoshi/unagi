@@ -77,8 +77,8 @@ module editor {
             const ratio = window.devicePixelRatio;
 
             let tile = this.tiles_[0];
-            let x = (tile % PaletteElement.tileXNum) * MainElement.tileWidth * PaletteElement.scale * ratio;
-            let y = ((tile / PaletteElement.tileXNum)|0) * MainElement.tileHeight * PaletteElement.scale * ratio;
+            let x = (tile % PaletteElement.tileXNum) * data.gridSize * PaletteElement.scale * ratio;
+            let y = ((tile / PaletteElement.tileXNum)|0) * data.gridSize * PaletteElement.scale * ratio;
 
             Canvas.drawFrame(context, x, y, this.width, this.height);
         }
@@ -108,12 +108,12 @@ module editor {
 
         private get width(): number {
             const ratio = window.devicePixelRatio;
-            return this.xNum_ * MainElement.tileWidth * PaletteElement.scale * ratio;
+            return this.xNum_ * data.gridSize * PaletteElement.scale * ratio;
         }
 
         private get height(): number {
             const ratio = window.devicePixelRatio;
-            return this.yNum_ * MainElement.tileHeight * PaletteElement.scale * ratio;
+            return this.yNum_ * data.gridSize * PaletteElement.scale * ratio;
         }
     }
 

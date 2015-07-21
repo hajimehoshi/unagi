@@ -14,9 +14,6 @@
 
 module editor {
     export class MainElement extends HTMLElement {
-        public static get tileWidth(): number { return 16; }
-        public static get tileHeight(): number { return 16; }
-
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-main-template');
             let clone = document.importNode(template.content, true);

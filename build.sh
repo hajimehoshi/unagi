@@ -13,5 +13,5 @@
 # limitations under the License.
 
 go run createdefaultscript.go < editor/defaultscript.js > editor/defaultscript.ts
-tsc --out editor.js --target ES5 editor/*.ts data/*.ts
-tsc --out player.js --target ES5 player/*.ts data/*.ts
+tsc --out editor.js --target ES5 data/*.ts editor/*.ts
+tsc --out player.js --target ES5 data/*.ts player/*.ts

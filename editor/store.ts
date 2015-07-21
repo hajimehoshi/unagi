@@ -100,8 +100,8 @@ module editor {
             let map = this.currentMap;
             let minX = -marginX;
             let minY = -marginY;
-            let maxX = Math.max(map.xNum * MainElement.tileWidth * scale - canvasWidth / ratio + marginX, marginX / 2);
-            let maxY = Math.max(map.yNum * MainElement.tileHeight * scale - canvasHeight / ratio + marginY, marginY / 2);
+            let maxX = Math.max(map.xNum * data.gridSize * scale - canvasWidth / ratio + marginX, marginX / 2);
+            let maxY = Math.max(map.yNum * data.gridSize * scale - canvasHeight / ratio + marginY, marginY / 2);
             offset.x = Math.min(Math.max(offset.x, minX), maxX);
             offset.y = Math.min(Math.max(offset.y, minY), maxY);
 
