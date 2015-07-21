@@ -37,7 +37,7 @@ module editor {
         }
 
         public tileAt(x: number, y: number): number {
-            return this.data_.tileAt(x, y);
+            return this.data_.tiles[x + this.data_.xNum * y];
         }
 
         public tilePosition(x: number, y: number, scale: number): {x: number, y: number} {
@@ -62,7 +62,7 @@ module editor {
                     if (this.yNum <= y + j) {
                         continue;
                     }
-                    this.data_.setTileAt(tile, x + i, y + j);
+                    this.data_.tiles[(x + i) + this.data_.xNum * (y + j)] = tile;
                 }
             }
         }

@@ -204,10 +204,10 @@ module editor {
         editor.Dispatcher.store = store;
 
         let game = new data.Game();
-        let firstMap = new data.Map(data.UUID.generate(), 100, 100);
+        let firstMap = data.createMap(100, 100);
         game.appendMap(firstMap)
-        game.appendMap(new data.Map(data.UUID.generate(), 20, 15))
-        game.appendMap(new data.Map(data.UUID.generate(), 20, 15))
+        game.appendMap(data.createMap(20, 15))
+        game.appendMap(data.createMap(20, 15))
         game.setPlayerInitialPosition(firstMap.id, 4, 4);
 
         game.scripts = editor.defaultScripts;

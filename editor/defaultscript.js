@@ -186,7 +186,7 @@ class MapScene {
         }
         for (let j = 0; j < map.yNum; j++) {
             for (let i = 0; i < map.xNum; i++) {
-                let tile = map.tileAt(i, j);
+                let tile = map.tiles[i + map.xNum * j];
                 let sx = (tile % 8) * data.gridSize;
                 let sy = ((tile / 8)|0) * data.gridSize;
                 let dx = i * data.gridSize + offsetX;

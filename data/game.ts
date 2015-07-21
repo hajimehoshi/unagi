@@ -23,7 +23,7 @@ module data {
 
     export declare type GameObject = {
         title: string,
-        maps: MapObject[],
+        maps: Map[],
         playerInitialPosition: Position,
         scripts: string[],
     };
@@ -42,10 +42,10 @@ module data {
         }
 
         public toObject(): GameObject {
-            let maps: MapObject[] = [];
+            let maps: Map[] = [];
             for (let id of this.mapIds_) {
                 let map = this.maps_[id];
-                maps.push(map.toObject());
+                maps.push(map);
             }
             let obj: GameObject = {
                 title: this.title_,
@@ -60,12 +60,9 @@ module data {
             this.title_ = obj.title;
             this.maps_ = {};
             this.mapIds_ = [];
-            for (let mapObj of obj.maps) {
-                let id = mapObj.id;
-                let map = new Map(id, 0, 0);
-                map.fromObject(mapObj);
-                this.maps_[id] = map;
-                this.mapIds_.push(id);
+            for (let map of obj.maps) {
+                this.maps_[map.id] = map;
+                this.mapIds_.push(map.id);
             }
             this.playerInitialPosition_ = obj.playerInitialPosition;
             this.scripts_ = obj.scripts;
