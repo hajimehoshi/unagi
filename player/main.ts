@@ -31,9 +31,9 @@ module util {
 
         const fullWidth = 12;
         const halfWidth = 6;
-        const height = 16;
+        const height = data.gridSize;
         let cx = x;
-        let cy = y + height;
+        let cy = y;
         for (let ch of str) {
             let code = <number>(<any>ch).codePointAt(0);
             if (ch == '\n') {
@@ -110,6 +110,7 @@ let $game: data.Game;
 
 (() => {
     let canvas = document.body.querySelector('canvas');
+    (<HTMLElement>canvas).focus();
     document.body.addEventListener('click', (e: MouseEvent) => {
         let rect = canvas.getBoundingClientRect();
         if (rect.left <= e.pageX && e.pageX < rect.right) {

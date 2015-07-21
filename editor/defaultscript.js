@@ -1,5 +1,49 @@
 'use strict';
 
+const KEY_LEFT  = 37;
+const KEY_UP    = 38;
+const KEY_RIGHT = 39;
+const KEY_DOWN  = 40;
+
+class Input {
+    constructor() {
+        this.keyPressed_ = new Map();
+        this.keyStates_ = new Map();
+    }
+
+    update() {
+        for (let key in this.keyPressed_) {
+            if (this.keyPressed_[key]) {
+                if (!this.keyStates_[key])
+                    this.keyStates_[key] = 0;
+                this.keyStates_[key]++;
+            } else {
+                this.keyStates_[key] = 0;
+            }
+        }
+    }
+
+    isPressed(key) {
+        return 0 < this.keyStates_[key];
+    }
+
+    isTrigger(key) {
+        return this.keyStates_[key] === 1;
+    }
+
+    onKeyDown(e) {
+        this.keyPressed_[e.keyCode] = true;
+    }
+
+    onKeyUp(e) {
+        this.keyPressed_[e.keyCode] = false;
+    }
+}
+
+let $input = new Input();
+window.addEventListener('keydown', function(e) { $input.onKeyDown(e); });
+window.addEventListener('keyup', function(e) { $input.onKeyUp(e) });
+
 // TODO: Tileset image should be registered in $game.
 let tileSetImage = new Image();
 tileSetImage.src = 'images/tileset.png';
@@ -18,6 +62,11 @@ class GameState {
             x:     x,
             y:     y,
         };
+    }
+
+    moveBy(dx, dy) {
+        this.playerPosition_.x += dx;
+        this.playerPosition_.y += dy;
     }
 
     get playerPosition() {
@@ -75,21 +124,66 @@ class CharacterSprite {
 class MapScene {
     constructor(gameState) {
         this.gameState_ = gameState;
-        this.playerSprite = new CharacterSprite(characterSetImage);
+        this.playerSprite_ = new CharacterSprite(characterSetImage);
+        this.movingCounter_ = 0;
+        this.movingDirectionX_ = 0;
+        this.movingDirectionY_ = 0;
+    }
+
+    get maxMovingCounter() {
+        return 15;
     }
 
     update() {
-        this.playerSprite.update();
+        this.playerSprite_.update();
+        if (this.movingCounter_) {
+            this.movingCounter_--;
+            if (this.movingCounter_ === 0) {
+                let p = this.gameState_.playerPosition;
+                this.gameState_.moveBy(this.movingDirectionX_, this.movingDirectionY_);
+                this.movingDirectionX_ = 0;
+                this.movingDirectionY_ = 0;
+            }
+            return;
+        }
+        this.movingDirectionX_ = 0;
+        this.movingDirectionY_ = 0;
+        if ($input.isPressed(KEY_LEFT)) {
+            this.movingCounter_ = this.maxMovingCounter;
+            this.movingDirectionX_ = -1;
+            this.movingDirectionY_ = 0;
+        } else if ($input.isPressed(KEY_UP)) {
+            this.movingCounter_ = this.maxMovingCounter;
+            this.movingDirectionX_ = 0;
+            this.movingDirectionY_ = -1;
+        } else if ($input.isPressed(KEY_RIGHT)) {
+            this.movingCounter_ = this.maxMovingCounter;
+            this.movingDirectionX_ = 1;
+            this.movingDirectionY_ = 0;
+        } else if ($input.isPressed(KEY_DOWN)) {
+            this.movingCounter_ = this.maxMovingCounter;
+            this.movingDirectionX_ = 0;
+            this.movingDirectionY_ = 1;
+        }
     }
 
     draw(context) {
         context.save();
         let mapId = $game.mapIdAt(0);
         let map = $game.mapAt(mapId);
-        let offsetX = this.playerSprite.x + this.playerSprite.width / 2 - data.gridSize / 2;
-        let offsetY = this.playerSprite.y + this.playerSprite.height - data.gridSize;
+        let offsetX = this.playerSprite_.x + this.playerSprite_.width / 2 - data.gridSize / 2;
+        let offsetY = this.playerSprite_.y + this.playerSprite_.height - data.gridSize;
         offsetX -= this.gameState_.playerPosition.x * data.gridSize;
         offsetY -= this.gameState_.playerPosition.y * data.gridSize;
+        let nextOffsetX = offsetX - this.movingDirectionX_ * data.gridSize;
+        let nextOffsetY = offsetY - this.movingDirectionY_ * data.gridSize;
+        let rate = 1 - this.movingCounter_ / this.maxMovingCounter;
+        if (offsetX !== nextOffsetX) {
+            offsetX = ((1 - rate) * offsetX + rate * nextOffsetX)|0;
+        }
+        if (offsetY !== nextOffsetY) {
+            offsetY = ((1 - rate) * offsetY + rate * nextOffsetY)|0;
+        }
         for (let j = 0; j < map.yNum; j++) {
             for (let i = 0; i < map.xNum; i++) {
                 let tile = map.tileAt(i, j);
@@ -100,8 +194,8 @@ class MapScene {
                 context.drawImage(tileSetImage, sx, sy, data.gridSize, data.gridSize, dx, dy, data.gridSize, data.gridSize);
             }
         }
-        util.drawBitmapTextAt(context, "ABC OPQ あいう\nIch heiße\n魑魅魍魎", 0, data.gridSize);
-        this.playerSprite.draw(context);
+        util.drawBitmapTextAt(context, map.id, 0, 0);
+        this.playerSprite_.draw(context);
         context.restore();
     }
 }
@@ -119,6 +213,7 @@ function update(context) {
         return;
     }
 
+    $input.update();
     currentScene.update();
     currentScene.draw(context);
 }
