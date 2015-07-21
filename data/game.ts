@@ -25,7 +25,7 @@ module data {
         title: string,
         maps: MapObject[],
         playerInitialPosition: Position,
-        script: string,
+        scripts: string[],
     };
 
     export class Game {
@@ -33,11 +33,12 @@ module data {
         private maps_: {[key: string]: Map};
         private mapIds_: string[];
         private playerInitialPosition_: Position;
-        private script_: string;
+        private scripts_: string[];
 
         constructor() {
             this.maps_ = {};
             this.mapIds_ = [];
+            this.scripts_ = [];
         }
 
         public toObject(): GameObject {
@@ -50,7 +51,7 @@ module data {
                 title: this.title_,
                 maps: maps,
                 playerInitialPosition: this.playerInitialPosition_,
-                script: this.script_,
+                scripts: this.scripts_,
             };
             return obj;
         }
@@ -67,7 +68,7 @@ module data {
                 this.mapIds_.push(id);
             }
             this.playerInitialPosition_ = obj.playerInitialPosition;
-            this.script_ = obj.script;
+            this.scripts_ = obj.scripts;
         }
 
         public appendMap(map: Map): void {
@@ -108,12 +109,12 @@ module data {
             };
         }
 
-        public get script(): string {
-            return this.script_;
+        public get concatenatedScript(): string {
+            return this.scripts_.join('');
         }
 
-        public set script(script: string) {
-            this.script_ = script;
+        public set scripts(scripts: string[]) {
+            this.scripts_ = scripts;
         }
     }
 }

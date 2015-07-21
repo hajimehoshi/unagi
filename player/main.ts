@@ -125,6 +125,6 @@ let $game: data.Game;
         game.fromObject(<data.GameObject>e.data);
         $game = game;
         // Call 'eval' indirectly so that 'this' variable will be a global window.
-        (0, eval)(game.script);
+        (0, eval)(game.concatenatedScript);
     });
 })();

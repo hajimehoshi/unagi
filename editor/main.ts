@@ -210,7 +210,7 @@ module editor {
         game.appendMap(new data.Map(data.UUID.generate(), 20, 15))
         game.setPlayerInitialPosition(firstMap.id, 4, 4);
 
-        game.script = editor.defaultScript;
+        game.scripts = editor.defaultScripts;
         editor.Dispatcher.onInitialized(game);
     });
 })();
