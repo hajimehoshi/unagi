@@ -78,9 +78,17 @@ class GameState {
     }
 }
 
+const DIRECTION_UP    = 0;
+const DIRECTION_RIGHT = 1;
+const DIRECTION_DOWN  = 2;
+const DIRECTION_LEFT  = 3;
+
 class CharacterSprite {
     constructor(image) {
         this.image_ = image;
+        this.x_ = 0;
+        this.y_ = 0;
+        this.direction_ = DIRECTION_DOWN;
     }
 
     // TODO: Rename
@@ -94,11 +102,19 @@ class CharacterSprite {
     }
 
     get x() {
-        return (320 - this.width) / 2;
+        return this.x_;
+    }
+
+    set x(x) {
+        this.x_ = x;
     }
 
     get y() {
-        return data.gridSize * 8 - this.height;
+        return this.y_;
+    }
+
+    set y(y) {
+        this.y_ = y;
     }
 
     get width() {
@@ -109,13 +125,17 @@ class CharacterSprite {
         return this.patternHeight / 4;
     }
 
+    turn(direction) {
+        this.direction_ = direction;
+    }
+
     update() {
     }
 
     draw(context) {
         context.save();
         let sx = 0 + this.width;
-        let sy = 0 + 2 * this.height;
+        let sy = 0 + this.direction_ * this.height;
         context.drawImage(this.image_, sx, sy, this.width, this.height, this.x, this.y, this.width, this.height);
         context.restore();
     }
@@ -152,22 +172,29 @@ class MapScene {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = -1;
             this.movingDirectionY_ = 0;
+            this.playerSprite_.turn(DIRECTION_LEFT);
         } else if ($input.isPressed(KEY_UP)) {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = 0;
             this.movingDirectionY_ = -1;
+            this.playerSprite_.turn(DIRECTION_UP);
         } else if ($input.isPressed(KEY_RIGHT)) {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = 1;
             this.movingDirectionY_ = 0;
+            this.playerSprite_.turn(DIRECTION_RIGHT);
         } else if ($input.isPressed(KEY_DOWN)) {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = 0;
             this.movingDirectionY_ = 1;
+            this.playerSprite_.turn(DIRECTION_DOWN);
         }
     }
 
     draw(context) {
+        this.playerSprite_.x = (320 - this.playerSprite_.width) / 2;
+        this.playerSprite_.y = data.gridSize * 8 - this.playerSprite_.height;
+
         context.save();
         let mapId = $game.mapIdAt(0);
         let map = $game.mapAt(mapId);
