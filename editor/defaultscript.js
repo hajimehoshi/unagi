@@ -78,27 +78,24 @@ class GameState {
     }
 }
 
-const DIRECTION_UP    = 0;
-const DIRECTION_RIGHT = 1;
-const DIRECTION_DOWN  = 2;
-const DIRECTION_LEFT  = 3;
+const CHARACTER_DIRECTION_UP    = 0;
+const CHARACTER_DIRECTION_RIGHT = 1;
+const CHARACTER_DIRECTION_DOWN  = 2;
+const CHARACTER_DIRECTION_LEFT  = 3;
+
+const CHARACTER_POSE_LEFT   = 0;
+const CHARACTER_POSE_MIDDLE = 1;
+const CHARACTER_POSE_RIGHT  = 2;
 
 class CharacterSprite {
     constructor(image) {
         this.image_ = image;
         this.x_ = 0;
         this.y_ = 0;
-        this.direction_ = DIRECTION_DOWN;
-    }
-
-    // TODO: Rename
-    get patternWidth() {
-        return this.image_.width / 4;
-    }
-
-    // TODO: Rename
-    get patternHeight() {
-        return this.image_.height / 2;
+        this.direction_ = CHARACTER_DIRECTION_DOWN;
+        this.pose_ = CHARACTER_POSE_MIDDLE;
+        this.poseCounter_ = 0;
+        this.nextPose_ = CHARACTER_POSE_LEFT;
     }
 
     get x() {
@@ -118,23 +115,38 @@ class CharacterSprite {
     }
 
     get width() {
-        return this.patternWidth / 3;
+        return this.image_.width / 4 / 3;
     }
 
     get height() {
-        return this.patternHeight / 4;
+        return this.image_.height / 2 / 4;
     }
 
-    turn(direction) {
+    startMoving(direction, poseTime) {
         this.direction_ = direction;
+        this.pose_ = this.nextPose_;
+        this.nextPose_ = (this.nextPose_ === CHARACTER_POSE_LEFT) ? CHARACTER_POSE_RIGHT : CHARACTER_POSE_LEFT;
+        this.poseCounter_ = poseTime;
+    }
+
+    stopMoving() {
+        this.pose_ = CHARACTER_POSE_MIDDLE;
+        this.nextPose_ = CHARACTER_POSE_LEFT;
     }
 
     update() {
+        if (this.poseCounter_ === 0) {
+            return;
+        }
+        this.poseCounter_--;
+        if (this.poseCounter_ === 0) {
+            this.pose_ = CHARACTER_POSE_MIDDLE;
+        }
     }
 
     draw(context) {
         context.save();
-        let sx = 0 + this.width;
+        let sx = 0 + this.pose_ * this.width;
         let sy = 0 + this.direction_ * this.height;
         context.drawImage(this.image_, sx, sy, this.width, this.height, this.x, this.y, this.width, this.height);
         context.restore();
@@ -158,13 +170,10 @@ class MapScene {
         this.playerSprite_.update();
         if (this.movingCounter_) {
             this.movingCounter_--;
-            if (this.movingCounter_ === 0) {
-                let p = this.gameState_.playerPosition;
-                this.gameState_.moveBy(this.movingDirectionX_, this.movingDirectionY_);
-                this.movingDirectionX_ = 0;
-                this.movingDirectionY_ = 0;
+            if (this.movingCounter_) {
+                return;
             }
-            return;
+            this.gameState_.moveBy(this.movingDirectionX_, this.movingDirectionY_);
         }
         this.movingDirectionX_ = 0;
         this.movingDirectionY_ = 0;
@@ -172,23 +181,31 @@ class MapScene {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = -1;
             this.movingDirectionY_ = 0;
-            this.playerSprite_.turn(DIRECTION_LEFT);
-        } else if ($input.isPressed(KEY_UP)) {
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_LEFT, (this.maxMovingCounter / 2)|0);
+            return;
+        }
+        if ($input.isPressed(KEY_UP)) {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = 0;
             this.movingDirectionY_ = -1;
-            this.playerSprite_.turn(DIRECTION_UP);
-        } else if ($input.isPressed(KEY_RIGHT)) {
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_UP, (this.maxMovingCounter / 2)|0);
+            return;
+        }
+        if ($input.isPressed(KEY_RIGHT)) {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = 1;
             this.movingDirectionY_ = 0;
-            this.playerSprite_.turn(DIRECTION_RIGHT);
-        } else if ($input.isPressed(KEY_DOWN)) {
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_RIGHT, (this.maxMovingCounter / 2)|0);
+            return;
+        }
+        if ($input.isPressed(KEY_DOWN)) {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = 0;
             this.movingDirectionY_ = 1;
-            this.playerSprite_.turn(DIRECTION_DOWN);
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_DOWN, (this.maxMovingCounter / 2)|0);
+            return;
         }
+        this.playerSprite_.stopMoving();
     }
 
     draw(context) {
