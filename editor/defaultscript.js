@@ -41,8 +41,14 @@ class Input {
 }
 
 let $input = new Input();
-window.addEventListener('keydown', function(e) { $input.onKeyDown(e); });
-window.addEventListener('keyup', function(e) { $input.onKeyUp(e) });
+window.addEventListener('keydown', function(e) {
+    e.preventDefault();
+    $input.onKeyDown(e);
+});
+window.addEventListener('keyup', function(e) {
+    e.preventDefault();
+    $input.onKeyUp(e);
+});
 
 // TODO: Tileset image should be registered in $game.
 let tileSetImage = new Image();
@@ -234,8 +240,12 @@ class MapScene {
         if (offsetY !== nextOffsetY) {
             offsetY = ((1 - rate) * offsetY + rate * nextOffsetY)|0;
         }
-        for (let j = 0; j < map.yNum; j++) {
-            for (let i = 0; i < map.xNum; i++) {
+        let minI = Math.max(this.gameState_.playerPosition.x - 11, 0);
+        let maxI = Math.min(this.gameState_.playerPosition.x + 11, map.xNum);
+        let minJ = Math.max(this.gameState_.playerPosition.y - 8, 0);
+        let maxJ = Math.min(this.gameState_.playerPosition.y + 8, map.yNum);
+        for (let j = minJ; j <= maxJ; j++) {
+            for (let i = minI; i <= maxI; i++) {
                 let tile = map.tiles[i + map.xNum * j];
                 let sx = (tile % 8) * data.gridSize;
                 let sy = ((tile / 8)|0) * data.gridSize;
