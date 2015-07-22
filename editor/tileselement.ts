@@ -13,7 +13,7 @@
 // limitations under the License.
 
 module editor {
-    export class TilesElement extends HTMLElement {
+    export class TilesElement {
         private map_: Map;
         private selectedTiles_: SelectedTiles;
         private tilesSelectingState_: TilesSelectingState;
@@ -33,7 +33,8 @@ module editor {
 
             let template = <HTMLTemplateElement>document.getElementById('unagi-tiles-template');
             let clone = document.importNode(template.content, true);
-            (<HTMLElementES6><any>this).createShadowRoot().appendChild(clone);
+            let self = <HTMLElementES6><any>this;
+            self.createShadowRoot().appendChild(clone);
 
             let canvas = this.canvas;
             canvas.width = canvas.offsetWidth * window.devicePixelRatio;
@@ -46,10 +47,10 @@ module editor {
                 this.render();
             })
 
-            this.addEventListener('contextmenu', (e: MouseEvent) => {
+            self.addEventListener('contextmenu', (e: MouseEvent) => {
                 e.preventDefault();
             });
-            this.addEventListener('mousedown', (e: MouseEvent) => {
+            self.addEventListener('mousedown', (e: MouseEvent) => {
                 if (!e.buttons) {
                     return;
                 }
@@ -69,7 +70,7 @@ module editor {
                     Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
                 }
             });
-            this.addEventListener('mousemove', (e: MouseEvent) => {
+            self.addEventListener('mousemove', (e: MouseEvent) => {
                 if (e.buttons !== 2) {
                     let x = e.offsetX + this.offsetX_;
                     let y = e.offsetY + this.offsetY_;
@@ -100,7 +101,7 @@ module editor {
                     Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
                 }
             });
-            this.addEventListener('mouseup', (e: MouseEvent) => {
+            self.addEventListener('mouseup', (e: MouseEvent) => {
                 this.isDrawing_ = false;
                 if (this.tilesEditingMode_ != TilesEditingMode.Map) {
                     return;
@@ -118,11 +119,11 @@ module editor {
                     this.tilesSelectingState_ = null;
                 }
             });
-            this.addEventListener('mouseleave', (e: MouseEvent) => {
+            self.addEventListener('mouseleave', (e: MouseEvent) => {
                 Dispatcher.onTilesCursorPositionChanged(void(0), void(0));
             });
 
-            this.addEventListener('wheel', (e: WheelEvent) => {
+            self.addEventListener('wheel', (e: WheelEvent) => {
                 e.preventDefault();
                 // TODO: Configure the wheel direction
                 Dispatcher.onTilesCursorPositionChanged(void(0), void(0));
@@ -194,5 +195,6 @@ module editor {
 }
 
 (() => {
+    (<any>editor.TilesElement.prototype).__proto__ = HTMLElement.prototype;
     (<editor.HTMLDocumentES6>document).registerElement('unagi-tiles', editor.TilesElement);
 })();

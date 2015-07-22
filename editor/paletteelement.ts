@@ -13,7 +13,7 @@
 // limitations under the License.
 
 module editor {
-    export class PaletteElement extends HTMLElement {
+    export class PaletteElement {
         public static get tileXNum(): number { return 8; }
         public static get tileYNum(): number { return 32; }
         public static get scale(): number { return 2; }
@@ -26,7 +26,8 @@ module editor {
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-palette-template');
             let clone = document.importNode(template.content, true);
-            (<HTMLElementES6><any>this).createShadowRoot().appendChild(clone);
+            let self = (<HTMLElementES6><any>this);
+            self.createShadowRoot().appendChild(clone);
 
             let canvas = <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
             let width = PaletteElement.tileXNum * data.gridSize;
@@ -37,18 +38,18 @@ module editor {
             canvas.style.width = (width * PaletteElement.scale) + 'px';
             canvas.style.height = (height * PaletteElement.scale) + 'px';
 
-            this.addEventListener('contextmenu', (e: MouseEvent) => {
+            self.addEventListener('contextmenu', (e: MouseEvent) => {
                 e.preventDefault();
             });
-            this.addEventListener('mousedown', (e: MouseEvent) => {
-                let x = e.offsetX + this.scrollLeft;
-                let y = e.offsetY + this.scrollTop;
+            self.addEventListener('mousedown', (e: MouseEvent) => {
+                let x = e.offsetX + self.scrollLeft;
+                let y = e.offsetY + self.scrollTop;
                 let tx = (((x / data.gridSize)|0) / PaletteElement.scale)|0;
                 let ty = (((y / data.gridSize)|0) / PaletteElement.scale)|0;
                 this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
                 Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
             })
-            this.addEventListener('mousemove', (e: MouseEvent) => {
+            self.addEventListener('mousemove', (e: MouseEvent) => {
                 if (!this.tilesSelectingState_) {
                     return;
                 }
@@ -59,22 +60,22 @@ module editor {
                     this.tilesSelectingState_ = null;
                     return;
                 }
-                let x = e.offsetX + this.scrollLeft;
-                let y = e.offsetY + this.scrollTop;
+                let x = e.offsetX + self.scrollLeft;
+                let y = e.offsetY + self.scrollTop;
                 let tx = (((x / data.gridSize)|0) / PaletteElement.scale)|0;
                 let ty = (((y / data.gridSize)|0) / PaletteElement.scale)|0;
                 this.tilesSelectingState_.moveTo(tx, ty);
                 Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
             })
-            this.addEventListener('mouseup', (e: MouseEvent) => {
+            self.addEventListener('mouseup', (e: MouseEvent) => {
                 if (!this.tilesSelectingState_) {
                     return;
                 }
                 if (this.tilesEditingMode_ != TilesEditingMode.Map) {
                     return;
                 }
-                let x = e.offsetX + this.scrollLeft;
-                let y = e.offsetY + this.scrollTop;
+                let x = e.offsetX + self.scrollLeft;
+                let y = e.offsetY + self.scrollTop;
                 let tx = (((x / data.gridSize)|0) / PaletteElement.scale)|0;
                 let ty = (((y / data.gridSize)|0) / PaletteElement.scale)|0;
                 this.tilesSelectingState_.moveTo(tx, ty);
@@ -119,5 +120,6 @@ module editor {
 }
 
 (() => {
+    (<any>editor.PaletteElement.prototype).__proto__ = HTMLElement.prototype;
     (<editor.HTMLDocumentES6>document).registerElement('unagi-palette', editor.PaletteElement);
 })();

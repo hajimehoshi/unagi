@@ -13,7 +13,7 @@
 // limitations under the License.
 
 module editor {
-    export class MapListElement extends HTMLElement {
+    export class MapListElement {
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-maplist-template');
             let clone = document.importNode(template.content, true);
@@ -60,5 +60,6 @@ module editor {
 }
 
 (() => {
+    (<any>editor.MapListElement.prototype).__proto__ = HTMLElement.prototype;
     (<editor.HTMLDocumentES6>document).registerElement('unagi-maplist', editor.MapListElement);
 })();

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 module editor {
-    export class MainElement extends HTMLElement {
+    export class MainElement {
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-main-template');
             let clone = document.importNode(template.content, true);
@@ -46,22 +46,22 @@ module editor {
 
         private get toolbar(): ToolbarElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <ToolbarElement>shadowRoot.querySelector('unagi-toolbar');
+            return <ToolbarElement><any>shadowRoot.querySelector('unagi-toolbar');
         }
 
         private get palette(): PaletteElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <PaletteElement>shadowRoot.querySelector('unagi-palette');
+            return <PaletteElement><any>shadowRoot.querySelector('unagi-palette');
         }
 
         private get mapList(): MapListElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <MapListElement>shadowRoot.querySelector('unagi-maplist');
+            return <MapListElement><any>shadowRoot.querySelector('unagi-maplist');
         }
 
         private get tiles(): TilesElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <TilesElement>shadowRoot.querySelector('unagi-tiles');
+            return <TilesElement><any>shadowRoot.querySelector('unagi-tiles');
         }
 
         public updateMap(map: Map) {
@@ -87,12 +87,12 @@ module editor {
 
         public playGame(game: data.Game): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            (<PlayerElement>shadowRoot.querySelector('unagi-player')).playGame(game);
+            (<PlayerElement><any>shadowRoot.querySelector('unagi-player')).playGame(game);
         }
 
         public stopGame(): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            (<PlayerElement>shadowRoot.querySelector('unagi-player')).stopGame();
+            (<PlayerElement><any>shadowRoot.querySelector('unagi-player')).stopGame();
         }
 
         public updateTilesEditingMode(tilesEditingMode: TilesEditingMode): void {
@@ -104,5 +104,6 @@ module editor {
 }
 
 (() => {
+    (<any>editor.MainElement.prototype).__proto__ = HTMLElement.prototype;
     (<editor.HTMLDocumentES6>document).registerElement('unagi-main', editor.MainElement);
 })();

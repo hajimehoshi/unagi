@@ -13,7 +13,7 @@
 // limitations under the License.
 
 module editor {
-    export class PlayerElement extends HTMLElement {
+    export class PlayerElement {
         private game_: data.Game;
 
         private createdCallback(): void {
@@ -41,12 +41,12 @@ module editor {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
             iframe.src = './player.html';
-            this.style.display = 'block';
+            (<HTMLElement><any>this).style.display = 'block';
         }
 
         public stopGame() {
             this.game_ = null;
-            this.style.display = 'none';
+            (<HTMLElement><any>this).style.display = 'none';
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe'));
             iframe.src = 'about:blank';
@@ -55,5 +55,6 @@ module editor {
 }
 
 (() => {
+    (<any>editor.PlayerElement.prototype).__proto__ = HTMLElement.prototype;
     (<editor.HTMLDocumentES6>document).registerElement('unagi-player', editor.PlayerElement);
 })();

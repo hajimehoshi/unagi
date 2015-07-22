@@ -199,7 +199,7 @@ module editor {
 
 (() => {
     window.addEventListener('load', () => {
-        let main = <editor.MainElement>document.querySelector('unagi-main');
+        let main = <editor.MainElement><any>document.querySelector('unagi-main');
         let store = new editor.Store(main);
         editor.Dispatcher.store = store;
 
