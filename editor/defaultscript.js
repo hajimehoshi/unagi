@@ -94,7 +94,8 @@ class CharacterSprite {
         this.y_ = 0;
         this.direction_ = CHARACTER_DIRECTION_DOWN;
         this.pose_ = CHARACTER_POSE_MIDDLE;
-        this.poseCounter_ = 0;
+        this.poseCounter1_ = 0;
+        this.poseCounter2_ = 0;
         this.nextPose_ = CHARACTER_POSE_LEFT;
     }
 
@@ -122,11 +123,10 @@ class CharacterSprite {
         return this.image_.height / 2 / 4;
     }
 
-    startMoving(direction, poseTime) {
+    startMoving(direction, poseTime1, poseTime2) {
         this.direction_ = direction;
-        this.pose_ = this.nextPose_;
-        this.nextPose_ = (this.nextPose_ === CHARACTER_POSE_LEFT) ? CHARACTER_POSE_RIGHT : CHARACTER_POSE_LEFT;
-        this.poseCounter_ = poseTime;
+        this.poseCounter1_ = poseTime1;
+        this.poseCounter2_ = poseTime2;
     }
 
     stopMoving() {
@@ -135,12 +135,19 @@ class CharacterSprite {
     }
 
     update() {
-        if (this.poseCounter_ === 0) {
+        if (this.poseCounter1_) {
+            this.poseCounter1_--;
+            if (this.poseCounter1_ === 0) {
+                this.pose_ = this.nextPose_;
+                this.nextPose_ = (this.nextPose_ === CHARACTER_POSE_LEFT) ? CHARACTER_POSE_RIGHT : CHARACTER_POSE_LEFT;
+            }
             return;
         }
-        this.poseCounter_--;
-        if (this.poseCounter_ === 0) {
-            this.pose_ = CHARACTER_POSE_MIDDLE;
+        if (this.poseCounter2_) {
+            this.poseCounter2_--;
+            if (this.poseCounter2_ === 0) {
+                this.pose_ = CHARACTER_POSE_MIDDLE;
+            }
         }
     }
 
@@ -177,32 +184,34 @@ class MapScene {
         }
         this.movingDirectionX_ = 0;
         this.movingDirectionY_ = 0;
+        let time1 = (this.maxMovingCounter / 3)|0;
+        let time2 = this.maxMovingCounter - time1;
         if ($input.isPressed(KEY_LEFT)) {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = -1;
             this.movingDirectionY_ = 0;
-            this.playerSprite_.startMoving(CHARACTER_DIRECTION_LEFT, (this.maxMovingCounter / 2)|0);
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_LEFT, time1, time2);
             return;
         }
         if ($input.isPressed(KEY_UP)) {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = 0;
             this.movingDirectionY_ = -1;
-            this.playerSprite_.startMoving(CHARACTER_DIRECTION_UP, (this.maxMovingCounter / 2)|0);
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_UP, time1, time2);
             return;
         }
         if ($input.isPressed(KEY_RIGHT)) {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = 1;
             this.movingDirectionY_ = 0;
-            this.playerSprite_.startMoving(CHARACTER_DIRECTION_RIGHT, (this.maxMovingCounter / 2)|0);
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_RIGHT, time1, time2);
             return;
         }
         if ($input.isPressed(KEY_DOWN)) {
             this.movingCounter_ = this.maxMovingCounter;
             this.movingDirectionX_ = 0;
             this.movingDirectionY_ = 1;
-            this.playerSprite_.startMoving(CHARACTER_DIRECTION_DOWN, (this.maxMovingCounter / 2)|0);
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_DOWN, time1, time2);
             return;
         }
         this.playerSprite_.stopMoving();
