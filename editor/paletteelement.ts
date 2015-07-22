@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module editor {
+namespace editor {
     export class PaletteElement {
         public static get tileXNum(): number { return 8; }
         public static get tileYNum(): number { return 32; }

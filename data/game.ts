@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module data {
+namespace data {
     export const gridSize = 16;
 
     export declare type Position = {

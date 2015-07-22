@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module editor {
+namespace editor {
     export class PlayerElement {
         private game_: data.Game;
 

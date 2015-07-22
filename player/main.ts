@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO: module name?
-module util {
+// TODO: namespace name?
+namespace util {
     let mplusImages: {[key:string]: HTMLImageElement} = {};
 
     let mplusFontNames = ['latin', 'bmp-0', 'bmp-2', 'bmp-3', 'bmp-4', 'bmp-5', 'bmp-6', 'bmp-7', 'bmp-8', 'bmp-9', 'bmp-15'];

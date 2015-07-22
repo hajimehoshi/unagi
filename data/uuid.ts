@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module data {
+namespace data {
     export class UUID {
         private static rand16(): number[] {
             let a = new Uint8Array(16);

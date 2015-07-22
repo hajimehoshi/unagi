@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// This can be compiled with TypeScript 1.5.3 or higher.
-
-module editor {
+namespace editor {
     export interface HTMLTemplateElement extends HTMLElement {
         content: DocumentFragment;
     }
