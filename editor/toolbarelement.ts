@@ -37,7 +37,7 @@ namespace editor {
                 if (!menuitem) {
                     return;
                 }
-                if (menuitem.classList.contains('disabled')) {
+                if (menuitem.getAttribute('disabled')) {
                     return;
                 }
                 Dispatcher.onPlayGame();
@@ -48,7 +48,7 @@ namespace editor {
                 if (!menuitem) {
                     return;
                 }
-                if (menuitem.classList.contains('disabled')) {
+                if (menuitem.getAttribute('disabled')) {
                     return;
                 }
                 Dispatcher.onStopGame();
@@ -94,15 +94,15 @@ namespace editor {
 
         public playGame() {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let imgs = Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem'));
-            for (let img of imgs) {
-                if (img.id === 'stop') {
-                    img.classList.remove('disabled');
+            let menuitems = <HTMLElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem'));
+            for (let menuitem of menuitems) {
+                if (menuitem.id !== 'stop') {
+                    menuitem.setAttribute('disabled', 'disabled');
                 } else {
-                    img.classList.add('disabled');
+                    menuitem.removeAttribute('disabled');
                 }
             }
-            let inputs = Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem input'));
+            let inputs = <HTMLInputElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem input'));
             for (let input of inputs) {
                 input.disabled = true;
             }
@@ -110,15 +110,15 @@ namespace editor {
 
         public stopGame() {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let imgs = Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem'));
-            for (let img of imgs) {
-                if (img.id === 'stop') {
-                    img.classList.add('disabled');
+            let menuitems = <HTMLElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem'));
+            for (let menuitem of menuitems) {
+                if (menuitem.id === 'stop') {
+                    menuitem.setAttribute('disabled', 'disabled');
                 } else {
-                    img.classList.remove('disabled');
+                    menuitem.removeAttribute('disabled');
                 }
             }
-            let inputs = Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem input'));
+            let inputs = <HTMLInputElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem input'));
             for (let input of inputs) {
                 input.disabled = false;
             }

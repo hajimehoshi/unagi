@@ -61,7 +61,7 @@
       font-size: 16px;
       line-height: 0;
     }
-    menu menuitem.disabled {
+    menu menuitem[disabled] {
       color: rgba(0, 0, 0, 0.26);
     }
     menuitem:first-child {
@@ -74,7 +74,7 @@
       opacity: 0.54;
       padding: 6px;
     }
-    menuitem.disabled img {
+    menuitem[disabled] img {
       opacity: 0.26;
     }
     menuitem span {
@@ -100,10 +100,10 @@
       background-color: #fbc02d;
       font-weight: bold;
     }
-    input[disabled] + *, menuitem.disabled {
+    input[disabled] + *, menuitem[disabled] {
       background-color: transparent !important;
     }
-    input[type=radio][disabled] + *, menuitem.disabled img {
+    input[type=radio][disabled] + *, menuitem[disabled] img {
       cursor: default !important;
     }
   </style>
