@@ -64,6 +64,11 @@ namespace editor {
             return <TilesElement><any>shadowRoot.querySelector('unagi-tiles');
         }
 
+        private get player(): PlayerElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return (<PlayerElement><any>shadowRoot.querySelector('unagi-player'));
+        }
+
         public updateMap(map: Map) {
             this.tiles.map = map;
         }
@@ -86,13 +91,15 @@ namespace editor {
         }
 
         public playGame(game: data.Game): void {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            (<PlayerElement><any>shadowRoot.querySelector('unagi-player')).playGame(game);
+            (<HTMLElement><any>this.tiles).style.display = 'none';
+            this.player.playGame(game);
+            this.toolbar.playGame();
         }
 
         public stopGame(): void {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            (<PlayerElement><any>shadowRoot.querySelector('unagi-player')).stopGame();
+            (<HTMLElement><any>this.tiles).style.display = 'block';
+            this.player.stopGame();
+            this.toolbar.stopGame();
         }
 
         public updateTilesEditingMode(tilesEditingMode: TilesEditingMode): void {

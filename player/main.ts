@@ -111,15 +111,6 @@ let $game: data.Game;
 (() => {
     let canvas = document.body.querySelector('canvas');
     (<HTMLElement>canvas).focus();
-    document.body.addEventListener('click', (e: MouseEvent) => {
-        let rect = canvas.getBoundingClientRect();
-        if (rect.left <= e.pageX && e.pageX < rect.right) {
-            if (rect.top <= e.pageY && e.pageY < rect.bottom) {
-                return;
-            }
-        }
-        window.parent.postMessage('quit', '*');
-    });
     window.addEventListener('message', (e) => {
         let game = new data.Game();
         game.fromObject(<data.GameObject>e.data);

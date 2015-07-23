@@ -14,15 +14,44 @@
 
 namespace editor {
     export class ToolbarElement {
+        private static menuitemOf(e: HTMLElement): HTMLElement {
+            let parent = e.parentElement;
+            while (parent) {
+                if (parent.nodeName === 'MENUITEM') {
+                    return parent;
+                }
+                parent = parent.parentElement;
+            }
+            return null;
+        }
+
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-toolbar-template');
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
 
-            let img = shadowRoot.querySelector('#play img');
-            img.addEventListener('click', () => {
+            shadowRoot.querySelector('#play img').addEventListener('click', (e: MouseEvent) => {
+                let img = <HTMLImageElement>e.target;
+                let menuitem = ToolbarElement.menuitemOf(img);
+                if (!menuitem) {
+                    return;
+                }
+                if (menuitem.classList.contains('disabled')) {
+                    return;
+                }
                 Dispatcher.onPlayGame();
+            });
+            shadowRoot.querySelector('#stop img').addEventListener('click', (e: MouseEvent) => {
+                let img = <HTMLImageElement>e.target;
+                let menuitem = ToolbarElement.menuitemOf(img);
+                if (!menuitem) {
+                    return;
+                }
+                if (menuitem.classList.contains('disabled')) {
+                    return;
+                }
+                Dispatcher.onStopGame();
             });
 
             let cond = `input[type=radio][name=tilesEditingMode]`;
@@ -41,6 +70,10 @@ namespace editor {
                     Dispatcher.onTilesEditingModeChanged(mode);
                 })
             });
+
+            window.addEventListener('load', () => {
+                this.stopGame();
+            });
         }
 
         public set tilesEditingMode(tilesEditingMode: TilesEditingMode) {
@@ -57,6 +90,38 @@ namespace editor {
             let cond = `input[type=radio][name=tilesEditingMode][value=${ value }]`;
             let radioButton = <HTMLInputElement>shadowRoot.querySelector(cond);
             radioButton.checked = true;
+        }
+
+        public playGame() {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let imgs = Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem'));
+            for (let img of imgs) {
+                if (img.id === 'stop') {
+                    img.classList.remove('disabled');
+                } else {
+                    img.classList.add('disabled');
+                }
+            }
+            let inputs = Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem input'));
+            for (let input of inputs) {
+                input.disabled = true;
+            }
+        }
+
+        public stopGame() {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let imgs = Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem'));
+            for (let img of imgs) {
+                if (img.id === 'stop') {
+                    img.classList.add('disabled');
+                } else {
+                    img.classList.remove('disabled');
+                }
+            }
+            let inputs = Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem input'));
+            for (let input of inputs) {
+                input.disabled = false;
+            }
         }
     }
 }
