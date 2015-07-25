@@ -50,6 +50,27 @@ window.addEventListener('keyup', function(e) {
     $input.onKeyUp(e);
 });
 
+class Window {
+    constructor(x, y, width, height) {
+        this.x_ = x;
+        this.y_ = y;
+        this.width_ = width;
+        this.height_ = height;
+    }
+
+    update() {
+    }
+
+    draw(context) {
+        context.save();
+        context.fillStyle = 'rgba(51, 51, 51, 255)';
+        context.fillRect(this.x_, this.y_, this.width_, this.height_);
+        context.strokeStyle = 'rgba(255, 255, 255, 255)';
+        context.strokeRect(this.x_ + 0.5, this.y_ + 0.5, this.width_ - 1, this.height_ - 1);
+        context.restore();
+    }
+}
+
 // TODO: Tileset image should be registered in $game.
 let tileSetImage = new Image();
 tileSetImage.src = 'images/tileset.png';
@@ -145,7 +166,7 @@ class CharacterSprite {
             return;
         }
         this.poseCounter_--;
-        if (this.poseCounter_ === (this.initPoseCounter_ * 2 / 3)|0) {
+        if (this.poseCounter_ === ((this.initPoseCounter_ / 2)|0)) {
             this.pose_ = this.nextPose_;
             this.nextPose_ = (this.nextPose_ === CHARACTER_POSE_LEFT) ? CHARACTER_POSE_RIGHT : CHARACTER_POSE_LEFT;
             return;
@@ -172,6 +193,8 @@ class MapScene {
         this.movingCounter_ = 0;
         this.movingDirectionX_ = 0;
         this.movingDirectionY_ = 0;
+
+        this.window_ = new Window(0, 0, 32, 32);
     }
 
     get maxMovingCounter() {
@@ -256,6 +279,9 @@ class MapScene {
         }
         util.drawBitmapTextAt(context, map.id, 0, 0);
         this.playerSprite_.draw(context);
+
+        this.window_.draw(context);
+
         context.restore();
     }
 }
