@@ -62,8 +62,8 @@ class MapScene {
         this.playerSprite_.y = data.gridSize * 8 - this.playerSprite_.height;
 
         context.save();
-        let mapId = $game.mapIdAt(0);
-        let map = $game.mapAt(mapId);
+        let mapId = $game.mapIds[0];
+        let map = $game.maps[mapId];
         let offsetX = this.playerSprite_.x + this.playerSprite_.width / 2 - data.gridSize / 2;
         let offsetY = this.playerSprite_.y + this.playerSprite_.height - data.gridSize;
         offsetX -= this.gameState_.playerPosition.x * data.gridSize;

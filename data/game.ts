@@ -21,110 +21,31 @@ namespace data {
         y: number,
     }
 
-    export declare type GameObject = {
+    export declare type Game = {
         title: string,
-        maps: Map[],
+        maps: {[id: string]: Map},
+        mapIds: string[],
         playerInitialPosition: Position,
         scripts: {[name: string]: string},
         scriptNames: string[],
-    };
+    }
 
-    export class Game {
-        private title_: string;
-        private maps_: {[key: string]: Map};
-        private mapIds_: string[];
-        private playerInitialPosition_: Position;
-        private scripts_: {[name: string]: string};
-        private scriptNames_: string[];
+    export function createGame(title: string): Game {
+        return {
+            title: title,
+            maps: {},
+            mapIds: [],
+            playerInitialPosition: {mapId: null, x: 0, y: 0},
+            scripts: {},
+            scriptNames: [],
+        };
+    }
 
-        constructor() {
-            this.maps_ = {};
-            this.mapIds_ = [];
-            this.scripts_ = {};
-            this.scriptNames_ = [];
+    export function concatenatedScript(game: Game): string {
+        let script = "";
+        for (let name of game.scriptNames) {
+            script += game.scripts[name];
         }
-
-        public toObject(): GameObject {
-            let maps: Map[] = [];
-            for (let id of this.mapIds_) {
-                let map = this.maps_[id];
-                maps.push(map);
-            }
-            let obj: GameObject = {
-                title: this.title_,
-                maps: maps,
-                playerInitialPosition: this.playerInitialPosition_,
-                scripts: this.scripts_,
-                scriptNames: this.scriptNames_,
-            };
-            return obj;
-        }
-
-        public fromObject(obj: GameObject): void {
-            this.title_ = obj.title;
-            this.maps_ = {};
-            this.mapIds_ = [];
-            for (let map of obj.maps) {
-                this.maps_[map.id] = map;
-                this.mapIds_.push(map.id);
-            }
-            this.playerInitialPosition_ = obj.playerInitialPosition;
-            this.scripts_ = obj.scripts;
-            this.scriptNames_ = obj.scriptNames;
-        }
-
-        public appendMap(map: Map): void {
-            this.maps_[map.id] = map;
-            this.mapIds_.push(map.id);
-        }
-
-        public mapIdAt(i: number): string {
-            return this.mapIds_[i];
-        }
-
-        public mapAt(id: string): Map {
-            return this.maps_[id];
-        }
-
-        public get maps(): Map[] {
-            let maps: Map[] = [];
-            for (let id of this.mapIds_) {
-                maps.push(this.maps_[id]);
-            }
-            return maps;
-        }
-
-        public get playerInitialPosition(): Position {
-            let p = this.playerInitialPosition_;
-            return {
-                mapId: p.mapId,
-                x: p.x,
-                y: p.y,
-            }
-        }
-
-        public setPlayerInitialPosition(mapId: string, x: number, y: number) {
-            this.playerInitialPosition_ = {
-                mapId: mapId,
-                x: x,
-                y: y,
-            };
-        }
-
-        public get concatenatedScript(): string {
-            let script = "";
-            for (let name of this.scriptNames_) {
-                script += this.scripts_[name];
-            }
-            return script;
-        }
-
-        public set scripts(scripts: {[name: string]: string}) {
-            this.scripts_ = scripts;
-        }
-
-        public set scriptNames(names: string[]) {
-            this.scriptNames_ = names;
-        }
+        return script;
     }
 }

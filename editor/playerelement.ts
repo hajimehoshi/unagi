@@ -32,7 +32,7 @@ namespace editor {
                 if (iframe.src === 'about:blank') {
                     return;
                 }
-                iframe.contentWindow.postMessage(this.game_.toObject(), '*');
+                iframe.contentWindow.postMessage(this.game_, '*');
             });
         }
 

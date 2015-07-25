@@ -112,10 +112,9 @@ let $game: data.Game;
     let canvas = document.body.querySelector('canvas');
     (<HTMLElement>canvas).focus();
     window.addEventListener('message', (e) => {
-        let game = new data.Game();
-        game.fromObject(<data.GameObject>e.data);
+        let game = <data.Game>e.data;
         $game = game;
         // Call 'eval' indirectly so that 'this' variable will be a global window.
-        (0, eval)(game.concatenatedScript);
+        (0, eval)(data.concatenatedScript(game));
     });
 })();

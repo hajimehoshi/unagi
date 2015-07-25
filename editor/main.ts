@@ -201,12 +201,13 @@ namespace editor {
         let store = new editor.Store(main);
         editor.Dispatcher.store = store;
 
-        let game = new data.Game();
+        let game = data.createGame('Sample RPG');
         let firstMap = data.createMap(100, 100);
-        game.appendMap(firstMap)
-        game.appendMap(data.createMap(20, 15))
-        game.appendMap(data.createMap(20, 15))
-        game.setPlayerInitialPosition(firstMap.id, 4, 4);
+        for (let map of [firstMap, data.createMap(20, 15), data.createMap(20, 15)]) {
+            game.maps[map.id] = map;
+            game.mapIds.push(map.id);
+        }
+        game.playerInitialPosition = {mapId: firstMap.id, x: 4, y: 4};
 
         game.scripts = editor.defaultScripts;
         game.scriptNames = editor.defaultScriptNames;
