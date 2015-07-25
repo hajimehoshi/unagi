@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-go run createdefaultscripts.go < editor/defaultscript.js > editor/defaultscripts.ts
+go run createdefaultscripts.go editor/defaultscripts/*.js > editor/defaultscripts.ts
 tsc --out editor.js --target ES5 data/*.ts editor/*.ts
 tsc --out player.js --target ES5 data/*.ts player/*.ts
