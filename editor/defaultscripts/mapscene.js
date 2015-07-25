@@ -1,0 +1,101 @@
+'use strict';
+
+class MapScene {
+    constructor(gameState) {
+        this.gameState_ = gameState;
+        this.playerSprite_ = new CharacterSprite(characterSetImage);
+        this.movingCounter_ = 0;
+        this.movingDirectionX_ = 0;
+        this.movingDirectionY_ = 0;
+
+        this.window_ = new Window(0, 0, 32, 32);
+    }
+
+    get maxMovingCounter() {
+        return 15;
+    }
+
+    update() {
+        this.playerSprite_.update();
+        if (this.movingCounter_) {
+            this.movingCounter_--;
+            if (this.movingCounter_) {
+                return;
+            }
+            this.gameState_.moveBy(this.movingDirectionX_, this.movingDirectionY_);
+        }
+        this.movingDirectionX_ = 0;
+        this.movingDirectionY_ = 0;
+        if ($input.isPressed(KEY_LEFT)) {
+            this.movingCounter_ = this.maxMovingCounter;
+            this.movingDirectionX_ = -1;
+            this.movingDirectionY_ = 0;
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_LEFT, this.maxMovingCounter);
+            return;
+        }
+        if ($input.isPressed(KEY_UP)) {
+            this.movingCounter_ = this.maxMovingCounter;
+            this.movingDirectionX_ = 0;
+            this.movingDirectionY_ = -1;
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_UP, this.maxMovingCounter);
+            return;
+        }
+        if ($input.isPressed(KEY_RIGHT)) {
+            this.movingCounter_ = this.maxMovingCounter;
+            this.movingDirectionX_ = 1;
+            this.movingDirectionY_ = 0;
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_RIGHT, this.maxMovingCounter);
+            return;
+        }
+        if ($input.isPressed(KEY_DOWN)) {
+            this.movingCounter_ = this.maxMovingCounter;
+            this.movingDirectionX_ = 0;
+            this.movingDirectionY_ = 1;
+            this.playerSprite_.startMoving(CHARACTER_DIRECTION_DOWN, this.maxMovingCounter);
+            return;
+        }
+        this.playerSprite_.stopMoving();
+    }
+
+    draw(context) {
+        this.playerSprite_.x = (320 - this.playerSprite_.width) / 2;
+        this.playerSprite_.y = data.gridSize * 8 - this.playerSprite_.height;
+
+        context.save();
+        let mapId = $game.mapIdAt(0);
+        let map = $game.mapAt(mapId);
+        let offsetX = this.playerSprite_.x + this.playerSprite_.width / 2 - data.gridSize / 2;
+        let offsetY = this.playerSprite_.y + this.playerSprite_.height - data.gridSize;
+        offsetX -= this.gameState_.playerPosition.x * data.gridSize;
+        offsetY -= this.gameState_.playerPosition.y * data.gridSize;
+        let nextOffsetX = offsetX - this.movingDirectionX_ * data.gridSize;
+        let nextOffsetY = offsetY - this.movingDirectionY_ * data.gridSize;
+        let rate = 1 - this.movingCounter_ / this.maxMovingCounter;
+        if (offsetX !== nextOffsetX) {
+            offsetX = ((1 - rate) * offsetX + rate * nextOffsetX)|0;
+        }
+        if (offsetY !== nextOffsetY) {
+            offsetY = ((1 - rate) * offsetY + rate * nextOffsetY)|0;
+        }
+        let minI = Math.max(this.gameState_.playerPosition.x - 11, 0);
+        let maxI = Math.min(this.gameState_.playerPosition.x + 11, map.xNum);
+        let minJ = Math.max(this.gameState_.playerPosition.y - 8, 0);
+        let maxJ = Math.min(this.gameState_.playerPosition.y + 8, map.yNum);
+        for (let j = minJ; j <= maxJ; j++) {
+            for (let i = minI; i <= maxI; i++) {
+                let tile = map.tiles[i + map.xNum * j];
+                let sx = (tile % 8) * data.gridSize;
+                let sy = ((tile / 8)|0) * data.gridSize;
+                let dx = i * data.gridSize + offsetX;
+                let dy = j * data.gridSize + offsetY;
+                context.drawImage(tileSetImage, sx, sy, data.gridSize, data.gridSize, dx, dy, data.gridSize, data.gridSize);
+            }
+        }
+        util.drawBitmapTextAt(context, map.id, 0, 0);
+        this.playerSprite_.draw(context);
+
+        this.window_.draw(context);
+
+        context.restore();
+    }
+}

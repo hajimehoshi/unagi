@@ -209,6 +209,7 @@ namespace editor {
         game.setPlayerInitialPosition(firstMap.id, 4, 4);
 
         game.scripts = editor.defaultScripts;
+        game.scriptNames = editor.defaultScriptNames;
         editor.Dispatcher.onInitialized(game);
     });
 })();

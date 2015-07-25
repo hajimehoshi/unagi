@@ -25,7 +25,8 @@ namespace data {
         title: string,
         maps: Map[],
         playerInitialPosition: Position,
-        scripts: string[],
+        scripts: {[name: string]: string},
+        scriptNames: string[],
     };
 
     export class Game {
@@ -33,12 +34,14 @@ namespace data {
         private maps_: {[key: string]: Map};
         private mapIds_: string[];
         private playerInitialPosition_: Position;
-        private scripts_: string[];
+        private scripts_: {[name: string]: string};
+        private scriptNames_: string[];
 
         constructor() {
             this.maps_ = {};
             this.mapIds_ = [];
-            this.scripts_ = [];
+            this.scripts_ = {};
+            this.scriptNames_ = [];
         }
 
         public toObject(): GameObject {
@@ -52,6 +55,7 @@ namespace data {
                 maps: maps,
                 playerInitialPosition: this.playerInitialPosition_,
                 scripts: this.scripts_,
+                scriptNames: this.scriptNames_,
             };
             return obj;
         }
@@ -66,6 +70,7 @@ namespace data {
             }
             this.playerInitialPosition_ = obj.playerInitialPosition;
             this.scripts_ = obj.scripts;
+            this.scriptNames_ = obj.scriptNames;
         }
 
         public appendMap(map: Map): void {
@@ -107,11 +112,19 @@ namespace data {
         }
 
         public get concatenatedScript(): string {
-            return this.scripts_.join('');
+            let script = "";
+            for (let name of this.scriptNames_) {
+                script += this.scripts_[name];
+            }
+            return script;
         }
 
-        public set scripts(scripts: string[]) {
+        public set scripts(scripts: {[name: string]: string}) {
             this.scripts_ = scripts;
+        }
+
+        public set scriptNames(names: string[]) {
+            this.scriptNames_ = names;
         }
     }
 }
