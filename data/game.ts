@@ -17,8 +17,8 @@ namespace data {
 
     export declare type Position = {
         mapId: string,
-        x: number,
-        y: number,
+        x:     number,
+        y:     number,
     }
 
     export declare type Game = {
@@ -26,10 +26,21 @@ namespace data {
         maps:                  Map[],
         actors:                Actor[],
         playerInitialPosition: Position,
+        initialParty:          string[],
         scripts:               {[name: string]: string},
         scriptNames:           string[],
     }
 
     export declare type Actor = {
+        id:               string,
+        name:             string,
+        initialLevel:     number,
+        maxHPCurve:       number[],
+        maxMPCurve:       number[],
+        attackCurve:      number[],
+        defenseCurve:     number[],
+        magicAttackCurve: number[],
+        magicDefeneCurve: number[],
+        speedCurve:       number[],
     }
 }

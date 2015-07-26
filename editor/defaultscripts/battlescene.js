@@ -22,13 +22,10 @@ class BattlePlayerWindow {
 
 class BattleScene {
     constructor() {
-        //this.window_ = new Window(0, 160, 320, 80);
-        this.playerWindows_ = [
-            new BattlePlayerWindow(0),
-            new BattlePlayerWindow(1),
-            new BattlePlayerWindow(2),
-            new BattlePlayerWindow(3),
-        ];
+        this.playerWindows_ = [];
+        for (let i = 0; i < $gameState.party.length; i++) {
+            this.playerWindows_.push(new BattlePlayerWindow(i));
+        }
     }
 
     update() {

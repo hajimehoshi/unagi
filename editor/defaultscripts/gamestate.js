@@ -2,7 +2,15 @@
 
 class GameState {
     constructor() {
+        this.party_ = [];
+        for (let actor of $game.initialParty) {
+            this.party_.push(actor);
+        }
         this.playerPosition_ = null;
+    }
+
+    get party() {
+        return this.party_;
     }
 
     moveTo(mapId, x, y) {

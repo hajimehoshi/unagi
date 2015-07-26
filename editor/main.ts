@@ -201,7 +201,8 @@ namespace editor {
         let store = new editor.Store(main);
         editor.Dispatcher.store = store;
 
-        let mapId = data.UUID.generate()
+        let mapId = data.UUID.generate();
+        let actorId = data.UUID.generate();
         let game: data.Game = {
             title:  'New RPG',
             maps:   [
@@ -213,14 +214,28 @@ namespace editor {
                     tiles: new Int16Array(100 * 100),
                 },
             ],
-            actors: [],
+            actors: [
+                {
+                    id:               actorId,
+                    name:             'New Actor',
+                    initialLevel:     1,
+                    maxHPCurve:       [100],
+                    maxMPCurve:       [100],
+                    attackCurve:      [100],
+                    defenseCurve:     [100],
+                    magicAttackCurve: [100],
+                    magicDefeneCurve: [100],
+                    speedCurve:       [100],
+                },
+            ],
             playerInitialPosition: {
                 mapId: mapId,
                 x:     4,
                 y:     4,
             },
-            scripts:     editor.defaultScripts,
-            scriptNames: editor.defaultScriptNames,
+            initialParty: [actorId],
+            scripts:      editor.defaultScripts,
+            scriptNames:  editor.defaultScriptNames,
         };
         editor.Dispatcher.onInitialized(game);
     });
