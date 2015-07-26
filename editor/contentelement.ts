@@ -87,12 +87,10 @@ namespace editor {
         }
 
         public playGame(game: data.Game): void {
-            (<HTMLElement><any>this.tiles).style.display = 'none';
             this.player.playGame(game);
         }
 
         public stopGame(): void {
-            (<HTMLElement><any>this.tiles).style.display = 'block';
             this.player.stopGame();
         }
 

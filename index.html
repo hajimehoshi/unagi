@@ -53,10 +53,11 @@
     unagi-player {
       display: none;
       height: 100%;
-      left: calc(256px + 1px);
+      left: 0;
       padding: 0;
       position: absolute;
-      width: calc(100% - 256px - 1px);
+      width: 100%;
+      z-index: 1;
     }
   </style>
   <unagi-palette></unagi-palette>
@@ -210,7 +211,6 @@
 <template id="unagi-player-template">
   <style>
     iframe {
-      background-color: transparent;
       border-style: none;
       border-width: 0;
       height: 100%;
