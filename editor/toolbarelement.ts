@@ -14,41 +14,20 @@
 
 namespace editor {
     export class ToolbarElement {
-        private static menuitemOf(e: HTMLElement): HTMLElement {
-            let parent = e.parentElement;
-            while (parent) {
-                if (parent.nodeName === 'MENUITEM') {
-                    return parent;
-                }
-                parent = parent.parentElement;
-            }
-            return null;
-        }
-
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-toolbar-template');
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
 
-            shadowRoot.querySelector('#play img').addEventListener('click', (e: MouseEvent) => {
-                let img = <HTMLImageElement>e.target;
-                let menuitem = ToolbarElement.menuitemOf(img);
-                if (!menuitem) {
-                    return;
-                }
-                if (menuitem.getAttribute('disabled')) {
+            shadowRoot.querySelector('#play').addEventListener('click', (e: MouseEvent) => {
+                if ((<HTMLElement>e.target).getAttribute('disabled')) {
                     return;
                 }
                 Dispatcher.onPlayGame();
             });
-            shadowRoot.querySelector('#stop img').addEventListener('click', (e: MouseEvent) => {
-                let img = <HTMLImageElement>e.target;
-                let menuitem = ToolbarElement.menuitemOf(img);
-                if (!menuitem) {
-                    return;
-                }
-                if (menuitem.getAttribute('disabled')) {
+            shadowRoot.querySelector('#stop').addEventListener('click', (e: MouseEvent) => {
+                if ((<HTMLElement>e.target).getAttribute('disabled')) {
                     return;
                 }
                 Dispatcher.onStopGame();
@@ -86,15 +65,15 @@ namespace editor {
 
         public playGame() {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let menuitems = <HTMLElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem'));
-            for (let menuitem of menuitems) {
-                if (menuitem.id !== 'stop') {
-                    menuitem.setAttribute('disabled', 'disabled');
+            let buttons = <HTMLElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('button'));
+            for (let button of buttons) {
+                if (button.id !== 'stop') {
+                    button.setAttribute('disabled', 'disabled');
                 } else {
-                    menuitem.removeAttribute('disabled');
+                    button.removeAttribute('disabled');
                 }
             }
-            let inputs = <HTMLInputElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem input'));
+            let inputs = <HTMLInputElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('label input'));
             for (let input of inputs) {
                 input.disabled = true;
             }
@@ -102,15 +81,15 @@ namespace editor {
 
         public stopGame() {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let menuitems = <HTMLElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem'));
-            for (let menuitem of menuitems) {
-                if (menuitem.id === 'stop') {
-                    menuitem.setAttribute('disabled', 'disabled');
+            let buttons = <HTMLElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('button'));
+            for (let button of buttons) {
+                if (button.id === 'stop') {
+                    button.setAttribute('disabled', 'disabled');
                 } else {
-                    menuitem.removeAttribute('disabled');
+                    button.removeAttribute('disabled');
                 }
             }
-            let inputs = <HTMLInputElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('menuitem input'));
+            let inputs = <HTMLInputElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('label input'));
             for (let input of inputs) {
                 input.disabled = false;
             }
