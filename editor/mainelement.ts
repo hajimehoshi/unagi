@@ -19,29 +19,10 @@ namespace editor {
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
-
-            window.addEventListener('load', () => {
-                let tileSetImage = new Image();
-                tileSetImage.src = './images/tileset.png';
-                tileSetImage.addEventListener('load', () => {
-                    tileSetImage.dataset['loaded'] = 'true';
-                });
-
-                let palette = this.palette;
-                palette.tileSetImage = tileSetImage;
-
-                let tiles = this.tiles;
-                tiles.tileSetImage = tileSetImage;
-
-                tileSetImage.addEventListener('load', () => {
-                    this.render();
-                });
-            })
         }
 
         public render(): void {
-            this.palette.render();
-            this.tiles.render();
+            this.content.render();
         }
 
         private get toolbar(): ToolbarElement {
@@ -49,63 +30,44 @@ namespace editor {
             return <ToolbarElement><any>shadowRoot.querySelector('unagi-toolbar');
         }
 
-        private get palette(): PaletteElement {
+        private get content(): ContentElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <PaletteElement><any>shadowRoot.querySelector('unagi-palette');
-        }
-
-        private get mapList(): MapListElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <MapListElement><any>shadowRoot.querySelector('unagi-maplist');
-        }
-
-        private get tiles(): TilesElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <TilesElement><any>shadowRoot.querySelector('unagi-tiles');
-        }
-
-        private get player(): PlayerElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return (<PlayerElement><any>shadowRoot.querySelector('unagi-player'));
+            return <ContentElement><any>shadowRoot.querySelector('unagi-content');
         }
 
         public updateMap(map: Map) {
-            this.tiles.map = map;
+            this.content.updateMap(map);
         }
 
         public updateMapList(currentMapId: string, maps: data.Map[]) {
-            this.mapList.update(currentMapId, maps);
+            this.content.updateMapList(currentMapId, maps);
         }
 
         public updateSelectedTiles(s: SelectedTiles) {
-            this.palette.selectedTiles = s;
-            this.tiles.selectedTiles = s;
+            this.content.updateSelectedTiles(s);
         }
 
         public updateTilesCursorPosition(x: number, y: number): void {
-            this.tiles.updateCursorPosition(x, y);
+            this.content.updateTilesCursorPosition(x, y);
         }
 
         public updateTilesOffset(x: number, y: number): void {
-            this.tiles.updateOffset(x, y);
+            this.content.updateTilesOffset(x, y);
         }
 
         public playGame(game: data.Game): void {
-            (<HTMLElement><any>this.tiles).style.display = 'none';
-            this.player.playGame(game);
             this.toolbar.playGame();
+            this.content.playGame(game);
         }
 
         public stopGame(): void {
-            (<HTMLElement><any>this.tiles).style.display = 'block';
-            this.player.stopGame();
             this.toolbar.stopGame();
+            this.content.stopGame();
         }
 
         public updateTilesEditingMode(tilesEditingMode: TilesEditingMode): void {
+            this.content.updateTilesEditingMode(tilesEditingMode);
             this.toolbar.tilesEditingMode = tilesEditingMode;
-            this.palette.tilesEditingMode = tilesEditingMode;
-            this.tiles.tilesEditingMode = tilesEditingMode;
         }
     }
 }
