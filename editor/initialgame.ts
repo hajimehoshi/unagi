@@ -16,6 +16,28 @@ namespace editor {
     let mapId = data.UUID.generate();
     let actorId = data.UUID.generate();
 
+    function calcCurve(growth: number, factor: number): number[] {
+        let result: number[] = [];
+        for (let i = 0; i < data.MAX_LEVEL; i++) {
+            let level = i + 1;
+            let base = Math.pow(Math.pow(level, 1.5)/8 + 2, growth);
+            let x = base * factor;
+            result.push(x|0);
+        }
+        return result;
+    }
+
+    function calcLogCurve(growth: number, factor: number, offset: number): number []{
+        let result: number[] = [];
+        for (let i = 0; i < data.MAX_LEVEL; i++) {
+            let level = i + 1;
+            let base = Math.pow(Math.pow(level, 1.5)/8 + 2, growth);
+            let x = (Math.LOG2E * Math.log(base * factor) + offset) * 16;
+            result.push(x|0);
+        }
+        return result;
+    }
+
     export const initialGame: data.Game = {
         title:  'New RPG',
         maps:   [
@@ -32,13 +54,13 @@ namespace editor {
                 id:               actorId,
                 name:             'New Actor',
                 initialLevel:     1,
-                maxHPCurve:       [100],
-                maxMPCurve:       [100],
-                attackCurve:      [100],
-                defenseCurve:     [100],
-                magicAttackCurve: [100],
-                magicDefeneCurve: [100],
-                speedCurve:       [100],
+                maxHPCurve:       calcCurve(1, 60),
+                maxMPCurve:       calcCurve(1, 6),
+                attackCurve:      calcLogCurve(7/4, 10, -4),
+                defenseCurve:     calcLogCurve(1/2, 1, 2),
+                magicAttackCurve: calcLogCurve(7/4, 10, -4),
+                magicDefeneCurve: calcLogCurve(1/2, 1, 2),
+                speedCurve:       calcCurve(1/2, 10),
             },
         ],
         playerInitialPosition: {

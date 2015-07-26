@@ -13,7 +13,14 @@
 // limitations under the License.
 
 namespace data {
-    export const gridSize = 16;
+    export const gridSize = 16; // TODO: Rename
+
+    export const MAX_LEVEL    = 99;
+    export const MAX_ACTOR_HP = 9999;
+    export const MAX_ACTOR_MP = 999;
+    export const MAX_ATTACK   = 255;
+    export const MAX_DEFENSE  = 255;
+    export const MAX_SPEED    = 255;
 
     export declare type Position = {
         mapId: string,
