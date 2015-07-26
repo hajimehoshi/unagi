@@ -50,7 +50,7 @@
       position: absolute;
       width: calc(100% - 256px - 1px);
     }
-    unagi-player {
+    unagi-database {
       display: none;
       height: 100%;
       left: 0;
@@ -59,10 +59,20 @@
       width: 100%;
       z-index: 1;
     }
+    unagi-player {
+      display: none;
+      height: 100%;
+      left: 0;
+      padding: 0;
+      position: absolute;
+      width: 100%;
+      z-index: 10;
+    }
   </style>
   <unagi-palette></unagi-palette>
   <unagi-maplist></unagi-maplist>
   <unagi-tiles></unagi-tiles>
+  <unagi-database></unagi-database>
   <unagi-player></unagi-player>
 </template>
 <template id="unagi-toolbar-template">
@@ -131,8 +141,9 @@
     <!--menuitem><label><input type="radio" name="drawing" value="pen"><img src="./images/icons/iconmonstr-pencil-10-icon.svg" width="20" height="20"></label></menuitem>
     <menuitem><label><input type="radio" name="drawing" value="fill"><img src="./images/icons/iconmonstr-paintbrush-3-icon.svg" width="20" height="20"></label></menuitem>
     <menuitem></menuitem-->
-    <menuitem><label><input type="radio" name="tilesEditingMode" value="map"><span>Map</span></label></menuitem>
-    <menuitem><label><input type="radio" name="tilesEditingMode" value="event"><span>Event</span></label></menuitem>
+    <menuitem><label><input type="radio" name="editingMode" value="map"><span>Map</span></label></menuitem>
+    <menuitem><label><input type="radio" name="editingMode" value="event"><span>Event</span></label></menuitem>
+    <menuitem><label><input type="radio" name="editingMode" value="database"><span>Database</span></label></menuitem>
     <menuitem></menuitem>
     <menuitem id="script"><img src="./images/icons/iconmonstr-script-4-icon.svg" width="20" height="20"></menuitem>
     <menuitem></menuitem>
@@ -207,6 +218,14 @@
     }
   </style>
   <canvas></canvas>
+</template>
+<template id="unagi-database-template">
+  <style>
+    :host {
+      background-color: #9e9e9e;
+    }
+  </style>
+  <p>This is the database editor</p>
 </template>
 <template id="unagi-player-template">
   <style>

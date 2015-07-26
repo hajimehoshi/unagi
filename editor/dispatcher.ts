@@ -48,8 +48,8 @@ namespace editor {
             Dispatcher.store_.stopGame();
         }
 
-        public static onTilesEditingModeChanged(tilesEditingMode: TilesEditingMode): void {
-            Dispatcher.store_.updateTilesEditingMode(tilesEditingMode);
+        public static onEditingModeChanged(editingMode: EditingMode): void {
+            Dispatcher.store_.updateEditingMode(editingMode);
         }
 
         public static onCurrentMapChanged(id: string): void {

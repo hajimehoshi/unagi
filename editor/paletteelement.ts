@@ -21,7 +21,7 @@ namespace editor {
         private selectedTiles_: SelectedTiles;
         private tileSetImage_: HTMLImageElement;
         private tilesSelectingState_: TilesSelectingState;
-        private tilesEditingMode_: TilesEditingMode;
+        private editingMode_: EditingMode;
 
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-palette-template');
@@ -53,7 +53,7 @@ namespace editor {
                 if (!this.tilesSelectingState_) {
                     return;
                 }
-                if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+                if (this.editingMode_ != EditingMode.Map) {
                     return;
                 }
                 if (!e.buttons) {
@@ -71,7 +71,7 @@ namespace editor {
                 if (!this.tilesSelectingState_) {
                     return;
                 }
-                if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+                if (this.editingMode_ != EditingMode.Map) {
                     return;
                 }
                 let x = e.offsetX + self.scrollLeft;
@@ -100,8 +100,8 @@ namespace editor {
             this.render();
         }
 
-        public set tilesEditingMode(tilesEditingMode: TilesEditingMode) {
-            this.tilesEditingMode_ = tilesEditingMode;
+        public set editingMode(editingMode: EditingMode) {
+            this.editingMode_ = editingMode;
             this.render();
         }
 

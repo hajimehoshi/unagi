@@ -55,6 +55,11 @@ namespace editor {
             return <TilesElement><any>shadowRoot.querySelector('unagi-tiles');
         }
 
+        private get database(): PlayerElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return (<PlayerElement><any>shadowRoot.querySelector('unagi-database'));
+        }
+
         private get player(): PlayerElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             return (<PlayerElement><any>shadowRoot.querySelector('unagi-player'));
@@ -94,9 +99,14 @@ namespace editor {
             this.player.stopGame();
         }
 
-        public updateTilesEditingMode(tilesEditingMode: TilesEditingMode): void {
-            this.palette.tilesEditingMode = tilesEditingMode;
-            this.tiles.tilesEditingMode = tilesEditingMode;
+        public updateEditingMode(editingMode: EditingMode): void {
+            if (editingMode === EditingMode.Database) {
+                (<HTMLElement><any>this.database).style.display = 'block';
+            } else {
+                (<HTMLElement><any>this.database).style.display = 'none';
+            }
+            this.palette.editingMode = editingMode;
+            this.tiles.editingMode = editingMode;
         }
     }
 }

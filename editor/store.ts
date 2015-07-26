@@ -13,9 +13,10 @@
 // limitations under the License.
 
 namespace editor {
-    export enum TilesEditingMode {
+    export enum EditingMode {
         Map,
         Event,
+        Database,
     }
 
     export class Store {
@@ -28,12 +29,12 @@ namespace editor {
         private tilesCursorY_: number;
         private tilesOffset_: {[id: string]: {x: number, y: number}};
         private isPlayingGame_: boolean;
-        private tilesEditingMode_: TilesEditingMode;
+        private tilesEditingMode_: EditingMode;
 
         public constructor(mapEditorMain: MainElement) {
             this.mainElement_ = mapEditorMain;
             this.isPlayingGame_ = false;
-            this.updateTilesEditingMode(TilesEditingMode.Map);
+            this.updateEditingMode(EditingMode.Map);
             this.tilesOffset_ = {};
         }
 
@@ -88,7 +89,7 @@ namespace editor {
             if (!this.selectedTiles_) {
                 return;
             }
-            if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+            if (this.tilesEditingMode_ != EditingMode.Map) {
                 return;
             }
             this.currentMap.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
@@ -125,11 +126,11 @@ namespace editor {
             this.mainElement_.stopGame();
         }
 
-        public updateTilesEditingMode(tilesEditingMode: TilesEditingMode): void {
+        public updateEditingMode(tilesEditingMode: EditingMode): void {
             this.tilesEditingMode_ = tilesEditingMode;
-            this.mainElement_.updateTilesEditingMode(tilesEditingMode);
+            this.mainElement_.updateEditingMode(tilesEditingMode);
 
-            if (this.tilesEditingMode_ == TilesEditingMode.Event && this.selectedTiles_) {
+            if (this.tilesEditingMode_ === EditingMode.Event && this.selectedTiles_) {
                 this.selectedTiles_.shrink();
                 this.updateSelectedTiles(this.selectedTiles_);
             }

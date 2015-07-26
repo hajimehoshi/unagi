@@ -65,9 +65,9 @@ namespace editor {
             this.content.stopGame();
         }
 
-        public updateTilesEditingMode(tilesEditingMode: TilesEditingMode): void {
-            this.content.updateTilesEditingMode(tilesEditingMode);
-            this.toolbar.tilesEditingMode = tilesEditingMode;
+        public updateEditingMode(editingMode: EditingMode): void {
+            this.toolbar.editingMode = editingMode;
+            this.content.updateEditingMode(editingMode);
         }
     }
 }

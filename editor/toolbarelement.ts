@@ -54,20 +54,16 @@ namespace editor {
                 Dispatcher.onStopGame();
             });
 
-            let cond = `input[type=radio][name=tilesEditingMode]`;
+            let cond = `input[type=radio][name=editingMode]`;
             let radioButtons = shadowRoot.querySelectorAll(cond);
             [].forEach.call(radioButtons, (radioButton: HTMLInputElement) => {
                 radioButton.addEventListener('change', () => {
-                    let mode: TilesEditingMode;
-                    switch (radioButton.value) {
-                    case 'map':
-                        mode = TilesEditingMode.Map;
-                        break;
-                    case 'event':
-                        mode = TilesEditingMode.Event;
-                        break;
-                    }
-                    Dispatcher.onTilesEditingModeChanged(mode);
+                    let mode = {
+                        map:      EditingMode.Map,
+                        event:    EditingMode.Event,
+                        database: EditingMode.Database,
+                    }[radioButton.value];
+                    Dispatcher.onEditingModeChanged(mode);
                 })
             });
 
@@ -76,18 +72,14 @@ namespace editor {
             });
         }
 
-        public set tilesEditingMode(tilesEditingMode: TilesEditingMode) {
+        public set editingMode(editingMode: EditingMode) {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let value = '';
-            switch (tilesEditingMode) {
-            case TilesEditingMode.Map:
-                value = 'map';
-                break;
-            case TilesEditingMode.Event:
-                value = 'event';
-                break;
-            }
-            let cond = `input[type=radio][name=tilesEditingMode][value=${ value }]`;
+            let value = {
+                [EditingMode.Map]:      'map',
+                [EditingMode.Event]:    'event',
+                [EditingMode.Database]: 'database',
+            }[editingMode];
+            let cond = `input[type=radio][name=editingMode][value=${ value }]`;
             let radioButton = <HTMLInputElement>shadowRoot.querySelector(cond);
             radioButton.checked = true;
         }

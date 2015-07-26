@@ -18,7 +18,7 @@ namespace editor {
         private selectedTiles_: SelectedTiles;
         private tilesSelectingState_: TilesSelectingState;
         private tileSetImage_: HTMLImageElement;
-        private tilesEditingMode_: TilesEditingMode;
+        private editingMode_: EditingMode;
         private scale_: number;
         private cursorPositionX_: number;
         private cursorPositionY_: number;
@@ -58,7 +58,7 @@ namespace editor {
                     this.isDrawing_ = true;
                     Dispatcher.onDrawingTiles();
                 }
-                if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+                if (this.editingMode_ != EditingMode.Map) {
                     return;
                 }
                 if (e.buttons === 2) {
@@ -83,7 +83,7 @@ namespace editor {
                     }
                     Dispatcher.onDrawingTiles();
                 }
-                if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+                if (this.editingMode_ != EditingMode.Map) {
                     return;
                 }
                 if (e.buttons === 2) {
@@ -103,7 +103,7 @@ namespace editor {
             });
             self.addEventListener('mouseup', (e: MouseEvent) => {
                 this.isDrawing_ = false;
-                if (this.tilesEditingMode_ != TilesEditingMode.Map) {
+                if (this.editingMode_ != EditingMode.Map) {
                     return;
                 }
                 if (e.buttons === 2) {
@@ -151,8 +151,8 @@ namespace editor {
             this.render();
         }
 
-        public set tilesEditingMode(tilesEditingMode: TilesEditingMode) {
-            this.tilesEditingMode_ = tilesEditingMode;
+        public set editingMode(editingMode: EditingMode) {
+            this.editingMode_ = editingMode;
             this.render();
         }
 
@@ -175,7 +175,7 @@ namespace editor {
             context.clearRect(0, 0, canvas.width, canvas.height);
 
             if (this.tileSetImage_ && this.tileSetImage_.dataset['loaded'] === 'true' && this.map_) {
-                this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_, this.tilesEditingMode_ == TilesEditingMode.Event);
+                this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_, this.editingMode_ == EditingMode.Event);
             }
 
             if (this.selectedTiles_ && this.cursorPositionX_ !== void(0) && this.cursorPositionY_ !== void(0)) {
