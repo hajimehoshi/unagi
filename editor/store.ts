@@ -21,6 +21,7 @@ namespace editor {
     export class Store {
         private mainElement_: MainElement;
         private game_: data.Game;
+        private idToMap_: {[id: string]: data.Map};
         private currentMapId_: string;
         private selectedTiles_: SelectedTiles;
         private tilesCursorX_: number;
@@ -37,11 +38,17 @@ namespace editor {
         }
 
         private get currentMap(): Map {
-            return new Map(this.game_.maps[this.currentMapId_]);
+            let id = this.currentMapId_;
+            // TODO: Map is not a good name because this conflicts with a standard Map.
+            return new Map(this.idToMap_[id]);
         }
 
         public updateGame(game: data.Game): void {
             this.game_ = game;
+            this.idToMap_ = {}; // TODO: Use standard Map.
+            for (let map of this.game_.maps) {
+                this.idToMap_[map.id] = map;
+            }
             // TODO: What if no map exists?
             this.currentMapId_ = this.game_.maps[0].id;
             this.mainElement_.updateMap(this.currentMap);

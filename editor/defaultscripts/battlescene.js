@@ -3,6 +3,7 @@
 class BattlePlayerWindow {
     constructor(index) {
         this.index_ = index;
+        // TODO: Centering?
         this.window_ = new Window(80 * this.index_, 160, 80, 80);
     }
 
