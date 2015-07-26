@@ -201,19 +201,21 @@ namespace editor {
         let store = new editor.Store(main);
         editor.Dispatcher.store = store;
 
-        let map: data.Map = {
-            id:    data.UUID.generate(),
-            name:  'New Map',
-            xNum:  100,
-            yNum:  100,
-            tiles: new Int16Array(100 * 100),
-        };
+        let mapId = data.UUID.generate()
         let game: data.Game = {
             title:  'New RPG',
-            maps:   {[map.id]: map},
-            mapIds: [map.id],
+            maps:   [
+                {
+                    id:    mapId,
+                    name:  'New Map',
+                    xNum:  100,
+                    yNum:  100,
+                    tiles: new Int16Array(100 * 100),
+                },
+            ],
+            actors: [],
             playerInitialPosition: {
-                mapId: map.id,
+                mapId: mapId,
                 x:     4,
                 y:     4,
             },

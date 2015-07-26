@@ -22,11 +22,14 @@ namespace data {
     }
 
     export declare type Game = {
-        title: string,
-        maps: {[id: string]: Map},
-        mapIds: string[],
+        title:                 string,
+        maps:                  Map[],
+        actors:                Actor[],
         playerInitialPosition: Position,
-        scripts: {[name: string]: string},
-        scriptNames: string[],
+        scripts:               {[name: string]: string},
+        scriptNames:           string[],
+    }
+
+    export declare type Actor = {
     }
 }

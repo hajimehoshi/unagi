@@ -40,23 +40,14 @@ namespace editor {
             return new Map(this.game_.maps[this.currentMapId_]);
         }
 
-        private get maps(): data.Map[] {
-            let maps: data.Map[] = [];
-            for (let id in this.game_.maps) {
-                maps.push(this.game_.maps[id]);
-            }
-            return maps;
-        }
-
         public updateGame(game: data.Game): void {
             this.game_ = game;
             // TODO: What if no map exists?
-            this.currentMapId_ = this.game_.mapIds[0];
+            this.currentMapId_ = this.game_.maps[0].id;
             this.mainElement_.updateMap(this.currentMap);
-            let maps = this.maps;
-            this.mainElement_.updateMapList(this.currentMapId_, maps);
+            this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
 
-            for (let map of maps) {
+            for (let map of this.game_.maps) {
                 this.tilesOffset_[map.id] = {x: -16, y: -16};
             }
             let offset = this.tilesOffset_[this.currentMapId_];
@@ -66,7 +57,7 @@ namespace editor {
         public updateCurrentMap(id: string): void {
             this.currentMapId_ = id;
             this.mainElement_.updateMap(this.currentMap);
-            this.mainElement_.updateMapList(this.currentMapId_, this.maps);
+            this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
 
             let offset = this.tilesOffset_[this.currentMapId_];
             this.mainElement_.updateTilesOffset(offset.x, offset.y);
