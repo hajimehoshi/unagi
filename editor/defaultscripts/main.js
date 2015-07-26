@@ -7,51 +7,46 @@ tileSetImage.src = 'images/tileset.png';
 let characterSetImage = new Image();
 characterSetImage.src = 'images/characterset.png';
 
-class GameState {
+let $gameState = new GameState();
+
+class SceneStack {
     constructor() {
-        this.playerPosition_ = null;
+        this.stack_ = [];
     }
 
-    moveTo(mapId, x, y) {
-        this.playerPosition_ = {
-            mapId: mapId,
-            x:     x,
-            y:     y,
-        };
+    get current() {
+        return this.stack_[this.stack_.length - 1];
     }
 
-    moveBy(dx, dy) {
-        this.playerPosition_.x += dx;
-        this.playerPosition_.y += dy;
+    push(scene) {
+        this.stack_.push(scene);
     }
 
-    get playerPosition() {
-        return {
-            mapId: this.playerPosition_.mapId,
-            x:     this.playerPosition_.x,
-            y:     this.playerPosition_.y,
-        }
+    pop() {
+        return this.stack_.pop();
+    }
+
+    clear() {
+        this.stack_.length = 0;
     }
 }
 
-let gameState = null;
-let currentScene = null;
+let $sceneStack = new SceneStack();
 
 (function() {
-    gameState = new GameState();
-    currentScene = new MapScene(gameState);
+    $sceneStack.push(new MapScene());
     let initialPosition = $game.playerInitialPosition;
-    gameState.moveTo(initialPosition.mapId, initialPosition.x, initialPosition.y);
+    $gameState.moveTo(initialPosition.mapId, initialPosition.x, initialPosition.y);
 })()
 
 function update(context) {
-    if (!currentScene) {
+    if (!$sceneStack.current) {
         return;
     }
 
     $input.update();
-    currentScene.update();
-    currentScene.draw(context);
+    $sceneStack.current.update();
+    $sceneStack.current.draw(context);
 }
 
 Env.run(update);

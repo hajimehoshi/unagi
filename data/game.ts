@@ -40,12 +40,4 @@ namespace data {
             scriptNames: [],
         };
     }
-
-    export function concatenatedScript(game: Game): string {
-        let script = "";
-        for (let name of game.scriptNames) {
-            script += game.scripts[name];
-        }
-        return script;
-    }
 }

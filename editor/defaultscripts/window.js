@@ -8,6 +8,11 @@ class Window {
         this.height_ = height;
     }
 
+    get x() { return this.x_; }
+    get y() { return this.y_; }
+    get width() { return this.width_; }
+    get height() { return this.height_; }
+
     update() {
     }
 

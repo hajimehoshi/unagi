@@ -1,9 +1,11 @@
 Input
+Game State
 
 Character Sprite
 
 Window
 
 Map Scene
+Battle Scene
 
 Main

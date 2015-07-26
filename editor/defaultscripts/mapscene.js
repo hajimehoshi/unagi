@@ -1,14 +1,11 @@
 'use strict';
 
 class MapScene {
-    constructor(gameState) {
-        this.gameState_ = gameState;
+    constructor() {
         this.playerSprite_ = new CharacterSprite(characterSetImage);
         this.movingCounter_ = 0;
         this.movingDirectionX_ = 0;
         this.movingDirectionY_ = 0;
-
-        this.window_ = new Window(0, 0, 32, 32);
     }
 
     get maxMovingCounter() {
@@ -17,12 +14,19 @@ class MapScene {
 
     update() {
         this.playerSprite_.update();
+
+        // test
+        if ($gameState.playerPosition.x === 5 && $gameState.playerPosition.y === 5) {
+            $sceneStack.push(new BattleScene());
+            return;
+        }
+
         if (this.movingCounter_) {
             this.movingCounter_--;
             if (this.movingCounter_) {
                 return;
             }
-            this.gameState_.moveBy(this.movingDirectionX_, this.movingDirectionY_);
+            $gameState.moveBy(this.movingDirectionX_, this.movingDirectionY_);
         }
         this.movingDirectionX_ = 0;
         this.movingDirectionY_ = 0;
@@ -66,8 +70,8 @@ class MapScene {
         let map = $game.maps[mapId];
         let offsetX = this.playerSprite_.x + this.playerSprite_.width / 2 - data.gridSize / 2;
         let offsetY = this.playerSprite_.y + this.playerSprite_.height - data.gridSize;
-        offsetX -= this.gameState_.playerPosition.x * data.gridSize;
-        offsetY -= this.gameState_.playerPosition.y * data.gridSize;
+        offsetX -= $gameState.playerPosition.x * data.gridSize;
+        offsetY -= $gameState.playerPosition.y * data.gridSize;
         let nextOffsetX = offsetX - this.movingDirectionX_ * data.gridSize;
         let nextOffsetY = offsetY - this.movingDirectionY_ * data.gridSize;
         let rate = 1 - this.movingCounter_ / this.maxMovingCounter;
@@ -77,10 +81,10 @@ class MapScene {
         if (offsetY !== nextOffsetY) {
             offsetY = ((1 - rate) * offsetY + rate * nextOffsetY)|0;
         }
-        let minI = Math.max(this.gameState_.playerPosition.x - 11, 0);
-        let maxI = Math.min(this.gameState_.playerPosition.x + 11, map.xNum);
-        let minJ = Math.max(this.gameState_.playerPosition.y - 8, 0);
-        let maxJ = Math.min(this.gameState_.playerPosition.y + 8, map.yNum);
+        let minI = Math.max($gameState.playerPosition.x - 11, 0);
+        let maxI = Math.min($gameState.playerPosition.x + 11, map.xNum);
+        let minJ = Math.max($gameState.playerPosition.y - 8, 0);
+        let maxJ = Math.min($gameState.playerPosition.y + 8, map.yNum);
         for (let j = minJ; j <= maxJ; j++) {
             for (let i = minI; i <= maxI; i++) {
                 let tile = map.tiles[i + map.xNum * j];
@@ -93,8 +97,6 @@ class MapScene {
         }
         util.drawBitmapTextAt(context, map.id, 0, 0);
         this.playerSprite_.draw(context);
-
-        this.window_.draw(context);
 
         context.restore();
     }

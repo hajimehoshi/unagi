@@ -94,8 +94,10 @@ class Env {
 
         let loop = () => {
             let offscreenContext = offscreenCanvas.getContext('2d');
+            offscreenContext.save();
             offscreenContext.clearRect(0, 0, width, height);
             f(offscreenContext);
+            offscreenContext.restore();
 
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.drawImage(offscreenCanvas, 0, 0, canvas.width, canvas.height);
@@ -114,7 +116,13 @@ let $game: data.Game;
     window.addEventListener('message', (e) => {
         let game = <data.Game>e.data;
         $game = game;
+
+        let script = "";
+        for (let name of game.scriptNames) {
+            script += game.scripts[name];
+        }
+
         // Call 'eval' indirectly so that 'this' variable will be a global window.
-        (0, eval)(data.concatenatedScript(game));
+        (0, eval)(script);
     });
 })();
