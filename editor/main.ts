@@ -208,6 +208,7 @@ namespace editor {
             game.mapIds.push(map.id);
         }
         game.playerInitialPosition = {mapId: firstMap.id, x: 4, y: 4};
+        console.log(JSON.stringify(game))
 
         game.scripts = editor.defaultScripts;
         game.scriptNames = editor.defaultScriptNames;
