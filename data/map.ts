@@ -20,14 +20,4 @@ namespace data {
         xNum: number,
         yNum: number,
     };
-
-    export function createMap(xNum: number, yNum: number): Map {
-        return {
-            id: data.UUID.generate(),
-            name: 'New Map',
-            xNum: xNum,
-            yNum: yNum,
-            tiles: new Int16Array(xNum * yNum),
-        }
-    }
 }

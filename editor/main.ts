@@ -201,17 +201,25 @@ namespace editor {
         let store = new editor.Store(main);
         editor.Dispatcher.store = store;
 
-        let game = data.createGame('Sample RPG');
-        let firstMap = data.createMap(100, 100);
-        for (let map of [firstMap, data.createMap(20, 15), data.createMap(20, 15)]) {
-            game.maps[map.id] = map;
-            game.mapIds.push(map.id);
-        }
-        game.playerInitialPosition = {mapId: firstMap.id, x: 4, y: 4};
-        console.log(JSON.stringify(game))
-
-        game.scripts = editor.defaultScripts;
-        game.scriptNames = editor.defaultScriptNames;
+        let map: data.Map = {
+            id:    data.UUID.generate(),
+            name:  'New Map',
+            xNum:  100,
+            yNum:  100,
+            tiles: new Int16Array(100 * 100),
+        };
+        let game: data.Game = {
+            title:  'New RPG',
+            maps:   {[map.id]: map},
+            mapIds: [map.id],
+            playerInitialPosition: {
+                mapId: map.id,
+                x:     4,
+                y:     4,
+            },
+            scripts:     editor.defaultScripts,
+            scriptNames: editor.defaultScriptNames,
+        };
         editor.Dispatcher.onInitialized(game);
     });
 })();

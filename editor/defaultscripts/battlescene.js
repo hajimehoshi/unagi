@@ -14,8 +14,8 @@ class BattlePlayerWindow {
         context.save();
         this.window_.draw(context);
         util.drawBitmapTextAt(context, "名前名前あ", this.window_.x + 8, this.window_.y + 8);
-        util.drawBitmapTextAt(context, "HP: 100", this.window_.x + 8, this.window_.y + 8 + 16);
-        util.drawBitmapTextAt(context, "MP: 100", this.window_.x + 8, this.window_.y + 8 + 32);
+        util.drawBitmapTextAt(context, "HP 100", this.window_.x + 8, this.window_.y + 8 + 16);
+        util.drawBitmapTextAt(context, "MP 100", this.window_.x + 8, this.window_.y + 8 + 32);
         context.restore();
     }
 }

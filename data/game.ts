@@ -29,15 +29,4 @@ namespace data {
         scripts: {[name: string]: string},
         scriptNames: string[],
     }
-
-    export function createGame(title: string): Game {
-        return {
-            title: title,
-            maps: {},
-            mapIds: [],
-            playerInitialPosition: {mapId: null, x: 0, y: 0},
-            scripts: {},
-            scriptNames: [],
-        };
-    }
 }
