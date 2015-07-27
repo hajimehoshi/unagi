@@ -19,10 +19,24 @@ namespace editor {
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
-        }
 
-        public render(): void {
-            this.content.render();
+            window.addEventListener('load', () => {
+                let tileSetImage = new Image();
+                tileSetImage.src = './images/tileset.png';
+                tileSetImage.addEventListener('load', () => {
+                    tileSetImage.dataset['loaded'] = 'true';
+                });
+
+                let palette = this.palette;
+                palette.tileSetImage = tileSetImage;
+
+                let tiles = this.tiles;
+                tiles.tileSetImage = tileSetImage;
+
+                tileSetImage.addEventListener('load', () => {
+                    this.render();
+                });
+            })
         }
 
         private get toolbar(): ToolbarElement {
@@ -30,48 +44,80 @@ namespace editor {
             return <ToolbarElement><any>shadowRoot.querySelector('unagi-toolbar');
         }
 
-        private get content(): ContentElement {
+        private get palette(): PaletteElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <ContentElement><any>shadowRoot.querySelector('unagi-content');
+            return <PaletteElement><any>shadowRoot.querySelector('unagi-palette');
+        }
+
+        private get mapList(): MapListElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return <MapListElement><any>shadowRoot.querySelector('unagi-maplist');
+        }
+
+        private get tiles(): TilesElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return <TilesElement><any>shadowRoot.querySelector('unagi-tiles');
+        }
+
+        private get database(): DatabaseElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return (<DatabaseElement><any>shadowRoot.querySelector('unagi-database'));
+        }
+
+        private get player(): PlayerElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return (<PlayerElement><any>shadowRoot.querySelector('unagi-player'));
+        }
+
+        public render(): void {
+            this.palette.render();
+            this.tiles.render();
         }
 
         public updateMap(map: Map) {
-            this.content.updateMap(map);
+            this.tiles.map = map;
         }
 
         public updateMapList(currentMapId: string, maps: data.Map[]) {
-            this.content.updateMapList(currentMapId, maps);
+            this.mapList.update(currentMapId, maps);
         }
 
         public updateSelectedTiles(s: SelectedTiles) {
-            this.content.updateSelectedTiles(s);
+            this.palette.selectedTiles = s;
+            this.tiles.selectedTiles = s;
         }
 
         public updateTilesCursorPosition(x: number, y: number): void {
-            this.content.updateTilesCursorPosition(x, y);
+            this.tiles.updateCursorPosition(x, y);
         }
 
         public updateTilesOffset(x: number, y: number): void {
-            this.content.updateTilesOffset(x, y);
+            this.tiles.updateOffset(x, y);
         }
 
         public playGame(game: data.Game): void {
             this.toolbar.playGame();
-            this.content.playGame(game);
+            this.player.playGame(game);
         }
 
         public stopGame(): void {
             this.toolbar.stopGame();
-            this.content.stopGame();
+            this.player.stopGame();
         }
 
         public updateEditingMode(editingMode: EditingMode): void {
             this.toolbar.editingMode = editingMode;
-            this.content.updateEditingMode(editingMode);
+            if (editingMode === EditingMode.Database) {
+                (<HTMLElement><any>this.database).style.display = 'block';
+            } else {
+                (<HTMLElement><any>this.database).style.display = 'none';
+            }
+            this.palette.editingMode = editingMode;
+            this.tiles.editingMode = editingMode;
         }
 
         public updateDatabaseMode(databaseMode: DatabaseMode): void {
-            this.content.updateDatabaseMode(databaseMode);
+            this.database.updateMode(databaseMode);
         }
     }
 }

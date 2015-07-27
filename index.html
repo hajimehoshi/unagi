@@ -10,16 +10,59 @@
       height: 32px;
       width: 100%;
     }
-    unagi-content {
+    .content {
       display: block;
       height: calc(100% - 33px);
       position: absolute;
       top: 33px;
       width: 100%;
     }
+    unagi-palette {
+      display: block;
+      height: calc(100% - 256px - 1px);
+      overflow: auto;
+      position: absolute;
+      width: 256px;
+    }
+    unagi-maplist {
+      bottom: 0;
+      display: block;
+      height: 256px;
+      position: absolute;
+      width: 256px;
+    }
+    unagi-tiles {
+      height: 100%;
+      display: block;
+      left: calc(256px + 1px);
+      position: absolute;
+      width: calc(100% - 256px - 1px);
+    }
+    unagi-database {
+      display: none;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      width: 100%;
+      z-index: 1;
+    }
+    unagi-player {
+      display: none;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      width: 100%;
+      z-index: 10;
+    }
   </style>
   <unagi-toolbar></unagi-toolbar>
-  <unagi-content></unagi-content>
+  <div class="content">
+    <unagi-palette></unagi-palette>
+    <unagi-maplist></unagi-maplist>
+    <unagi-tiles></unagi-tiles>
+    <unagi-database></unagi-database>
+    <unagi-player></unagi-player>
+  </div>
 </template>
 <template id="unagi-toolbar-style-template">
   <style>
@@ -114,55 +157,6 @@
     <button id="stop"><img src="./images/icons/stop-icon.svg" width="20" height="20"></button>
     <button id="play"><img src="./images/icons/play-icon.svg" width="20" height="20"></button>
   </menu>
-</template>
-<template id="unagi-content-template">
-  <style>
-    :host {
-      font-size: 0;
-    }
-    unagi-palette {
-      display: block;
-      height: calc(100% - 256px - 1px);
-      overflow: auto;
-      position: absolute;
-      width: 256px;
-    }
-    unagi-maplist {
-      bottom: 0;
-      display: block;
-      height: 256px;
-      position: absolute;
-      width: 256px;
-    }
-    unagi-tiles {
-      height: 100%;
-      display: block;
-      left: calc(256px + 1px);
-      position: absolute;
-      width: calc(100% - 256px - 1px);
-    }
-    unagi-database {
-      display: none;
-      height: 100%;
-      left: 0;
-      position: absolute;
-      width: 100%;
-      z-index: 1;
-    }
-    unagi-player {
-      display: none;
-      height: 100%;
-      left: 0;
-      position: absolute;
-      width: 100%;
-      z-index: 10;
-    }
-  </style>
-  <unagi-palette></unagi-palette>
-  <unagi-maplist></unagi-maplist>
-  <unagi-tiles></unagi-tiles>
-  <unagi-database></unagi-database>
-  <unagi-player></unagi-player>
 </template>
 <template id="unagi-palette-template">
   <style>
