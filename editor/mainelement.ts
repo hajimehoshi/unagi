@@ -69,6 +69,10 @@ namespace editor {
             this.toolbar.editingMode = editingMode;
             this.content.updateEditingMode(editingMode);
         }
+
+        public updateDatabaseMode(databaseMode: DatabaseMode): void {
+            this.content.updateDatabaseMode(databaseMode);
+        }
     }
 }
 

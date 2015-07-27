@@ -20,6 +20,15 @@ namespace editor {
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
         }
+
+        private get toolbar(): DatabaseToolbarElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return (<DatabaseToolbarElement><any>shadowRoot.querySelector('unagi-database-toolbar'));
+        }
+
+        public updateMode(mode: DatabaseMode): void {
+            this.toolbar.updateMode(mode);
+        }
     }
 }
 

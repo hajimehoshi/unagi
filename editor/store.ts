@@ -19,6 +19,16 @@ namespace editor {
         Database,
     }
 
+    export enum DatabaseMode {
+        Actors,
+        Skills,
+        States,
+        Items,
+        Enemies,
+        Troops,
+        System,
+    }
+
     export class Store {
         private mainElement_: MainElement;
         private game_: data.Game;
@@ -29,12 +39,14 @@ namespace editor {
         private tilesCursorY_: number;
         private tilesOffset_: {[id: string]: {x: number, y: number}};
         private isPlayingGame_: boolean;
-        private tilesEditingMode_: EditingMode;
+        private editingMode_: EditingMode;
+        private databaseMode_: DatabaseMode;
 
         public constructor(mapEditorMain: MainElement) {
             this.mainElement_ = mapEditorMain;
             this.isPlayingGame_ = false;
             this.updateEditingMode(EditingMode.Map);
+            this.updateDatabaseMode(DatabaseMode.Actors);
             this.tilesOffset_ = {};
         }
 
@@ -89,7 +101,7 @@ namespace editor {
             if (!this.selectedTiles_) {
                 return;
             }
-            if (this.tilesEditingMode_ != EditingMode.Map) {
+            if (this.editingMode_ != EditingMode.Map) {
                 return;
             }
             this.currentMap.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
@@ -126,14 +138,19 @@ namespace editor {
             this.mainElement_.stopGame();
         }
 
-        public updateEditingMode(tilesEditingMode: EditingMode): void {
-            this.tilesEditingMode_ = tilesEditingMode;
-            this.mainElement_.updateEditingMode(tilesEditingMode);
+        public updateEditingMode(editingMode: EditingMode): void {
+            this.editingMode_ = editingMode;
+            this.mainElement_.updateEditingMode(editingMode);
 
-            if (this.tilesEditingMode_ === EditingMode.Event && this.selectedTiles_) {
+            if (this.editingMode_ === EditingMode.Event && this.selectedTiles_) {
                 this.selectedTiles_.shrink();
                 this.updateSelectedTiles(this.selectedTiles_);
             }
+        }
+
+        public updateDatabaseMode(databaseMode: DatabaseMode): void {
+            this.databaseMode_ = databaseMode;
+            this.mainElement_.updateDatabaseMode(databaseMode);
         }
     }
 }

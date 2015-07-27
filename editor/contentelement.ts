@@ -55,9 +55,9 @@ namespace editor {
             return <TilesElement><any>shadowRoot.querySelector('unagi-tiles');
         }
 
-        private get database(): PlayerElement {
+        private get database(): DatabaseElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return (<PlayerElement><any>shadowRoot.querySelector('unagi-database'));
+            return (<DatabaseElement><any>shadowRoot.querySelector('unagi-database'));
         }
 
         private get player(): PlayerElement {
@@ -107,6 +107,10 @@ namespace editor {
             }
             this.palette.editingMode = editingMode;
             this.tiles.editingMode = editingMode;
+        }
+
+        public updateDatabaseMode(databaseMode: DatabaseMode): void {
+            this.database.updateMode(databaseMode);
         }
     }
 }
