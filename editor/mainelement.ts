@@ -14,6 +14,8 @@
 
 namespace editor {
     export class MainElement {
+        private game_: data.Game;
+
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-main-template');
             let clone = document.importNode(template.content, true);
@@ -37,6 +39,19 @@ namespace editor {
                     this.render();
                 });
             })
+            
+            window.addEventListener('message', (e: MessageEvent) => {
+                if (e.data === 'quit') {
+                    Dispatcher.onStopGame();
+                }
+            });
+            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe.player'));
+            iframe.addEventListener('load', (e) => {
+                if (iframe.src === 'about:blank') {
+                    return;
+                }
+                iframe.contentWindow.postMessage(this.game_, '*');
+            });
         }
 
         private get toolbar(): ToolbarElement {
@@ -62,11 +77,6 @@ namespace editor {
         private get database(): DatabaseElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             return (<DatabaseElement><any>shadowRoot.querySelector('unagi-database'));
-        }
-
-        private get player(): PlayerElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return (<PlayerElement><any>shadowRoot.querySelector('unagi-player'));
         }
 
         public render(): void {
@@ -96,13 +106,25 @@ namespace editor {
         }
 
         public playGame(game: data.Game): void {
+            this.game_ = game;
+
             this.toolbar.playGame();
-            this.player.playGame(game);
+
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe.player'));
+            iframe.src = './player.html';
+            iframe.style.display = 'block';
         }
 
         public stopGame(): void {
+            this.game_ = null;
+
             this.toolbar.stopGame();
-            this.player.stopGame();
+
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe.player'));
+            iframe.src = 'about:blank';
+            iframe.style.display = 'none';
         }
 
         public updateEditingMode(editingMode: EditingMode): void {

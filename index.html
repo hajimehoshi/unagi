@@ -11,11 +11,11 @@
       width: 100%;
     }
     .content {
-      display: block;
       height: calc(100% - 33px);
       position: absolute;
       top: 33px;
       width: 100%;
+      z-index: 0;
     }
     unagi-palette {
       display: block;
@@ -46,13 +46,16 @@
       width: 100%;
       z-index: 1;
     }
-    unagi-player {
+    iframe.player {
+      border-style: none;
+      border-width: 0;
       display: none;
       height: 100%;
-      left: 0;
+      margin: 0;
+      padding: 0;
       position: absolute;
       width: 100%;
-      z-index: 10;
+      z-index: 1;
     }
   </style>
   <unagi-toolbar></unagi-toolbar>
@@ -61,7 +64,7 @@
     <unagi-maplist></unagi-maplist>
     <unagi-tiles></unagi-tiles>
     <unagi-database></unagi-database>
-    <unagi-player></unagi-player>
+    <iframe class="player" sandbox="allow-scripts"></iframe>
   </div>
 </template>
 <template id="unagi-toolbar-style-template">
@@ -85,12 +88,12 @@
       margin: 0;
       padding: 0;
     }
-    button[disabled] {
-      color: rgba(0, 0, 0, 0.26);
-    }
     button img {
       opacity: 0.54;
       margin: 6px;
+    }
+    input[disabled] + span {
+      color: rgba(0, 0, 0, 0.26);
     }
     button[disabled] img {
       opacity: 0.26;
@@ -231,9 +234,19 @@
     :host {
       background-color: #9e9e9e;
     }
+    .content {
+      height: calc(100% - 33px);
+      font-size: 12px;
+      line-height: 1.5;
+      position: absolute;
+      top: 33px;
+      width: 100%;
+    }
   </style>
   <unagi-database-toolbar></unagi-database-toolbar>
-  <p>This is the database editor</p>
+  <div class="content">
+    <p>hogehoge<br>huga</p>
+  </div>
 </template>
 <template id="unagi-database-toolbar-template">
   <style>
@@ -251,19 +264,6 @@
     <label><input type="radio" name="databaseMode" value="troops"><span>Troops</span></label>
     <label><input type="radio" name="databaseMode" value="system"><span>System</span></label>
   </menu>
-</template>
-<template id="unagi-player-template">
-  <style>
-    iframe {
-      border-style: none;
-      border-width: 0;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-    }
-  </style>
-  <iframe sandbox="allow-scripts"></iframe>
 </template>
 <title>Unagi - RPG Editor</title>
 <style>
