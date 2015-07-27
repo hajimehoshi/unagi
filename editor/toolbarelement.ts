@@ -20,6 +20,10 @@ namespace editor {
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
 
+            let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-toolbar-style-template');
+            let styleClone = document.importNode(styleTemplate.content, true);
+            shadowRoot.appendChild(styleClone);
+
             shadowRoot.querySelector('#play').addEventListener('click', (e: MouseEvent) => {
                 if ((<HTMLElement>e.target).getAttribute('disabled')) {
                     return;
