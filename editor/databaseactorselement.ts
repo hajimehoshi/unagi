@@ -19,10 +19,6 @@ namespace editor {
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
-
-            let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-itemlist-style-template');
-            let styleClone = document.importNode(styleTemplate.content, true);
-            shadowRoot.appendChild(styleClone);
         }
     }
 }

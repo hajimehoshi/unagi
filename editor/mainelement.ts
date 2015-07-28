@@ -52,6 +52,9 @@ namespace editor {
                 }
                 iframe.contentWindow.postMessage(this.game_, '*');
             });
+            (<HTMLElement><any>this.mapList).addEventListener('itemSelected', (e: CustomEvent) => {
+                Dispatcher.onCurrentMapChanged(e.detail.id);
+            });
         }
 
         private get toolbar(): ToolbarElement {
@@ -64,9 +67,9 @@ namespace editor {
             return <PaletteElement><any>shadowRoot.querySelector('unagi-palette');
         }
 
-        private get mapList(): MapListElement {
+        private get mapList(): ListBoxElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <MapListElement><any>shadowRoot.querySelector('unagi-maplist');
+            return <ListBoxElement><any>shadowRoot.querySelector('unagi-listbox');
         }
 
         private get tiles(): TilesElement {
@@ -89,7 +92,14 @@ namespace editor {
         }
 
         public updateMapList(currentMapId: string, maps: data.Map[]) {
-            this.mapList.update(currentMapId, maps);
+            let items = maps.map((map: data.Map): ListBoxItem => {
+                return {
+                    title: map.name,
+                    id:    map.id,
+                };
+            });
+            this.mapList.replaceItems(items);
+            this.mapList.select(currentMapId);
         }
 
         public updateSelectedTiles(s: SelectedTiles) {

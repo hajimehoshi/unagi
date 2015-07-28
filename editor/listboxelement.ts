@@ -13,46 +13,50 @@
 // limitations under the License.
 
 namespace editor {
-    export class MapListElement {
+    export declare type ListBoxItem = {
+        title: string,
+        id:    string,
+    }
+
+    export class ListBoxElement {
         private createdCallback(): void {
-            let template = <HTMLTemplateElement>document.getElementById('unagi-maplist-template');
+            let template = <HTMLTemplateElement>document.getElementById('unagi-listbox-template');
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
-
-            let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-itemlist-style-template');
-            let styleClone = document.importNode(styleTemplate.content, true);
-            shadowRoot.appendChild(styleClone);
         }
 
-        public update(currentMapId: string, maps: data.Map[]): void {
+        public replaceItems(items: ListBoxItem[]): void {
+            // TODO: Fix implementation to update items that are only needed
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let ul = shadowRoot.querySelector('ul');
             while (ul.firstChild) {
                 ul.removeChild(ul.firstChild);
             }
-            for (let map of maps) {
+            for (let item of items) {
                 let li = document.createElement('li');
                 let label = document.createElement('label');
 
                 let input = document.createElement('input');
                 input.type = 'radio';
-                input.name = 'selectedMap';
-                input.value = map.id;
-                if (map.id === currentMapId) {
-                    input.checked = true;
-                }
+                input.name = 'selectedItem';
+                input.value = item.id;
                 input.addEventListener('change', (e) => {
                     let input = <HTMLInputElement>e.target;
                     if (!input.checked) {
                         return;
                     }
-                    Dispatcher.onCurrentMapChanged(input.value);
+                    let ce = new CustomEvent('itemSelected', {
+                        detail: {
+                            id: input.value,
+                        },
+                    });
+                    (<HTMLElement><any>this).dispatchEvent(ce);
                 });
                 label.appendChild(input);
 
                 let span = document.createElement('span');
-                span.textContent = map.name;
+                span.textContent = item.title;
                 label.appendChild(span);
 
                 li.appendChild(label);
@@ -60,10 +64,17 @@ namespace editor {
                 ul.appendChild(li);
             }
         }
+
+        public select(id: string): void {
+            // TODO: Check id's syntax
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let input = <HTMLInputElement>shadowRoot.querySelector(`input[value="${id}"]`);
+            input.checked = true;
+        }
     }
 }
 
 (() => {
-    (<any>editor.MapListElement.prototype).__proto__ = HTMLElement.prototype;
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-maplist', editor.MapListElement);
+    (<any>editor.ListBoxElement.prototype).__proto__ = HTMLElement.prototype;
+    (<editor.HTMLDocumentES6>document).registerElement('unagi-listbox', editor.ListBoxElement);
 })();

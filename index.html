@@ -24,7 +24,7 @@
       position: absolute;
       width: 256px;
     }
-    unagi-maplist {
+    unagi-listbox {
       bottom: 0;
       display: block;
       height: 256px;
@@ -61,7 +61,7 @@
   <unagi-toolbar></unagi-toolbar>
   <div class="content">
     <unagi-palette></unagi-palette>
-    <unagi-maplist></unagi-maplist>
+    <unagi-listbox></unagi-listbox>
     <unagi-tiles></unagi-tiles>
     <unagi-database></unagi-database>
     <iframe class="player" sandbox="allow-scripts"></iframe>
@@ -176,10 +176,12 @@
   </style>
   <canvas></canvas>
 </template>
-<template id="unagi-itemlist-style-template">
+<template id="unagi-listbox-template">
   <style>
-    ul.itemlist {
+    :host {
       background-color: #f5f5f5;
+    }
+    ul {
       color: rgba(0, 0, 0, 0.54);
       display: block;
       font-size: 14px;
@@ -188,43 +190,36 @@
       overflow: auto;
       padding: 0;
     }
-    ul.itemlist li {
+    ul li {
       display: block;
       overflow: none;
       margin: 0;
       padding: 0;
     }
-    ul.itemlist input[type=radio] {
+    ul input[type=radio] {
       position: absolute;
       visibility: hidden;
     }
-    ul.itemlist input[type=radio] + * {
+    ul input[type=radio] + * {
       cursor: pointer;
     }
-    ul.itemlist input[type=radio] + *:hover {
+    ul input[type=radio] + *:hover {
       background-color: #fff176;
     }
-    ul.itemlist input[type=radio] + *:active {
+    ul input[type=radio] + *:active {
       background-color: #fdd835;
     }
-    ul.itemlist input[type=radio]:checked + * {
+    ul input[type=radio]:checked + * {
       background-color: #fbc02d;
       font-weight: bold;
     }
-    ul.itemlist input[type=radio] + span {
+    ul input[type=radio] + span {
       display: inline-block;
       padding: 2px 4px;
       width: calc(100% - 8px);
     }
   </style>
-</template>
-<template id="unagi-maplist-template">
-  <style>
-    ul.itemlist {
-      height: 100%;
-    }
-  </style>
-  <ul class="itemlist">
+  <ul>
   </ul>
 </template>
 <template id="unagi-tiles-template">
@@ -282,8 +277,7 @@
       width: 128px;
     }
   </style>
-  <ul class="itemlist">
-  </ul>
+  <unagi-listbox></unagi-listbox>
 </template>
 <title>Unagi - RPG Editor</title>
 <style>
