@@ -102,7 +102,7 @@ namespace editor {
                 return;
             }
             this.currentMap.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
-            this.mainElement_.render();
+            this.mainElement_.updateMap(this.currentMap);
         }
 
         public moveTilesOffset(x: number, y: number, scale: number, canvasWidth: number, canvasHeight: number): void {

@@ -14,8 +14,6 @@
 
 namespace editor {
     export class MainElement {
-        private game_: data.Game;
-
         private createdCallback(): void {
             let template = <HTMLTemplateElement>document.getElementById('unagi-main-template');
             let clone = document.importNode(template.content, true);
@@ -36,7 +34,8 @@ namespace editor {
                 tiles.tileSetImage = tileSetImage;
 
                 tileSetImage.addEventListener('load', () => {
-                    this.render();
+                    this.palette.render();
+                    this.tiles.render();
                 });
             })
             
@@ -44,13 +43,6 @@ namespace editor {
                 if (e.data === 'quit') {
                     Dispatcher.onStopGame();
                 }
-            });
-            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe.player'));
-            iframe.addEventListener('load', (e) => {
-                if (iframe.src === 'about:blank') {
-                    return;
-                }
-                iframe.contentWindow.postMessage(this.game_, '*');
             });
             (<HTMLElement><any>this.mapList).addEventListener('itemSelected', (e: CustomEvent) => {
                 Dispatcher.onCurrentMapChanged(e.detail.id);
@@ -82,16 +74,13 @@ namespace editor {
             return (<DatabaseElement><any>shadowRoot.querySelector('unagi-database'));
         }
 
-        public render(): void {
-            this.palette.render();
-            this.tiles.render();
-        }
-
-        public updateMap(map: Map) {
+        // TODO: Rename updateCurrentMap?
+        public updateMap(map: Map): void {
             this.tiles.map = map;
         }
 
-        public updateMapList(currentMapId: string, maps: data.Map[]) {
+        // TODO: Why |currentMapId| is passed?
+        public updateMapList(currentMapId: string, maps: data.Map[]): void {
             let items = maps.map((map: data.Map): ListBoxItem => {
                 return {
                     title: map.name,
@@ -102,7 +91,7 @@ namespace editor {
             this.mapList.select(currentMapId);
         }
 
-        public updateSelectedTiles(s: SelectedTiles) {
+        public updateSelectedTiles(s: SelectedTiles): void {
             this.palette.selectedTiles = s;
             this.tiles.selectedTiles = s;
         }
@@ -116,19 +105,23 @@ namespace editor {
         }
 
         public playGame(game: data.Game): void {
-            this.game_ = game;
-
             this.toolbar.playGame();
 
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe.player'));
             iframe.src = './player.html';
             iframe.style.display = 'block';
+            let f = (e) => {
+                if (iframe.src === 'about:blank') {
+                    return;
+                }
+                iframe.contentWindow.postMessage(game, '*');
+                iframe.removeEventListener('load', f);
+            };
+            iframe.addEventListener('load', f);
         }
 
         public stopGame(): void {
-            this.game_ = null;
-
             this.toolbar.stopGame();
 
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
