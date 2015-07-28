@@ -48,6 +48,13 @@ namespace editor {
                 yNum:  100,
                 tiles: new Int16Array(100 * 100),
             },
+            {
+                id:    data.UUID.generate(),
+                name:  'New Map 2',
+                xNum:  20,
+                yNum:  15,
+                tiles: new Int16Array(20 * 15),
+            },
         ],
         actors: [
             {
