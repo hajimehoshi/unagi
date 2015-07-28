@@ -38,13 +38,10 @@ namespace editor {
         private tilesCursorX_: number;
         private tilesCursorY_: number;
         private tilesOffset_: {[id: string]: {x: number, y: number}};
-        private isPlayingGame_: boolean;
         private editingMode_: EditingMode;
-        private databaseMode_: DatabaseMode;
 
         public constructor(mapEditorMain: MainElement) {
             this.mainElement_ = mapEditorMain;
-            this.isPlayingGame_ = false;
             this.updateEditingMode(EditingMode.Map);
             this.updateDatabaseMode(DatabaseMode.Actors);
             this.tilesOffset_ = {};
@@ -129,12 +126,10 @@ namespace editor {
         }
 
         public playGame(): void {
-            this.isPlayingGame_ = true;
             this.mainElement_.playGame(this.game_);
         }
 
         public stopGame(): void {
-            this.isPlayingGame_ = false;
             this.mainElement_.stopGame();
         }
 
@@ -149,7 +144,6 @@ namespace editor {
         }
 
         public updateDatabaseMode(databaseMode: DatabaseMode): void {
-            this.databaseMode_ = databaseMode;
             this.mainElement_.updateDatabaseMode(databaseMode);
         }
     }
