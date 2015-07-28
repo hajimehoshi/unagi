@@ -59,8 +59,11 @@ namespace editor {
             for (let map of this.game_.maps) {
                 this.idToMap_[map.id] = map;
             }
+            this.mainElement_.updateGame(this.game_);
             // TODO: What if no map exists?
-            this.currentMapId_ = this.game_.maps[0].id;
+            if (!this.currentMapId_) {
+                this.currentMapId_ = this.game_.maps[0].id;
+            }
             this.mainElement_.updateMap(this.currentMap);
             this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
 

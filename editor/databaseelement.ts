@@ -26,6 +26,15 @@ namespace editor {
             return (<DatabaseToolbarElement><any>shadowRoot.querySelector('unagi-database-toolbar'));
         }
 
+        private get actors(): DatabaseActorsElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return (<DatabaseActorsElement><any>shadowRoot.querySelector('unagi-database-actors'));
+        }
+
+        public updateGame(game: data.Game): void {
+            this.actors.updateGame(game);
+        }
+
         public updateMode(mode: DatabaseMode): void {
             this.toolbar.updateMode(mode);
         }

@@ -74,6 +74,10 @@ namespace editor {
             return (<DatabaseElement><any>shadowRoot.querySelector('unagi-database'));
         }
 
+        public updateGame(game: data.Game): void {
+            this.database.updateGame(game);
+        }
+
         // TODO: Rename updateCurrentMap?
         public updateMap(map: Map): void {
             this.tiles.map = map;
@@ -112,9 +116,6 @@ namespace editor {
             iframe.src = './player.html';
             iframe.style.display = 'block';
             let f = (e) => {
-                if (iframe.src === 'about:blank') {
-                    return;
-                }
                 iframe.contentWindow.postMessage(game, '*');
                 iframe.removeEventListener('load', f);
             };

@@ -33,13 +33,14 @@ namespace editor {
             while (ul.firstChild) {
                 ul.removeChild(ul.firstChild);
             }
+            let groupName = (<HTMLElement><any>this).getAttribute('groupname');
             for (let item of items) {
                 let li = document.createElement('li');
                 let label = document.createElement('label');
 
                 let input = document.createElement('input');
                 input.type = 'radio';
-                input.name = 'selectedItem';
+                input.name = `selectedItem-${groupName}`;
                 input.value = item.id;
                 input.addEventListener('change', (e) => {
                     let input = <HTMLInputElement>e.target;

@@ -20,6 +20,20 @@ namespace editor {
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
         }
+
+        private get list(): ListBoxElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return (<ListBoxElement><any>shadowRoot.querySelector('unagi-listbox'));
+        }
+
+        public updateGame(game: data.Game): void {
+            this.list.replaceItems(game.actors.map((actor: data.Actor): ListBoxItem => {
+                return {
+                    title: actor.name,
+                    id:    actor.id,
+                };
+            }));
+        }
     }
 }
 
