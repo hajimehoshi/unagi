@@ -34,7 +34,7 @@ namespace data {
         actors:                Actor[],
         playerInitialPosition: Position,
         initialParty:          string[],
-        scripts:               {[name: string]: string},
+        scripts:               {[name: string]: string}, // TODO: Fix this to Script[]
         scriptNames:           string[],
     }
 

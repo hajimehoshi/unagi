@@ -44,7 +44,7 @@ namespace editor {
                     Dispatcher.onStopGame();
                 }
             });
-            (<HTMLElement><any>this.mapList).addEventListener('itemSelected', (e: CustomEvent) => {
+            (<HTMLElement><any>this.mapList).addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Dispatcher.onCurrentMapChanged(e.detail.id);
             });
         }

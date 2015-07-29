@@ -295,10 +295,18 @@
       top: 0;
       width: calc(100% - 128px - 1px);
     }
+    .disabled {
+      color: rgba(0, 0, 0, 0.56);
+      opacity: 0.56;
+      pointer-events: none;
+    }
   </style>
   <unagi-listbox groupname="actors"></unagi-listbox>
   <div class="content">
-    <label>Name: <input type="text" value=""></label>
+    <ul>
+      <li><label>Name: <input type="text" name="name"></label></li>
+      <li><label>Initial Level: <input type="number" name="initialLevel" min="1" max="99"></label></li>
+    </ul>
   </div>
 </template>
 <title>Unagi - RPG Editor</title>

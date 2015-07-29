@@ -26,16 +26,39 @@ namespace editor {
             shadowRoot.appendChild(clone);
         }
 
+        public get selectedId(): string {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let input = <HTMLInputElement>shadowRoot.querySelector('input:checked');
+            if (!input) {
+                return null;
+            }
+            return input.value;
+        }
+
         public replaceItems(items: ListBoxItem[]): void {
             // TODO: Fix implementation to update items that are only needed
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let ul = shadowRoot.querySelector('ul');
+            let idToLi: {[id: string]: HTMLLIElement} = {};
             while (ul.firstChild) {
-                ul.removeChild(ul.firstChild);
+                if (ul.firstChild.nodeType !== Node.ELEMENT_NODE) {
+                    ul.removeChild(ul.firstChild);
+                    continue;
+                }
+                let li = <HTMLLIElement>ul.firstChild;
+                let id = li.dataset['id'];
+                idToLi[id] = li;
+                ul.removeChild(li);
             }
             let groupName = (<HTMLElement><any>this).getAttribute('groupname');
             for (let item of items) {
-                let li = document.createElement('li');
+                let li = idToLi[item.id];
+                if (li) {
+                    ul.appendChild(li);
+                    continue;
+                }
+                li = document.createElement('li');
+                li.dataset['id'] = item.id;
                 let label = document.createElement('label');
 
                 let input = document.createElement('input');
@@ -47,7 +70,7 @@ namespace editor {
                     if (!input.checked) {
                         return;
                     }
-                    let ce = new CustomEvent('itemSelected', {
+                    let ce = new CustomEvent('selectedItemChanged', {
                         detail: {
                             id: input.value,
                         },

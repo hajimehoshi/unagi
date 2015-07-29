@@ -19,11 +19,32 @@ namespace editor {
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
+
+            (<HTMLElement><any>this.list).addEventListener('selectedItemChanged', (e: CustomEvent) => {
+                let id = <string>e.detail.id;
+                Dispatcher.onCurrentActorChanged(id);
+            });
         }
 
         private get list(): ListBoxElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             return (<ListBoxElement><any>shadowRoot.querySelector('unagi-listbox'));
+        }
+
+        private input(name: string): HTMLInputElement {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            return <HTMLInputElement>shadowRoot.querySelector(`input[name="${name}"]`)
+        }
+
+        private currentActor(game: data.Game): data.Actor {
+            let id = this.list.selectedId;
+            let actors = game.actors;
+            for (let actor of actors) {
+                if (id === actor.id) {
+                    return actor;
+                }
+            }
+            return null;
         }
 
         public updateGame(game: data.Game): void {
@@ -33,6 +54,19 @@ namespace editor {
                     id:    actor.id,
                 };
             }));
+            let id = this.list.selectedId;
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let content = shadowRoot.querySelector('div.content');
+            if (!id) {
+                content.classList.add('disabled');
+                this.input('name').value = '';
+                this.input('initialLevel').value = '1';
+                return;
+            }
+            content.classList.remove('disabled');
+            let actor = this.currentActor(game);
+            this.input('name').value = actor.name;
+            this.input('initialLevel').value = actor.initialLevel.toString();
         }
     }
 }

@@ -64,6 +64,7 @@ namespace editor {
             if (!this.currentMapId_) {
                 this.currentMapId_ = this.game_.maps[0].id;
             }
+            // TODO: Unify to updateGame?
             this.mainElement_.updateMap(this.currentMap);
             this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
 
@@ -148,6 +149,37 @@ namespace editor {
 
         public updateDatabaseMode(databaseMode: DatabaseMode): void {
             this.mainElement_.updateDatabaseMode(databaseMode);
+        }
+
+        public updateCurrentActor(id: string) {
+            this.mainElement_.updateGame(this.game_);
+        }
+
+        public updateGameData(path: string, value: any): void {
+            let current = this.game_;
+            let keys = path.split('.');
+            for (let i = 0; i < keys.length; i++) {
+                let key = keys[i];
+                let m = key.match(/^.+?\[(\d?)\]$/);
+                let index = -1;
+                if (m[1]) {
+                    index = parseInt(m[1], 10);
+                }
+                if (i < keys.length - 1) {
+                    if (0 <= index) {
+                        current = current[key][index];
+                    } else {
+                        current = current[key];
+                    }
+                    continue
+                }
+                if (0 <= index) {
+                    current[key][index] = value;
+                } else {
+                    current[key] = value;
+                }
+            }
+            this.mainElement_.updateGame(this.game_);
         }
     }
 }

@@ -55,5 +55,13 @@ namespace editor {
         public static onCurrentMapChanged(id: string): void {
             Dispatcher.store_.updateCurrentMap(id);
         }
+
+        public static onCurrentActorChanged(id: string): void {
+            Dispatcher.store_.updateCurrentActor(id);
+        }
+
+        public static onUpdatingGameData(path: string, value: any): void {
+            Dispatcher.store_.updateGameData(path, value);
+        }
     }
 }
