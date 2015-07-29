@@ -118,10 +118,9 @@ let $game: data.Game;
         $game = game;
 
         let script = "";
-        for (let name of game.scriptNames) {
-            script += game.scripts[name];
+        for (let s of game.scripts) {
+            script += s.content;
         }
-
         // Call 'eval' indirectly so that 'this' variable will be a global window.
         (0, eval)(script);
     });

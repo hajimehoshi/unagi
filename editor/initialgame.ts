@@ -77,6 +77,5 @@ namespace editor {
         },
         initialParty: [actorId],
         scripts:      editor.defaultScripts,
-        scriptNames:  editor.defaultScriptNames,
     };
 }

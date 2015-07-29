@@ -34,8 +34,7 @@ namespace data {
         actors:                Actor[],
         playerInitialPosition: Position,
         initialParty:          string[],
-        scripts:               {[name: string]: string}, // TODO: Fix this to Script[]
-        scriptNames:           string[],
+        scripts:               Script[],
     }
 
     export declare type Actor = {
@@ -49,5 +48,10 @@ namespace data {
         magicAttackCurve: number[],
         magicDefeneCurve: number[],
         speedCurve:       number[],
+    }
+
+    export declare type Script = {
+        name:    string,
+        content: string,
     }
 }
