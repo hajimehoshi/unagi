@@ -30,6 +30,12 @@ namespace editor {
                 let id = <string>e.detail.id;
                 Dispatcher.onCurrentActorChanged(id);
             });
+
+            /*[].forEach.call(shadowRoot.querySelectorAll('input'), (e: HTMLInputElement) => {
+                e.addEventListener('change', () => {
+                    console.log(e.value);
+                });
+            });*/
         }
 
         private get list(): ListBoxElement {
@@ -41,12 +47,12 @@ namespace editor {
             return (<HTMLElement><any>this).getAttribute('groupname');
         }
 
-        private input(name: string): HTMLInputElement {
+        private get inputs(): HTMLInputElement[] {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <HTMLInputElement>shadowRoot.querySelector(`input[name="${name}"]`)
+            return [].slice.call(shadowRoot.querySelectorAll('input'));
         }
 
-        private currentActor(game: data.Game): any {
+        private currentItem(game: data.Game): any {
             let id = this.list.selectedId;
             for (let item of game[this.groupName]) {
                 if (id === item.id) {
@@ -68,14 +74,20 @@ namespace editor {
             let content = shadowRoot.querySelector('div.content');
             if (!id) {
                 content.classList.add('disabled');
-                this.input('name').value = '';
-                this.input('initialLevel').value = '1';
+                for (let input of this.inputs) {
+                    input.value = null;
+                }
                 return;
             }
             content.classList.remove('disabled');
-            let actor = this.currentActor(game);
-            this.input('name').value = actor.name;
-            this.input('initialLevel').value = actor.initialLevel.toString();
+            let item = this.currentItem(game);
+            for (let key in item) {
+                let input = <HTMLInputElement>shadowRoot.querySelector(`input[name="${key}"]`)
+                if (input) {
+                    input.value = item[key];
+                    continue;
+                }
+            }
         }
     }
 }
