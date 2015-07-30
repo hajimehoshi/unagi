@@ -52,6 +52,10 @@ namespace editor {
             Dispatcher.store_.updateEditingMode(editingMode);
         }
 
+        public static onDatabaseModeChanged(editingMode: DatabaseMode): void {
+            Dispatcher.store_.updateDatabaseMode(editingMode);
+        }
+
         public static onCurrentMapChanged(id: string): void {
             Dispatcher.store_.updateCurrentMap(id);
         }

@@ -66,9 +66,23 @@ namespace editor {
                 attackCurve:      calcLogCurve(7/4, 10, -4),
                 defenseCurve:     calcLogCurve(1/2, 1, 2),
                 magicAttackCurve: calcLogCurve(7/4, 10, -4),
-                magicDefeneCurve: calcLogCurve(1/2, 1, 2),
+                magicDefenseCurve: calcLogCurve(1/2, 1, 2),
                 speedCurve:       calcCurve(1/2, 10),
             },
+        ],
+        enemies: [
+            {
+                id:           data.UUID.generate(),
+                name:         'New Enemy',
+                level:        1,
+                maxHP:        10,
+                maxMP:        10,
+                attack:       10,
+                defense:      10,
+                magicAttack:  10,
+                magicDefense: 10,
+                speed:        10,
+            }
         ],
         playerInitialPosition: {
             mapId: mapId,

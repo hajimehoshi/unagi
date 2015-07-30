@@ -32,22 +32,36 @@ namespace data {
         title:                 string,
         maps:                  Map[],
         actors:                Actor[],
+        enemies:               Enemy[],
         playerInitialPosition: Position,
         initialParty:          string[],
         scripts:               Script[],
     }
 
     export declare type Actor = {
-        id:               string,
-        name:             string,
-        initialLevel:     number,
-        maxHPCurve:       number[],
-        maxMPCurve:       number[],
-        attackCurve:      number[],
-        defenseCurve:     number[],
-        magicAttackCurve: number[],
-        magicDefeneCurve: number[],
-        speedCurve:       number[],
+        id:                string,
+        name:              string,
+        initialLevel:      number,
+        maxHPCurve:        number[],
+        maxMPCurve:        number[],
+        attackCurve:       number[],
+        defenseCurve:      number[],
+        magicAttackCurve:  number[],
+        magicDefenseCurve: number[],
+        speedCurve:        number[],
+    }
+
+    export declare type Enemy = {
+        id:           string,
+        name:         string,
+        level:        number,
+        maxHP:        number,
+        maxMP:        number,
+        attack:       number,
+        defense:      number,
+        magicAttack:  number,
+        magicDefense: number,
+        speed:        number,
     }
 
     export declare type Script = {

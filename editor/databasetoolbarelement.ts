@@ -23,6 +23,23 @@ namespace editor {
             let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-toolbar-style-template');
             let styleClone = document.importNode(styleTemplate.content, true);
             shadowRoot.appendChild(styleClone);
+
+            let inputs = shadowRoot.querySelectorAll('input[type="radio"]');
+            [].forEach.call(inputs, (node: Node) => {
+                let input = <HTMLInputElement>node;
+                input.addEventListener('change', (e) => {
+                    let mode = {
+                        'actors':  DatabaseMode.Actors,
+                        'skills':  DatabaseMode.Skills,
+                        'states':  DatabaseMode.States,
+                        'items':   DatabaseMode.Items,
+                        'enemies': DatabaseMode.Enemies,
+                        'troops':  DatabaseMode.Troops,
+                        'system':  DatabaseMode.System,
+                    }[input.value];
+                    Dispatcher.onDatabaseModeChanged(mode);
+                });
+            })
         }
 
         public updateMode(mode: DatabaseMode): void {
@@ -38,7 +55,9 @@ namespace editor {
             }[mode];
             let cond = `input[type=radio][name=databaseMode][value=${ value }]`;
             let radioButton = <HTMLInputElement>shadowRoot.querySelector(cond);
-            radioButton.checked = true;
+            if (radioButton) {
+                radioButton.checked = true;
+            }
         }
     }
 }
