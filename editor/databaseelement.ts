@@ -26,13 +26,11 @@ namespace editor {
             return (<DatabaseToolbarElement><any>shadowRoot.querySelector('unagi-database-toolbar'));
         }
 
-        private get actors(): DatabaseActorsElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return (<DatabaseActorsElement><any>shadowRoot.querySelector('unagi-database-actors'));
-        }
-
         public updateGame(game: data.Game): void {
-            this.actors.updateGame(game);
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            [].forEach.call(shadowRoot.querySelectorAll('unagi-database-content'), (e: DatabaseContentElement) => {
+                e.updateGame(game);
+            });
         }
 
         public updateMode(mode: DatabaseMode): void {
@@ -41,7 +39,7 @@ namespace editor {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             [].forEach.call(shadowRoot.querySelectorAll('div.content > *'), (node: Node) => {
                 let e = <HTMLElement>node;
-                if (e.nodeName.toLowerCase() === `unagi-database-${modeStr}`) {
+                if (e.nodeName.toLowerCase() === "unagi-database-content" && e.getAttribute('groupname') === modeStr) {
                     e.style.display = 'block';
                 } else {
                     e.style.display = 'none';

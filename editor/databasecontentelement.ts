@@ -13,12 +13,18 @@
 // limitations under the License.
 
 namespace editor {
-    export class DatabaseActorsElement {
+    export class DatabaseContentElement {
         private createdCallback(): void {
-            let template = <HTMLTemplateElement>document.getElementById('unagi-database-actors-template');
+            let template = <HTMLTemplateElement>document.getElementById('unagi-database-content-template');
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
+
+            let self = <HTMLElement><any>this;
+            let content = shadowRoot.querySelector('div.content');
+            while (self.firstChild) {
+                content.appendChild(self.firstChild);
+            }
 
             (<HTMLElement><any>this.list).addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 let id = <string>e.detail.id;
@@ -31,27 +37,30 @@ namespace editor {
             return (<ListBoxElement><any>shadowRoot.querySelector('unagi-listbox'));
         }
 
+        private get groupName(): string {
+            return (<HTMLElement><any>this).getAttribute('groupname');
+        }
+
         private input(name: string): HTMLInputElement {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             return <HTMLInputElement>shadowRoot.querySelector(`input[name="${name}"]`)
         }
 
-        private currentActor(game: data.Game): data.Actor {
+        private currentActor(game: data.Game): any {
             let id = this.list.selectedId;
-            let actors = game.actors;
-            for (let actor of actors) {
-                if (id === actor.id) {
-                    return actor;
+            for (let item of game[this.groupName]) {
+                if (id === item.id) {
+                    return item;
                 }
             }
             return null;
         }
 
         public updateGame(game: data.Game): void {
-            this.list.replaceItems(game.actors.map((actor: data.Actor): ListBoxItem => {
+            this.list.replaceItems(game[this.groupName].map((item: {id: string, name: string}): ListBoxItem => {
                 return {
-                    title: actor.name,
-                    id:    actor.id,
+                    title: item.name,
+                    id:    item.id,
                 };
             }));
             let id = this.list.selectedId;
@@ -72,6 +81,6 @@ namespace editor {
 }
 
 (() => {
-    (<any>editor.DatabaseActorsElement.prototype).__proto__ = HTMLElement.prototype;
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-database-actors', editor.DatabaseActorsElement);
+    (<any>editor.DatabaseContentElement.prototype).__proto__ = HTMLElement.prototype;
+    (<editor.HTMLDocumentES6>document).registerElement('unagi-database-content', editor.DatabaseContentElement);
 })();
