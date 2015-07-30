@@ -36,15 +36,7 @@ namespace editor {
         }
 
         public updateMode(mode: DatabaseMode): void {
-            let modeStr = {
-                [DatabaseMode.Actors]:  'actors',
-                [DatabaseMode.Skills]:  'skills',
-                [DatabaseMode.States]:  'states',
-                [DatabaseMode.Items]:   'items',
-                [DatabaseMode.Enemies]: 'enemies',
-                [DatabaseMode.Troops]:  'troops',
-                [DatabaseMode.System]:  'system',
-            }[mode];
+            let modeStr = DatabaseMode[mode].toLowerCase();
             this.toolbar.updateMode(mode);
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             [].forEach.call(shadowRoot.querySelectorAll('div.content > *'), (node: Node) => {

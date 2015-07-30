@@ -28,15 +28,8 @@ namespace editor {
             [].forEach.call(inputs, (node: Node) => {
                 let input = <HTMLInputElement>node;
                 input.addEventListener('change', (e) => {
-                    let mode = {
-                        'actors':  DatabaseMode.Actors,
-                        'skills':  DatabaseMode.Skills,
-                        'states':  DatabaseMode.States,
-                        'items':   DatabaseMode.Items,
-                        'enemies': DatabaseMode.Enemies,
-                        'troops':  DatabaseMode.Troops,
-                        'system':  DatabaseMode.System,
-                    }[input.value];
+                    let value = input.value;
+                    let mode = DatabaseMode[value.charAt(0).toUpperCase() + value.substr(1).toLowerCase()];
                     Dispatcher.onDatabaseModeChanged(mode);
                 });
             })
@@ -44,15 +37,7 @@ namespace editor {
 
         public updateMode(mode: DatabaseMode): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let value = {
-                [DatabaseMode.Actors]:  'actors',
-                [DatabaseMode.Skills]:  'skills',
-                [DatabaseMode.States]:  'states',
-                [DatabaseMode.Items]:   'items',
-                [DatabaseMode.Enemies]: 'enemies',
-                [DatabaseMode.Troops]:  'troops',
-                [DatabaseMode.System]:  'system',
-            }[mode];
+            let value = DatabaseMode[mode].toLowerCase();
             let cond = `input[type=radio][name=databaseMode][value=${ value }]`;
             let radioButton = <HTMLInputElement>shadowRoot.querySelector(cond);
             if (radioButton) {
