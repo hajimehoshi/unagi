@@ -26,6 +26,24 @@ namespace editor {
             shadowRoot.appendChild(clone);
         }
 
+        public get selectedIndex(): number {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let input = <Node>shadowRoot.querySelector('input:checked');
+            let li = input;
+            while (li && li.nodeName !== 'LI') {
+                li = li.parentNode;
+            }
+            return [].indexOf.call(shadowRoot.querySelectorAll('li'), li);
+        }
+
+        public get groupName(): string {
+            return (<HTMLElement><any>this).getAttribute('groupname');
+        }
+
+        public set groupName(groupName: string) {
+            (<HTMLElement><any>this).setAttribute('groupname', groupName);
+        }
+
         public get selectedId(): string {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let input = <HTMLInputElement>shadowRoot.querySelector('input:checked');
@@ -50,7 +68,7 @@ namespace editor {
                 idToLi[id] = li;
                 ul.removeChild(li);
             }
-            let groupName = (<HTMLElement><any>this).getAttribute('groupname');
+            let groupName = this.groupName;
             for (let item of items) {
                 let li = idToLi[item.id];
                 if (li) {

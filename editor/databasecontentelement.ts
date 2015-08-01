@@ -26,16 +26,23 @@ namespace editor {
                 content.appendChild(self.firstChild);
             }
 
+            this.list.groupName = this.groupName;
             (<HTMLElement><any>this.list).addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 let id = <string>e.detail.id;
                 Dispatcher.onCurrentActorChanged(id);
             });
 
-            /*[].forEach.call(shadowRoot.querySelectorAll('input'), (e: HTMLInputElement) => {
+            [].forEach.call(shadowRoot.querySelectorAll('input'), (e: HTMLInputElement) => {
                 e.addEventListener('change', () => {
-                    console.log(e.value);
+                    let value: any = e.value;
+                    if (e.type === 'number') {
+                        value = parseInt(value, 10);
+                    }
+                    let index = this.list.selectedIndex;
+                    let path = `${this.groupName}[${index}].${e.name}`;
+                    Dispatcher.onUpdatingGameData(path, value);
                 });
-            });*/
+            });
         }
 
         private get list(): ListBoxElement {

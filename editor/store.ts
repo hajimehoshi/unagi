@@ -158,12 +158,14 @@ namespace editor {
         public updateGameData(path: string, value: any): void {
             let current = this.game_;
             let keys = path.split('.');
+            let updated = false;
             for (let i = 0; i < keys.length; i++) {
                 let key = keys[i];
-                let m = key.match(/^.+?\[(\d?)\]$/);
+                let m = key.match(/^(.+?)\[(\d?)\]$/);
                 let index = -1;
-                if (m[1]) {
-                    index = parseInt(m[1], 10);
+                if (m) {
+                    key = m[1];
+                    index = parseInt(m[2], 10);
                 }
                 if (i < keys.length - 1) {
                     if (0 <= index) {
@@ -174,12 +176,20 @@ namespace editor {
                     continue
                 }
                 if (0 <= index) {
-                    current[key][index] = value;
+                    if (current[key][index] !== value) {
+                        current[key][index] = value;
+                        updated = true;
+                    }
                 } else {
-                    current[key] = value;
+                    if (current[key] !== value) {
+                        current[key] = value;
+                        updated = true;
+                    }
                 }
             }
-            this.mainElement_.updateGame(this.game_);
+            if (updated) {
+                this.mainElement_.updateGame(this.game_);
+            }
         }
     }
 }
