@@ -14,19 +14,39 @@
 
 // TODO: namespace name?
 namespace util {
-    let mplusImages: {[key:string]: HTMLImageElement} = {};
+    let mplusImages: {[key:string]: ImageData} = {};
 
     let mplusFontNames = ['latin', 'bmp-0', 'bmp-2', 'bmp-3', 'bmp-4', 'bmp-5', 'bmp-6', 'bmp-7', 'bmp-8', 'bmp-9', 'bmp-15'];
     mplusFontNames.forEach((key) => {
         let img = new Image();
-        img.src = './images/mplus-bitmap-images/' + key + '.png'
+        img.src = './images/mplus-bitmap-images/' + key + '.png';
         img.onload = () => {
-            mplusImages[key] = img;
+            let canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            let context = canvas.getContext('2d');
+            context.drawImage(img, 0, 0);
+            mplusImages[key] = context.getImageData(0, 0, img.width, img.height);
         };
         // TODO: Wait until all images are loaded.
     });
 
-    export function drawBitmapTextAt(context: CanvasRenderingContext2D, str: string, x: number, y: number): void {
+    function drawBinaryBitmap(dst: ImageData, src: ImageData, dstX: number, dstY: number, width: number, height: number, srcX: number, srcY: number, r: number, g: number, b: number) {
+        for (let j = 0; j < height; j++) {
+            for (let i = 0; i < width; i++) {
+                let srcP = ((srcY + j) * src.width + (srcX + i)) * 4;
+                if (src.data[srcP + 3]) {
+                    let dstP = ((dstY + j) * dst.width + (dstX + i)) * 4;
+                    dst.data[dstP]     = r;
+                    dst.data[dstP + 1] = g;
+                    dst.data[dstP + 2] = b;
+                    dst.data[dstP + 3] = 255;
+                }
+            }
+        }
+    }
+
+    export function drawBitmapTextAt(context: CanvasRenderingContext2D, str: string, x: number, y: number, r: number, g: number, b: number): void {
         context.save();
 
         const fullWidth = 12;
@@ -34,6 +54,7 @@ namespace util {
         const height = data.gridSize;
         let cx = x;
         let cy = y;
+        let dst = context.getImageData(0, 0, 320, 240);
         for (let ch of str) {
             let code = <number>(<any>ch).codePointAt(0);
             if (ch == '\n') {
@@ -53,7 +74,7 @@ namespace util {
                 }
                 let sx = (code % 32) * halfWidth;
                 let sy = ((code / 32)|0) * height;
-                context.drawImage(img, sx, sy, halfWidth, height, cx, cy, halfWidth, height);
+                drawBinaryBitmap(dst, img, cx, cy, halfWidth, height, sx, sy, r, g, b);
                 cx += halfWidth;
                 continue;
             }
@@ -69,9 +90,10 @@ namespace util {
             }
             let sx = (code % 64) * fullWidth;
             let sy = (((code % 4096) / 64)|0) * height;
-            context.drawImage(img, sx, sy, fullWidth, height, cx, cy, fullWidth, height);
+            drawBinaryBitmap(dst, img, cx, cy, fullWidth, height, sx, sy, r, g, b);
             cx += fullWidth;
         }
+        context.putImageData(dst, 0, 0);
         context.restore();
     }
 }
