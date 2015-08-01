@@ -3,7 +3,7 @@
 class GameState {
     constructor() {
         this.party_ = [];
-        for (let actor of $game.initialParty) {
+        for (let actor of $game.system.initialParty) {
             this.party_.push(actor);
         }
         this.playerPosition_ = null;

@@ -29,12 +29,11 @@ namespace data {
     }
 
     export declare type Game = {
-        title:                 string,
         maps:                  Map[],
         actors:                Actor[],
         enemies:               Enemy[],
+        system:                System,
         playerInitialPosition: Position,
-        initialParty:          string[],
         scripts:               Script[],
     }
 
@@ -62,6 +61,11 @@ namespace data {
         magicAttack:  number,
         magicDefense: number,
         speed:        number,
+    }
+
+    export declare type System = {
+        title:        string,
+        initialParty: string[],
     }
 
     export declare type Script = {

@@ -39,7 +39,6 @@ namespace editor {
     }
 
     export const initialGame: data.Game = {
-        title:  'New RPG',
         maps:   [
             {
                 id:    mapId,
@@ -58,16 +57,16 @@ namespace editor {
         ],
         actors: [
             {
-                id:               actorId,
-                name:             'New Actor',
-                initialLevel:     1,
-                maxHPCurve:       calcCurve(1, 60),
-                maxMPCurve:       calcCurve(1, 6),
-                attackCurve:      calcLogCurve(7/4, 10, -4),
-                defenseCurve:     calcLogCurve(1/2, 1, 2),
-                magicAttackCurve: calcLogCurve(7/4, 10, -4),
+                id:                actorId,
+                name:              'New Actor',
+                initialLevel:      1,
+                maxHPCurve:        calcCurve(1, 60),
+                maxMPCurve:        calcCurve(1, 6),
+                attackCurve:       calcLogCurve(7/4, 10, -4),
+                defenseCurve:      calcLogCurve(1/2, 1, 2),
+                magicAttackCurve:  calcLogCurve(7/4, 10, -4),
                 magicDefenseCurve: calcLogCurve(1/2, 1, 2),
-                speedCurve:       calcCurve(1/2, 10),
+                speedCurve:        calcCurve(1/2, 10),
             },
         ],
         enemies: [
@@ -84,12 +83,15 @@ namespace editor {
                 speed:        10,
             }
         ],
+        system: {
+            title:        'New RPG',
+            initialParty: [actorId],
+        },
         playerInitialPosition: {
             mapId: mapId,
             x:     4,
             y:     4,
         },
-        initialParty: [actorId],
-        scripts:      editor.defaultScripts,
+        scripts: editor.defaultScripts,
     };
 }
