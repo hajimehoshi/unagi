@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO: namespace name?
-namespace util {
+namespace BitmapText {
     let mplusImages: {[key:string]: ImageData} = {};
 
     let mplusFontNames = ['latin', 'bmp-0', 'bmp-2', 'bmp-3', 'bmp-4', 'bmp-5', 'bmp-6', 'bmp-7', 'bmp-8', 'bmp-9', 'bmp-15'];
@@ -46,54 +45,77 @@ namespace util {
         }
     }
 
-    export function drawBitmapTextAt(context: CanvasRenderingContext2D, str: string, x: number, y: number, r: number, g: number, b: number): void {
-        context.save();
+    const TEXT_FULL_WIDTH = 12;
+    const TEXT_HALF_WIDTH = 6;
+    const TEXT_HEIGHT = data.gridSize;
 
-        const fullWidth = 12;
-        const halfWidth = 6;
-        const height = data.gridSize;
-        let cx = x;
-        let cy = y;
-        let dst = context.getImageData(0, 0, 320, 240);
+    function textSize(str: string): {width: number, height: number} {
+        let width = 0;
+        let height = TEXT_HEIGHT;
+        let currentWidth = 0;
         for (let ch of str) {
             let code = <number>(<any>ch).codePointAt(0);
             if (ch == '\n') {
-                cx = x;
-                cy += height;
+                height += TEXT_HEIGHT;
+                continue;
+            }
+            if (code <= 0xff) {
+                currentWidth += TEXT_HALF_WIDTH; 
+                width = Math.max(width, currentWidth);
+                continue;
+            }
+            currentWidth += TEXT_FULL_WIDTH;
+            width = Math.max(width, currentWidth);
+        }
+        return {width, height}
+    }
+
+    export function drawAt(context: CanvasRenderingContext2D, str: string, x: number, y: number, r: number, g: number, b: number): void {
+        context.save();
+
+        let cx = 0;
+        let cy = 0;
+        let size = textSize(str);
+        let dst = context.getImageData(x, y, size.width, size.height);
+        for (let ch of str) {
+            let code = <number>(<any>ch).codePointAt(0);
+            if (ch == '\n') {
+                cx = 0;
+                cy += TEXT_HEIGHT;
                 continue;
             }
             if (ch == ' ') {
-                cx += halfWidth;
+                cx += TEXT_HALF_WIDTH;
                 continue;
             }
             if (code <= 0xff) {
                 let img = mplusImages['latin'];
                 if (!img) {
-                    cx += halfWidth;
+                    cx += TEXT_HALF_WIDTH;
                     continue;
                 }
-                let sx = (code % 32) * halfWidth;
-                let sy = ((code / 32)|0) * height;
-                drawBinaryBitmap(dst, img, cx, cy, halfWidth, height, sx, sy, r, g, b);
-                cx += halfWidth;
+                let sx = (code % 32) * TEXT_HALF_WIDTH;
+                let sy = ((code / 32)|0) * TEXT_HEIGHT;
+                drawBinaryBitmap(dst, img, cx, cy, TEXT_HALF_WIDTH, TEXT_HEIGHT, sx, sy, r, g, b);
+                cx += TEXT_HALF_WIDTH;
                 continue;
             }
             if (0xffff < code) {
-                cx += fullWidth;
+                cx += TEXT_FULL_WIDTH;
                 continue;
             }
             let page = (code / 4096)|0;
             let img = mplusImages[`bmp-${page}`];
             if (!img) {
-                cx += fullWidth;
+                cx += TEXT_FULL_WIDTH;
                 continue;
             }
-            let sx = (code % 64) * fullWidth;
-            let sy = (((code % 4096) / 64)|0) * height;
-            drawBinaryBitmap(dst, img, cx, cy, fullWidth, height, sx, sy, r, g, b);
-            cx += fullWidth;
+            let sx = (code % 64) * TEXT_FULL_WIDTH;
+            let sy = (((code % 4096) / 64)|0) * TEXT_HEIGHT;
+            drawBinaryBitmap(dst, img, cx, cy, TEXT_FULL_WIDTH, TEXT_HEIGHT, sx, sy, r, g, b);
+            cx += TEXT_FULL_WIDTH;
         }
-        context.putImageData(dst, 0, 0);
+        context.putImageData(dst, x, y);
         context.restore();
     }
 }

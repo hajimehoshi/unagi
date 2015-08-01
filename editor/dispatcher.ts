@@ -67,5 +67,9 @@ namespace editor {
         public static onUpdatingGameData(path: string, value: any): void {
             Dispatcher.store_.updateGameData(path, value);
         }
+
+        public static onAddingGameData(path: string): void {
+            Dispatcher.store_.addGameData(path);
+        }
     }
 }

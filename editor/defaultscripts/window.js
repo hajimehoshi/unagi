@@ -18,7 +18,7 @@ class Window {
 
     draw(context) {
         context.save();
-        context.fillStyle = 'rgba(51, 51, 51, 1)';
+        context.fillStyle = 'rgba(0, 64, 128, 1)';
         context.fillRect(this.x_, this.y_, this.width_, this.height_);
         context.strokeStyle = 'rgba(128, 128, 128, 1)';
         context.strokeRect(this.x_ + 0.5, this.y_ + 0.5, this.width_ - 1, this.height_ - 1);

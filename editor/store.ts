@@ -155,6 +155,27 @@ namespace editor {
             this.mainElement_.updateGame(this.game_);
         }
 
+        private getFromPath(path: string): any {
+            let current = this.game_;
+            let keys = path.split('.');
+            let updated = false;
+            for (let i = 0; i < keys.length; i++) {
+                let key = keys[i];
+                let m = key.match(/^(.+?)\[(\d?)\]$/);
+                let index = -1;
+                if (m) {
+                    key = m[1];
+                    index = parseInt(m[2], 10);
+                }
+                if (0 <= index) {
+                    current = current[key][index];
+                } else {
+                    current = current[key];
+                }
+            }
+            return current;
+        }
+
         public updateGameData(path: string, value: any): void {
             let current = this.game_;
             let keys = path.split('.');
@@ -190,6 +211,14 @@ namespace editor {
             if (updated) {
                 this.mainElement_.updateGame(this.game_);
             }
+        }
+
+        public addGameData(path: string): void {
+            (<any[]>this.getFromPath(path)).push({
+                id: data.UUID.generate(),
+                name: '(No Name)',
+            });
+            this.mainElement_.updateGame(this.game_);
         }
     }
 }

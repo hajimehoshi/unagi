@@ -24,6 +24,26 @@ namespace editor {
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
+
+            let ul = <HTMLUListElement>shadowRoot.querySelector('ul.list');
+            let self = <HTMLElement><any>this;
+            self.addEventListener('contextmenu', (e: MouseEvent) => {
+                e.preventDefault();
+                let menu = <HTMLMenuElement>shadowRoot.querySelector('menu.context');
+                menu.style.display = 'block';
+                let rect = self.getBoundingClientRect();
+                menu.style.left = (e.pageX - rect.left) + 'px';
+                menu.style.top = (e.pageY - rect.top) + 'px';
+            });
+            // TODO: Want to close the menu on clicking anywhere.
+            self.addEventListener('click', (e: MouseEvent) => {
+                let menu = <HTMLMenuElement>shadowRoot.querySelector('menu.context');
+                menu.style.display = 'none';
+            });
+            (<HTMLLIElement>shadowRoot.querySelector('#contextNew')).addEventListener('click', (e: MouseEvent) => {
+                e.preventDefault();
+                Dispatcher.onAddingGameData(this.groupName);
+            });
         }
 
         public get selectedIndex(): number {
@@ -33,7 +53,7 @@ namespace editor {
             while (li && li.nodeName !== 'LI') {
                 li = li.parentNode;
             }
-            return [].indexOf.call(shadowRoot.querySelectorAll('li'), li);
+            return [].indexOf.call(shadowRoot.querySelectorAll('ul.list li'), li);
         }
 
         public get groupName(): string {
@@ -56,7 +76,7 @@ namespace editor {
         public replaceItems(items: ListBoxItem[]): void {
             // TODO: Fix implementation to update items that are only needed
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let ul = shadowRoot.querySelector('ul');
+            let ul = shadowRoot.querySelector('ul.list');
             let idToLi: {[id: string]: HTMLLIElement} = {};
             while (ul.firstChild) {
                 if (ul.firstChild.nodeType !== Node.ELEMENT_NODE) {

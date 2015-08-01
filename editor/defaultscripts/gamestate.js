@@ -34,3 +34,10 @@ class GameState {
         }
     }
 }
+
+class Actor {
+    constructor(data) {
+        this.hp_ = data.maxHP;
+        this.mp_ = data.maxMP;
+    }
+}

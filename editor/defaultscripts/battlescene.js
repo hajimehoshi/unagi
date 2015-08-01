@@ -10,13 +10,19 @@ class BattlePlayerWindow {
     update() {
         this.window_.update();
     }
+    
+    drawShadowTextAt(context, text, x, y) {
+        BitmapText.drawAt(context, text, x+1, y+1, 0, 0, 0);
+        BitmapText.drawAt(context, text, x, y, 255, 255, 255);
+    }
 
     draw(context) {
         context.save();
-        //this.window_.draw(context);
-        util.drawBitmapTextAt(context, "名前名前あ", this.window_.x + 8, this.window_.y + 8, 255, 255, 255);
-        util.drawBitmapTextAt(context, "HP 100", this.window_.x + 8, this.window_.y + 8 + 16, 255, 255, 255);
-        util.drawBitmapTextAt(context, "MP 100", this.window_.x + 8, this.window_.y + 8 + 32, 255, 255, 255);
+        this.window_.draw(context);
+        let actor = $game.actors[this.index_];
+        this.drawShadowTextAt(context, actor.name, this.window_.x + 8, this.window_.y + 8, 255, 255, 255);
+        this.drawShadowTextAt(context, "9999", this.window_.x + 8, this.window_.y + 8 + 16, 255, 255, 255);
+        this.drawShadowTextAt(context, "999", this.window_.x + 8, this.window_.y + 8 + 32, 255, 255, 255);
         context.restore();
     }
 }
@@ -39,7 +45,7 @@ class BattleScene {
         context.save();
 
         // background
-        context.fillStyle = 'rgba(192, 192, 192, 1)';
+        context.fillStyle = 'rgba(128, 128, 128, 1)';
         context.fillRect(0, 0, 320, 240);
 
         for (let window of this.playerWindows_) {

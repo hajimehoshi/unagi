@@ -94,7 +94,7 @@ class MapScene {
                 context.drawImage(tileSetImage, sx, sy, data.gridSize, data.gridSize, dx, dy, data.gridSize, data.gridSize);
             }
         }
-        util.drawBitmapTextAt(context, map.id, 0, 0, 128, 192, 255);
+        BitmapText.drawAt(context, map.id, 0, 0, 128, 192, 255);
         this.playerSprite_.draw(context);
 
         context.restore();
