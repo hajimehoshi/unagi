@@ -42,7 +42,8 @@ namespace editor {
             });
             (<HTMLLIElement>shadowRoot.querySelector('#contextNew')).addEventListener('click', (e: MouseEvent) => {
                 e.preventDefault();
-                Dispatcher.onAddingGameData(this.groupName);
+                let ce = new CustomEvent('contextMenuNew');
+                (<HTMLElement><any>this).dispatchEvent(ce);
             });
         }
 

@@ -27,9 +27,12 @@ namespace editor {
             }
 
             this.list.groupName = this.groupName;
-            (<HTMLElement><any>this.list).addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            self.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 let id = <string>e.detail.id;
                 Dispatcher.onCurrentActorChanged(id);
+            });
+            self.addEventListener('contextMenuNew', (e: CustomEvent) => {
+                Dispatcher.onAddingGameData(this.groupName);
             });
 
             [].forEach.call(shadowRoot.querySelectorAll('input'), (e: HTMLInputElement) => {
