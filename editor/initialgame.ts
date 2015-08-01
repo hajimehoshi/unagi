@@ -14,7 +14,12 @@
 
 namespace editor {
     let mapId = data.UUID.generate();
-    let actorId = data.UUID.generate();
+    let actorIds = [
+        data.UUID.generate(),
+        data.UUID.generate(),
+        data.UUID.generate(),
+        data.UUID.generate(),
+    ];
 
     function calcCurve(growth: number, factor: number): number[] {
         let result: number[] = [];
@@ -57,8 +62,44 @@ namespace editor {
         ],
         actors: [
             {
-                id:                actorId,
-                name:              'New Actor',
+                id:                actorIds[0],
+                name:              'Sato',
+                initialLevel:      1,
+                maxHPCurve:        calcCurve(1, 60),
+                maxMPCurve:        calcCurve(1, 6),
+                attackCurve:       calcLogCurve(7/4, 10, -4),
+                defenseCurve:      calcLogCurve(1/2, 1, 2),
+                magicAttackCurve:  calcLogCurve(7/4, 10, -4),
+                magicDefenseCurve: calcLogCurve(1/2, 1, 2),
+                speedCurve:        calcCurve(1/2, 10),
+            },
+            {
+                id:                actorIds[1],
+                name:              'Suzuki',
+                initialLevel:      1,
+                maxHPCurve:        calcCurve(1, 60),
+                maxMPCurve:        calcCurve(1, 6),
+                attackCurve:       calcLogCurve(7/4, 10, -4),
+                defenseCurve:      calcLogCurve(1/2, 1, 2),
+                magicAttackCurve:  calcLogCurve(7/4, 10, -4),
+                magicDefenseCurve: calcLogCurve(1/2, 1, 2),
+                speedCurve:        calcCurve(1/2, 10),
+            },
+            {
+                id:                actorIds[2],
+                name:              'Takahashi',
+                initialLevel:      1,
+                maxHPCurve:        calcCurve(1, 60),
+                maxMPCurve:        calcCurve(1, 6),
+                attackCurve:       calcLogCurve(7/4, 10, -4),
+                defenseCurve:      calcLogCurve(1/2, 1, 2),
+                magicAttackCurve:  calcLogCurve(7/4, 10, -4),
+                magicDefenseCurve: calcLogCurve(1/2, 1, 2),
+                speedCurve:        calcCurve(1/2, 10),
+            },
+            {
+                id:                actorIds[3],
+                name:              'Tanaka',
                 initialLevel:      1,
                 maxHPCurve:        calcCurve(1, 60),
                 maxMPCurve:        calcCurve(1, 6),
@@ -85,7 +126,7 @@ namespace editor {
         ],
         system: {
             title:        'New RPG',
-            initialParty: [actorId],
+            initialParty: actorIds.slice(),
         },
         playerInitialPosition: {
             mapId: mapId,
