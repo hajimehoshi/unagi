@@ -215,8 +215,8 @@ namespace editor {
 
         public addGameData(path: string): void {
             (<any[]>this.getFromPath(path)).push({
-                id: data.UUID.generate(),
-                name: '(No Name)',
+                id:   data.UUID.generate(),
+                name: '',
             });
             this.mainElement_.updateGame(this.game_);
         }

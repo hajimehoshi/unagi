@@ -73,6 +73,13 @@ namespace editor {
             return input.value;
         }
 
+        private toItemTitle(item: ListBoxItem): string {
+            if (item.title && item.title.trim() !== '') {
+                return item.title;
+            }
+            return '(No Name)';
+        }
+
         public replaceItems(items: ListBoxItem[]): void {
             // TODO: Fix implementation to update items that are only needed
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
@@ -92,6 +99,8 @@ namespace editor {
             for (let item of items) {
                 let li = idToLi[item.id];
                 if (li) {
+                    let span = li.querySelector('span');
+                    span.textContent = this.toItemTitle(item);
                     ul.appendChild(li);
                     continue;
                 }
@@ -118,7 +127,7 @@ namespace editor {
                 label.appendChild(input);
 
                 let span = document.createElement('span');
-                span.textContent = item.title;
+                span.textContent = this.toItemTitle(item);
                 label.appendChild(span);
 
                 li.appendChild(label);
