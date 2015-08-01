@@ -264,6 +264,14 @@
     <unagi-database-content groupname="enemies">
       <ul>
         <li><label>Name: <input type="text" name="name"></label></li>
+        <li><label>Level: <input type="number" name="level" min="1" max="99"></label></li>
+        <li><label>Max HP: <input type="number" name="maxHP" min="1" max="999999"></label></li>
+        <li><label>Max MP: <input type="number" name="maxMP" min="1" max="9999"></label></li>
+        <li><label>Attack: <input type="number" name="attack" min="1" max="9999"></label></li>
+        <li><label>Defense: <input type="number" name="defense" min="1" max="9999"></label></li>
+        <li><label>Magic Attack: <input type="number" name="magicAttack" min="1" max="9999"></label></li>
+        <li><label>Magic Defense: <input type="number" name="magicDefense" min="1" max="9999"></label></li>
+        <li><label>Speed: <input type="number" name="speed" min="1" max="9999"></label></li>
       </ul>
     </unagi-database-content>
   </div>
@@ -309,6 +317,9 @@
       color: rgba(0, 0, 0, 0.56);
       opacity: 0.56;
       pointer-events: none;
+    }
+    input[type=number] {
+      text-align: right;
     }
   </style>
   <unagi-listbox groupname="actors"></unagi-listbox>
