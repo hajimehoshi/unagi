@@ -46,6 +46,16 @@ namespace editor {
                     Dispatcher.onUpdatingGameData(path, value);
                 });
             });
+
+            [].forEach.call(shadowRoot.querySelectorAll('unagi-image-selector'), (e: HTMLElement) => {
+                (<HTMLElement><any>e).addEventListener('change', () => {
+                    let index = this.list.selectedIndex;
+                    let name = e.getAttribute('name');
+                    let imageId = e.getAttribute('imageid');
+                    let path = `${this.groupName}[${index}].${name}`;
+                    Dispatcher.onUpdatingGameData(path, imageId);
+                });
+            });
         }
 
         private get list(): ListBoxElement {
@@ -90,12 +100,24 @@ namespace editor {
                 return;
             }
             content.classList.remove('disabled');
+
+            // TODO: This seems a dirty hack. Fix this
+            let imageSelectors = shadowRoot.querySelectorAll(`unagi-image-selector`);
+            [].forEach.call(imageSelectors, (imageSelector: ImageSelectorElement) => {
+                imageSelector.images = game.images;
+            });
+
             let item = this.currentItem(game);
             for (let key in item) {
                 let input = <HTMLInputElement>shadowRoot.querySelector(`input[name="${key}"]`)
                 if (input) {
                     input.value = item[key];
                     continue;
+                }
+                let imageSelector = <HTMLElement>shadowRoot.querySelector(`unagi-image-selector[name="${key}"]`);
+                if (imageSelector) {
+                    imageSelector.setAttribute('imageid', item[key]);
+                    continue
                 }
             }
         }

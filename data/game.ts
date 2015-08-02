@@ -54,6 +54,7 @@ namespace data {
     export declare type Enemy = {
         id:           string,
         name:         string,
+        image:        string,
         level:        number,
         maxHP:        number,
         maxMP:        number,

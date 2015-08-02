@@ -14,10 +14,10 @@
 
 namespace data {
     export declare type Map = {
-        id: string,
-        name: string,
+        id:    string,
+        name:  string,
         tiles: Int16Array,
-        xNum: number,
-        yNum: number,
+        xNum:  number,
+        yNum:  number,
     };
 }

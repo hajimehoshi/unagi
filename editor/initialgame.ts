@@ -114,6 +114,7 @@ namespace editor {
             {
                 id:           data.UUID.generate(),
                 name:         'New Enemy',
+                image:        null,
                 level:        1,
                 maxHP:        10,
                 maxMP:        10,
@@ -138,6 +139,15 @@ namespace editor {
         scripts: editor.defaultScripts,
     };
 
+    function idFromName(items: {id: string, name: string}[], name: string): string {
+        for (let item of items) {
+            if (item.name === name) {
+                return item.id;
+            }
+        }
+        return null;
+    }
+
     (() => {
         for (let image of defaultImages) {
             initialGame.images.push({
@@ -146,5 +156,6 @@ namespace editor {
                 data: image.data,
             });
         }
+        initialGame.enemies[0].image = idFromName(initialGame.images, 'monster_demo');
     })()
 }

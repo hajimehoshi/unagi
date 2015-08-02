@@ -292,6 +292,7 @@
     <unagi-database-content groupname="enemies">
       <ul>
         <li><label>Name: <input type="text" name="name"></label></li>
+        <li>Image: <unagi-image-selector name="image" width="320" height="160"></unagi-image-selector></li>
         <li><label>Level: <input type="number" name="level" min="1" max="99"></label></li>
         <li><label>Max HP: <input type="number" name="maxHP" min="1" max="999999"></label></li>
         <li><label>Max MP: <input type="number" name="maxMP" min="1" max="9999"></label></li>
@@ -356,13 +357,39 @@
       opacity: 0.56;
       pointer-events: none;
     }
+    img {
+      background-color: #9e9e9e;
+      image-rendering: pixelated;
+    }
     input[type=number] {
       text-align: right;
     }
   </style>
-  <unagi-listbox groupname="actors"></unagi-listbox>
+  <unagi-listbox></unagi-listbox>
   <div class="content">
   </div>
+</template>
+<template id="unagi-image-selector-template">
+  <style>
+    :host {
+      display: block;
+    }
+    div {
+      background-color: #9e9e9e;
+      height: 100%;
+      position: relative;
+      width: 100%;
+    }
+    img {
+      image-rendering: pixelated;
+      left: 50%;
+      margin-right: -50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+  <div><img name="image"></div>
 </template>
 <title>Unagi - RPG Editor</title>
 <style>
