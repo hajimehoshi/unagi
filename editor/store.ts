@@ -60,12 +60,12 @@ namespace editor {
             for (let map of this.game_.maps) {
                 this.idToMap_[map.id] = map;
             }
-            this.mainElement_.updateGame(this.game_);
+            this.mainElement_.render(this.game_);
             // TODO: What if no map exists?
             if (!this.currentMapId_) {
                 this.currentMapId_ = this.game_.maps[0].id;
             }
-            // TODO: Unify to updateGame?
+            // TODO: Unify to render?
             this.mainElement_.updateMap(this.currentMap);
             this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
 
@@ -153,7 +153,7 @@ namespace editor {
         }
 
         public updateCurrentActor(id: string) {
-            this.mainElement_.updateGame(this.game_);
+            this.mainElement_.render(this.game_);
         }
 
         private getFromPath(path: string): any {
@@ -210,7 +210,7 @@ namespace editor {
                 }
             }
             if (updated) {
-                this.mainElement_.updateGame(this.game_);
+                this.mainElement_.render(this.game_);
             }
         }
 
@@ -219,7 +219,7 @@ namespace editor {
                 id:   data.UUID.generate(),
                 name: '',
             });
-            this.mainElement_.updateGame(this.game_);
+            this.mainElement_.render(this.game_);
         }
     }
 }

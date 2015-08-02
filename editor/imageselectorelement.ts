@@ -37,35 +37,40 @@ namespace editor {
                 self.style.height = newValue + 'px';
                 break;
             case 'imageid':
-                if (this.images_) {
-                    let image = this.imageById(newValue);
-                    if (image) {
-                        let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-                        let img = <HTMLImageElement>shadowRoot.querySelector('img');
-                        if (img.src !== image.data) {
-                            img.src = image.data;
-                        }
-                    }
-                }
                 let ce = new CustomEvent('change');
                 self.dispatchEvent(ce);
                 break;
             }
         }
 
-        public set images(images: data.Image[]) {
-            this.images_ = images;
+        public render(game: data.Game): void {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let img = <HTMLImageElement>shadowRoot.querySelector('img');
+
+            let id = (<HTMLElement><any>this).getAttribute('imageid');
+            if (!id) {
+                img.src = '';
+                return;
+            }
+            let image = this.imageById(game.images, id);
+            if (!image) {
+                img.src = '';
+                return;
+            }
+            if (img.src === image.data) {
+                return;
+            }
+            img.src = image.data;
         }
 
-        private imageById(id: string): data.Image {
-            for (let image of this.images_) {
+        private imageById(images: data.Image[], id: string): data.Image {
+            for (let image of images) {
                 if (image.id === id) {
                     return image;
                 }
             }
             return null;
         }
-
     }
 }
 

@@ -26,10 +26,10 @@ namespace editor {
             return (<DatabaseToolbarElement><any>shadowRoot.querySelector('unagi-database-toolbar'));
         }
 
-        public updateGame(game: data.Game): void {
+        public render(game: data.Game): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             [].forEach.call(shadowRoot.querySelectorAll('unagi-database-content'), (e: DatabaseContentElement) => {
-                e.updateGame(game);
+                e.render(game);
             });
 
             let images = <DatabaseContentElement><any>shadowRoot.querySelector('unagi-database-content[groupname="images"]');

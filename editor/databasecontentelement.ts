@@ -82,7 +82,7 @@ namespace editor {
             return null;
         }
 
-        public updateGame(game: data.Game): void {
+        public render(game: data.Game): void {
             this.list.replaceItems(game[this.groupName].map((item: {id: string, name: string}): ListBoxItem => {
                 return {
                     title: item.name,
@@ -101,12 +101,6 @@ namespace editor {
             }
             content.classList.remove('disabled');
 
-            // TODO: This seems a dirty hack. Fix this
-            let imageSelectors = shadowRoot.querySelectorAll(`unagi-image-selector`);
-            [].forEach.call(imageSelectors, (imageSelector: ImageSelectorElement) => {
-                imageSelector.images = game.images;
-            });
-
             let item = this.currentItem(game);
             for (let key in item) {
                 let input = <HTMLInputElement>shadowRoot.querySelector(`input[name="${key}"]`)
@@ -120,6 +114,11 @@ namespace editor {
                     continue
                 }
             }
+
+            let imageSelectors = shadowRoot.querySelectorAll(`unagi-image-selector`);
+            [].forEach.call(imageSelectors, (imageSelector: ImageSelectorElement) => {
+                imageSelector.render(game);
+            });
         }
     }
 }

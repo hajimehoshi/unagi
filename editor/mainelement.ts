@@ -74,8 +74,8 @@ namespace editor {
             return (<DatabaseElement><any>shadowRoot.querySelector('unagi-database'));
         }
 
-        public updateGame(game: data.Game): void {
-            this.database.updateGame(game);
+        public render(game: data.Game): void {
+            this.database.render(game);
         }
 
         // TODO: Rename updateCurrentMap?
