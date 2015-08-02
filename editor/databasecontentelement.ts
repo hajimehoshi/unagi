@@ -62,7 +62,7 @@ namespace editor {
             return [].slice.call(shadowRoot.querySelectorAll('input'));
         }
 
-        private currentItem(game: data.Game): any {
+        public currentItem(game: data.Game): any {
             let id = this.list.selectedId;
             for (let item of game[this.groupName]) {
                 if (id === item.id) {

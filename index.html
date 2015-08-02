@@ -307,8 +307,8 @@
     <unagi-database-content groupname="images">
       <ul>
         <li><label>Name: <input type="text" name="name"></label></li>
+        <li>Image: <img class="data"></li>
       </ul>
-      <canvas></canvas>
     </unagi-database-content>
   </div>
 </template>
@@ -346,6 +346,7 @@
       background-color: #f5f5f5;
       height: 100%;
       left: calc(128px + 1px);
+      overflow: auto;
       position: absolute;
       top: 0;
       width: calc(100% - 128px - 1px);
