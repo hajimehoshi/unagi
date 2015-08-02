@@ -128,6 +128,8 @@ namespace editor {
             title:        'New RPG',
             initialParty: actorIds.slice(),
         },
+        images: [
+        ],
         playerInitialPosition: {
             mapId: mapId,
             x:     4,
@@ -135,4 +137,14 @@ namespace editor {
         },
         scripts: editor.defaultScripts,
     };
+
+    (() => {
+        for (let image of defaultImages) {
+            initialGame.images.push({
+                id:   data.UUID.generate(),
+                name: image.name,
+                data: image.data,
+            });
+        }
+    })()
 }

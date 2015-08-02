@@ -304,6 +304,12 @@
     </unagi-database-content>
     <!--unagi-database-content groupname="system">
     </unagi-database-content-->
+    <unagi-database-content groupname="images">
+      <ul>
+        <li><label>Name: <input type="text" name="name"></label></li>
+      </ul>
+      <canvas></canvas>
+    </unagi-database-content>
   </div>
 </template>
 <template id="unagi-database-toolbar-template">
@@ -324,6 +330,7 @@
     <label><input type="radio" name="databaseMode" value="enemies"><span>Enemies</span></label>
     <label><input type="radio" name="databaseMode" value="troops"><span>Troops</span></label>
     <label><input type="radio" name="databaseMode" value="system"><span>System</span></label>
+    <label><input type="radio" name="databaseMode" value="images"><span>Images</span></label>
   </menu>
 </template>
 <template id="unagi-database-content-template">

@@ -27,6 +27,7 @@ namespace editor {
         Enemies,
         Troops,
         System,
+        Images,
     }
 
     export class Store {

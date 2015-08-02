@@ -33,6 +33,7 @@ namespace data {
         actors:                Actor[],
         enemies:               Enemy[],
         system:                System,
+        images:                Image[],
         playerInitialPosition: Position,
         scripts:               Script[],
     }
@@ -66,6 +67,12 @@ namespace data {
     export declare type System = {
         title:        string,
         initialParty: string[],
+    }
+
+    export declare type Image = {
+        id:   string,
+        name: string,
+        data: string,
     }
 
     export declare type Script = {

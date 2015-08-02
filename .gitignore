@@ -2,4 +2,5 @@
 .DS_Store
 editor.js
 player.js
+editor/defaultimages.ts
 editor/defaultscripts.ts
