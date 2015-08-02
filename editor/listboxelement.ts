@@ -57,12 +57,8 @@ namespace editor {
             return [].indexOf.call(shadowRoot.querySelectorAll('ul.list li'), li);
         }
 
-        public get groupName(): string {
+        private get groupName(): string {
             return (<HTMLElement><any>this).getAttribute('groupname');
-        }
-
-        public set groupName(groupName: string) {
-            (<HTMLElement><any>this).setAttribute('groupname', groupName);
         }
 
         public get selectedId(): string {

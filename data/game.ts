@@ -70,10 +70,17 @@ namespace data {
         initialParty: string[],
     }
 
+    export enum ImageType {
+        CharacterSet,
+        Enemy,
+        TileSet,
+    }
+
     export declare type Image = {
         id:   string,
         name: string,
         data: string,
+        type: ImageType,
     }
 
     export declare type Script = {

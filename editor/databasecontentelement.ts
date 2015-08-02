@@ -26,7 +26,7 @@ namespace editor {
                 content.appendChild(self.firstChild);
             }
 
-            this.list.groupName = this.groupName;
+            (<HTMLElement><any>this.list).setAttribute('groupname', this.groupName);
             self.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 let id = <string>e.detail.id;
                 Dispatcher.onCurrentActorChanged(id);

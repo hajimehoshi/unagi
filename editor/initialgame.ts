@@ -150,12 +150,21 @@ namespace editor {
 
     (() => {
         for (let image of defaultImages) {
+            let type: data.ImageType;
+            if (image.name.match(/^characterset/)) {
+                type = data.ImageType.CharacterSet;
+            } else if (image.name.match(/^enemy/)) {
+                type = data.ImageType.Enemy;
+            } else  if (image.name.match(/^tileset/)) {
+                type = data.ImageType.TileSet;
+            }
             initialGame.images.push({
                 id:   data.UUID.generate(),
                 name: image.name,
                 data: image.data,
+                type: type,
             });
         }
-        initialGame.enemies[0].image = idFromName(initialGame.images, 'monster_demo');
+        initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_demo');
     })()
 }
