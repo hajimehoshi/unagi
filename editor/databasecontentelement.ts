@@ -48,10 +48,10 @@ namespace editor {
             });
 
             [].forEach.call(shadowRoot.querySelectorAll('unagi-image-selector'), (e: HTMLElement) => {
-                (<HTMLElement><any>e).addEventListener('change', () => {
+                e.addEventListener('change', (ev: CustomEvent) => {
                     let index = this.list.selectedIndex;
                     let name = e.getAttribute('name');
-                    let imageId = e.getAttribute('imageid');
+                    let imageId = ev.detail.id;
                     let path = `${this.groupName}[${index}].${name}`;
                     Dispatcher.onUpdatingGameData(path, imageId);
                 });
@@ -108,18 +108,12 @@ namespace editor {
                     input.value = item[key];
                     continue;
                 }
-                let imageSelector = <HTMLElement>shadowRoot.querySelector(`unagi-image-selector[name="${key}"]`);
+                let imageSelector = <ImageSelectorElement><any>shadowRoot.querySelector(`unagi-image-selector[name="${key}"]`)
                 if (imageSelector) {
-                    imageSelector.setAttribute('imageid', item[key]);
+                    imageSelector.render(game, item[key]);
                     continue
                 }
             }
-
-            let imageSelectors = shadowRoot.querySelectorAll(`unagi-image-selector`);
-            [].forEach.call(imageSelectors, (imageSelector: ImageSelectorElement) => {
-                let index = this.list.selectedIndex;
-                imageSelector.render(game, game[this.groupName][index].image);
-            });
         }
     }
 }

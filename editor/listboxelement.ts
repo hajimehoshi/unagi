@@ -29,6 +29,9 @@ namespace editor {
             let self = <HTMLElement><any>this;
             self.addEventListener('contextmenu', (e: MouseEvent) => {
                 e.preventDefault();
+                if (self.getAttribute('contextmenu') === 'none') {
+                    return;
+                }
                 let menu = <HTMLMenuElement>shadowRoot.querySelector('menu.context');
                 menu.style.display = 'block';
                 let rect = self.getBoundingClientRect();
@@ -68,6 +71,13 @@ namespace editor {
                 return null;
             }
             return input.value;
+        }
+
+        public set selectedId(id: string) {
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let li = shadowRoot.querySelector(`li[data-id="${id}"]`);
+            let input = <HTMLInputElement>li.querySelector('input');
+            input.checked = true;
         }
 
         private toItemTitle(item: ListBoxItem): string {
