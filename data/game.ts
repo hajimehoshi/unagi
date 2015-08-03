@@ -54,7 +54,7 @@ namespace data {
     export declare type Enemy = {
         id:           string,
         name:         string,
-        image:        string,
+        image:        string, // TODO: Add hue
         level:        number,
         maxHP:        number,
         maxMP:        number,

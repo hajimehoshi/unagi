@@ -117,7 +117,8 @@ namespace editor {
 
             let imageSelectors = shadowRoot.querySelectorAll(`unagi-image-selector`);
             [].forEach.call(imageSelectors, (imageSelector: ImageSelectorElement) => {
-                imageSelector.render(game);
+                let index = this.list.selectedIndex;
+                imageSelector.render(game, game[this.groupName][index].image);
             });
         }
     }

@@ -374,13 +374,14 @@
     :host {
       display: block;
     }
-    div {
+    div.image {
       background-color: #9e9e9e;
+      cursor: pointer;
       height: 100%;
       position: relative;
       width: 100%;
     }
-    img {
+    div.image img {
       image-rendering: pixelated;
       left: 50%;
       margin-right: -50%;
@@ -388,8 +389,31 @@
       top: 50%;
       transform: translate(-50%, -50%);
     }
+    div.selector {
+      background-color: #9e9e9e;
+      border-color: #9e9e9e;
+      border-style: solid;
+      border-width: 1px;
+      display: none;
+      height: 384px;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 512px;
+      z-index: 1;
+    }
+    div.selector unagi-listbox {
+      height: 100%;
+      width: 128px;
+    }
   </style>
-  <div><img name="image"></div>
+  <div class="image"><img name="image"></div>
+  <div class="selector">
+    <unagi-listbox groupname="imageSelector">
+    </unagi-listbox>
+    <img>
+  </div>
 </template>
 <title>Unagi - RPG Editor</title>
 <style>

@@ -25,34 +25,22 @@ namespace editor {
             let self = <HTMLElement><any>this;
             self.style.width = self.getAttribute('width') + 'px';
             self.style.height = self.getAttribute('height') + 'px';
+
+            shadowRoot.querySelector('div.image').addEventListener('click', () => {
+                let selector = <HTMLElement>shadowRoot.querySelector('div.selector');
+                selector.style.display = 'block';
+            });
         }
 
-        private attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-            let self = <HTMLElement><any>this;
-            switch (name) {
-            case 'width':
-                self.style.width = newValue + 'px';
-                break;
-            case 'height':
-                self.style.height = newValue + 'px';
-                break;
-            case 'imageid':
-                let ce = new CustomEvent('change');
-                self.dispatchEvent(ce);
-                break;
-            }
-        }
-
-        public render(game: data.Game): void {
+        public render(game: data.Game, imageId: string): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let img = <HTMLImageElement>shadowRoot.querySelector('img');
 
-            let id = (<HTMLElement><any>this).getAttribute('imageid');
-            if (!id) {
+            if (!imageId) {
                 img.src = '';
                 return;
             }
-            let image = this.imageById(game.images, id);
+            let image = this.imageById(game.images, imageId);
             if (!image) {
                 img.src = '';
                 return;
