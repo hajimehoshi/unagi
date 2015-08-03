@@ -32,15 +32,18 @@ namespace editor {
                     e.clientX <= rect.left + rect.width && rect.left <= e.clientX) {
                     return;
                 }
-                let dialogList = <ListBoxElement><any>dialog.querySelector('unagi-listbox');
+                dialog.close();
+            });
+
+            let dialogList = <HTMLElement>dialog.querySelector('unagi-listbox');
+            dialogList.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 let ce = new CustomEvent('change', {
                     detail: {
-                        id: dialogList.selectedId,
+                        id: e.detail.id,
                     }
                 });
                 (<HTMLElement><any>this).dispatchEvent(ce);
-                dialog.close();
-            });
+            })
         }
 
         public render(game: data.Game, imageId: string): void {
@@ -60,12 +63,17 @@ namespace editor {
 
             let dialog = <any>shadowRoot.querySelector('dialog');
             let dialogList = <ListBoxElement><any>dialog.querySelector('unagi-listbox');
-            dialogList.replaceItems(game.images.map((image: data.Image): ListBoxItem => {
+            let items = game.images.map((image: data.Image): ListBoxItem => {
                 return {
                     title: image.name,
                     id:    image.id,
                 };
-            }));
+            });
+            items.unshift({
+                title: '(None)',
+                id:    null,
+            });
+            dialogList.replaceItems(items);
             if (!dialog.open) {
                 dialogList.selectedId = imageId;
             }
