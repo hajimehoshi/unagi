@@ -40,6 +40,7 @@ namespace data {
 
     export declare type Actor = {
         id:                string,
+        image:             string,
         name:              string,
         initialLevel:      number,
         maxHPCurve:        number[],
@@ -71,6 +72,7 @@ namespace data {
     }
 
     export enum ImageType {
+        Null,
         CharacterSet,
         Enemy,
         TileSet,
@@ -82,6 +84,14 @@ namespace data {
         data: string,
         type: ImageType,
     }
+
+    export const NullImage: Image = {
+        id:   'ebdc76b2-beab-4aa5-8064-cab21c967e19',
+        name: '',
+        data: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=',
+        type: ImageType.Null,
+    };
+
 
     export declare type Script = {
         name:    string,

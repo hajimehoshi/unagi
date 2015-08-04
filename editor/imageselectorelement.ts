@@ -36,6 +36,7 @@ namespace editor {
             });
 
             let dialogList = <HTMLElement>dialog.querySelector('unagi-listbox');
+            dialogList.setAttribute('groupname', data.UUID.generate());
             dialogList.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 let ce = new CustomEvent('change', {
                     detail: {
@@ -50,16 +51,8 @@ namespace editor {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let img = <HTMLImageElement>shadowRoot.querySelector('img');
 
-            let image: data.Image = null;
-            if (imageId) {
-                image = this.imageById(game.images, imageId);
-            }
-
-            if (!image) {
-                img.src = '';
-            } else {
-                img.src = image.data;
-            }
+            let image = this.imageById(game.images, imageId);
+            img.src = image.data;
 
             let dialog = <any>shadowRoot.querySelector('dialog');
             let dialogList = <ListBoxElement><any>dialog.querySelector('unagi-listbox');
@@ -71,23 +64,20 @@ namespace editor {
             });
             items.unshift({
                 title: '(None)',
-                id:    null,
+                id:    data.NullImage.id,
             });
             dialogList.replaceItems(items);
-            if (!dialog.open) {
-                dialogList.selectedId = imageId;
-            }
+            dialogList.selectedId = imageId;
 
             let dialogImg = <HTMLImageElement>dialog.querySelector('img');
             let dialogImage = this.imageById(game.images, dialogList.selectedId);
-            if (!dialogImage) {
-                dialogImg.src = '';
-            } else {
-                dialogImg.src = dialogImage.data
-            }
+            dialogImg.src = dialogImage.data
         }
 
         private imageById(images: data.Image[], id: string): data.Image {
+            if (id === data.NullImage.id) {
+                return data.NullImage;
+            }
             for (let image of images) {
                 if (image.id === id) {
                     return image;

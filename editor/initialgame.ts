@@ -64,6 +64,7 @@ namespace editor {
             {
                 id:                actorIds[0],
                 name:              'Sato',
+                image:             data.NullImage.id,
                 initialLevel:      1,
                 maxHPCurve:        calcCurve(1, 60),
                 maxMPCurve:        calcCurve(1, 6),
@@ -76,6 +77,7 @@ namespace editor {
             {
                 id:                actorIds[1],
                 name:              'Suzuki',
+                image:             data.NullImage.id,
                 initialLevel:      1,
                 maxHPCurve:        calcCurve(1, 60),
                 maxMPCurve:        calcCurve(1, 6),
@@ -88,6 +90,7 @@ namespace editor {
             {
                 id:                actorIds[2],
                 name:              'Takahashi',
+                image:             data.NullImage.id,
                 initialLevel:      1,
                 maxHPCurve:        calcCurve(1, 60),
                 maxMPCurve:        calcCurve(1, 6),
@@ -100,6 +103,7 @@ namespace editor {
             {
                 id:                actorIds[3],
                 name:              'Tanaka',
+                image:             data.NullImage.id,
                 initialLevel:      1,
                 maxHPCurve:        calcCurve(1, 60),
                 maxMPCurve:        calcCurve(1, 6),
@@ -114,7 +118,7 @@ namespace editor {
             {
                 id:           data.UUID.generate(),
                 name:         'New Enemy',
-                image:        null,
+                image:        data.NullImage.id,
                 level:        1,
                 maxHP:        10,
                 maxMP:        10,
@@ -165,6 +169,7 @@ namespace editor {
                 type: type,
             });
         }
+        initialGame.actors[0].image = idFromName(initialGame.images, 'characterset');
         initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_demo');
     })()
 }
