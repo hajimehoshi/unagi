@@ -155,8 +155,8 @@ namespace editor {
     (() => {
         for (let image of defaultImages) {
             let type: data.ImageType;
-            if (image.name.match(/^characterset/)) {
-                type = data.ImageType.CharacterSet;
+            if (image.name.match(/^character/)) {
+                type = data.ImageType.Character;
             } else if (image.name.match(/^enemy/)) {
                 type = data.ImageType.Enemy;
             } else  if (image.name.match(/^tileset/)) {
@@ -169,7 +169,10 @@ namespace editor {
                 type: type,
             });
         }
-        initialGame.actors[0].image = idFromName(initialGame.images, 'characterset');
+        initialGame.actors[0].image = idFromName(initialGame.images, 'character0');
+        initialGame.actors[1].image = idFromName(initialGame.images, 'character3');
+        initialGame.actors[2].image = idFromName(initialGame.images, 'character4');
+        initialGame.actors[3].image = idFromName(initialGame.images, 'character7');
         initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_demo');
     })()
 }

@@ -73,7 +73,7 @@ namespace data {
 
     export enum ImageType {
         Null,
-        CharacterSet,
+        Character,
         Enemy,
         TileSet,
     }
