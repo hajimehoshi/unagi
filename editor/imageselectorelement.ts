@@ -20,10 +20,18 @@ namespace editor {
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
 
-            shadowRoot.querySelector('div.image').addEventListener('click', () => {
+            let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas');
+            canvas.addEventListener('click', (e: MouseEvent) => {
+                e.preventDefault();
                 let dialog = <any>shadowRoot.querySelector('dialog');
                 dialog.showModal();
             });
+            let width = parseInt((<HTMLElement><any>this).getAttribute('width'), 10);
+            let height = parseInt((<HTMLElement><any>this).getAttribute('height'), 10);
+            canvas.width = width;
+            canvas.height = height;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
 
             let dialog = <any>shadowRoot.querySelector('dialog');
             dialog.addEventListener('click', (e: MouseEvent) => {
@@ -48,10 +56,17 @@ namespace editor {
 
         public render(game: data.Game, imageId: string): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let img = <HTMLImageElement>shadowRoot.querySelector('img');
 
+            let img = new Image();
             let image = this.imageById(game.images, imageId);
             img.src = image.data;
+            img.addEventListener('load', () => {
+                let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas');
+                let context = canvas.getContext('2d');
+                (<any>context).imageSmoothingEnabled = false;
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(img, 0, 0);
+            });
 
             let dialog = <any>shadowRoot.querySelector('dialog');
             let dialogList = <ListBoxElement><any>dialog.querySelector('unagi-listbox');

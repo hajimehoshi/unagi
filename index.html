@@ -286,14 +286,14 @@
     <unagi-database-content groupname="actors">
       <ul>
         <li><label>Name: <input type="text" name="name"></label></li>
-        <li>Image: <unagi-image-selector name="image" style="width: 32px; height: 32px"></unagi-image-selector></li>
+        <li>Image: <unagi-image-selector name="image" width="24" height="32"></unagi-image-selector></li>
         <li><label>Initial Level: <input type="number" name="initialLevel" min="1" max="99"></label></li>
       </ul>
     </unagi-database-content>
     <unagi-database-content groupname="enemies">
       <ul>
         <li><label>Name: <input type="text" name="name"></label></li>
-        <li>Image: <unagi-image-selector name="image" style="width: 320px; height: 160px"></unagi-image-selector></li>
+        <li>Image: <unagi-image-selector name="image" width="320" height="160"></unagi-image-selector></li>
         <li><label>Level: <input type="number" name="level" min="1" max="99"></label></li>
         <li><label>Max HP: <input type="number" name="maxHP" min="1" max="999999"></label></li>
         <li><label>Max MP: <input type="number" name="maxMP" min="1" max="9999"></label></li>
@@ -377,26 +377,16 @@
       font-size: 0;
       line-height: 0;
     }
-    img {
+    img, canvas {
       image-rendering: pixelated;
     }
-    div.image {
+    canvas {
       background-color: #9e9e9e;
       border-color: #9e9e9e;
       border-style: solid;
       border-width: 1px;
       cursor: pointer;
-      height: 100%;
-      overflow: hidden;
       position: relative;
-      width: 100%;
-    }
-    div.image img {
-      left: 50%;
-      margin-right: -50%;
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
     }
     dialog {
       background-color: #9e9e9e;
@@ -425,7 +415,7 @@
       width: calc(100% - 129px);
     }
   </style>
-  <div class="image"><img name="image"></div>
+  <canvas></canvas>
   <dialog>
     <unagi-listbox contextmenu="none">
     </unagi-listbox>
