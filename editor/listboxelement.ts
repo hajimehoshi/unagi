@@ -19,7 +19,11 @@ namespace editor {
     }
 
     export class ListBoxElement {
+        private namePostfix_: string;
+
         private createdCallback(): void {
+            this.namePostfix_ = data.UUID.generate();
+
             let template = <HTMLTemplateElement>document.getElementById('unagi-listbox-template');
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
@@ -60,10 +64,6 @@ namespace editor {
             return [].indexOf.call(shadowRoot.querySelectorAll('ul.list li'), li);
         }
 
-        private get groupName(): string {
-            return (<HTMLElement><any>this).getAttribute('groupname');
-        }
-
         public get selectedId(): string {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let input = <HTMLInputElement>shadowRoot.querySelector('input:checked');
@@ -102,7 +102,6 @@ namespace editor {
                 idToLi[id] = li;
                 ul.removeChild(li);
             }
-            let groupName = this.groupName;
             for (let item of items) {
                 let li = idToLi[item.id];
                 if (li) {
@@ -117,7 +116,7 @@ namespace editor {
 
                 let input = document.createElement('input');
                 input.type = 'radio';
-                input.name = `selectedItem-${groupName}`;
+                input.name = `selectedItem-${this.namePostfix_}`;
                 input.value = item.id;
                 input.addEventListener('change', (e) => {
                     let input = <HTMLInputElement>e.target;

@@ -36,7 +36,6 @@ namespace editor {
             });
 
             let dialogList = <HTMLElement>dialog.querySelector('unagi-listbox');
-            dialogList.setAttribute('groupname', data.UUID.generate());
             dialogList.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 let ce = new CustomEvent('change', {
                     detail: {
