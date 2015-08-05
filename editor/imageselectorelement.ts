@@ -65,7 +65,18 @@ namespace editor {
                 let context = canvas.getContext('2d');
                 (<any>context).imageSmoothingEnabled = false;
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(img, 0, 0);
+                let sx = (img.width - canvas.width)/2;
+                let sy = (img.height - canvas.height)/2;
+                let srcoffsetx = (<HTMLElement><any>this).getAttribute('srcoffsetx');
+                if (srcoffsetx) {
+                    sx += parseInt(srcoffsetx, 10);
+                }
+                let srcoffsety = (<HTMLElement><any>this).getAttribute('srcoffsety');
+                if (srcoffsety) {
+                    sy += parseInt(srcoffsety, 10);
+                }
+                context.drawImage(img, sx, sy, canvas.width, canvas.height,
+                                  0, 0, canvas.width, canvas.height);
             });
 
             let dialog = <any>shadowRoot.querySelector('dialog');
