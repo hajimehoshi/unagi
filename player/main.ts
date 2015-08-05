@@ -13,19 +13,20 @@
 // limitations under the License.
 
 namespace BitmapText {
-    let mplusImages: {[key:string]: ImageData} = {};
+    let mplusImages: {[key:string]: HTMLImageElement} = {};
 
     let mplusFontNames = ['latin', 'bmp-0', 'bmp-2', 'bmp-3', 'bmp-4', 'bmp-5', 'bmp-6', 'bmp-7', 'bmp-8', 'bmp-9', 'bmp-15'];
     mplusFontNames.forEach((key) => {
         let img = new Image();
         img.src = './images/mplus-bitmap-images/' + key + '.png';
         img.onload = () => {
-            let canvas = document.createElement('canvas');
+            /*let canvas = document.createElement('canvas');
             canvas.width = img.width;
             canvas.height = img.height;
             let context = canvas.getContext('2d');
             context.drawImage(img, 0, 0);
-            mplusImages[key] = context.getImageData(0, 0, canvas.width, canvas.height);
+            mplusImages[key] = context.getImageData(0, 0, canvas.width, canvas.height);*/
+            mplusImages[key] = img;
         };
         // TODO: Wait until all images are loaded.
     });
@@ -80,8 +81,7 @@ namespace BitmapText {
         let dstCanvas = <HTMLCanvasElement>document.createElement('canvas');
         dstCanvas.width = size.width;
         dstCanvas.height = size.height;
-        let dstContext = dstCanvas.getContext('2d');
-        let dst = dstContext.getImageData(0, 0, size.width, size.height);
+        let dst = dstCanvas.getContext('2d');
 
         for (let ch of str) {
             let code = <number>(<any>ch).codePointAt(0);
@@ -102,7 +102,9 @@ namespace BitmapText {
                 }
                 let sx = (code % 32) * TEXT_HALF_WIDTH;
                 let sy = ((code / 32)|0) * TEXT_HEIGHT;
-                drawBinaryBitmap(dst, img, cx, cy, TEXT_HALF_WIDTH, TEXT_HEIGHT, sx, sy, r, g, b);
+                let w = TEXT_HALF_WIDTH;
+                let h = TEXT_HEIGHT;
+                dst.drawImage(img, sx, sy, w, h, cx, cy, w, h);
                 cx += TEXT_HALF_WIDTH;
                 continue;
             }
@@ -118,10 +120,14 @@ namespace BitmapText {
             }
             let sx = (code % 64) * TEXT_FULL_WIDTH;
             let sy = (((code % 4096) / 64)|0) * TEXT_HEIGHT;
-            drawBinaryBitmap(dst, img, cx, cy, TEXT_FULL_WIDTH, TEXT_HEIGHT, sx, sy, r, g, b);
+            let w = TEXT_FULL_WIDTH;
+            let h = TEXT_HEIGHT;
+            dst.drawImage(img, sx, sy, w, h, cx, cy, w, h);
             cx += TEXT_FULL_WIDTH;
         }
-        dstContext.putImageData(dst, 0, 0);
+        dst.globalCompositeOperation = 'source-in';
+        dst.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
+        dst.fillRect(0, 0, size.width, size.height);
         context.drawImage(dstCanvas, x, y);
         context.restore();
     }
