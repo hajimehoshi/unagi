@@ -25,7 +25,7 @@ namespace BitmapText {
             canvas.height = img.height;
             let context = canvas.getContext('2d');
             context.drawImage(img, 0, 0);
-            mplusImages[key] = context.getImageData(0, 0, img.width, img.height);
+            mplusImages[key] = context.getImageData(0, 0, canvas.width, canvas.height);
         };
         // TODO: Wait until all images are loaded.
     });
@@ -76,7 +76,13 @@ namespace BitmapText {
         let cx = 0;
         let cy = 0;
         let size = textSize(str);
-        let dst = context.getImageData(x, y, size.width, size.height);
+
+        let dstCanvas = <HTMLCanvasElement>document.createElement('canvas');
+        dstCanvas.width = size.width;
+        dstCanvas.height = size.height;
+        let dstContext = dstCanvas.getContext('2d');
+        let dst = dstContext.getImageData(0, 0, size.width, size.height);
+
         for (let ch of str) {
             let code = <number>(<any>ch).codePointAt(0);
             if (ch == '\n') {
@@ -115,7 +121,8 @@ namespace BitmapText {
             drawBinaryBitmap(dst, img, cx, cy, TEXT_FULL_WIDTH, TEXT_HEIGHT, sx, sy, r, g, b);
             cx += TEXT_FULL_WIDTH;
         }
-        context.putImageData(dst, x, y);
+        dstContext.putImageData(dst, 0, 0);
+        context.drawImage(dstCanvas, x, y);
         context.restore();
     }
 }

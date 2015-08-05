@@ -30,6 +30,7 @@ class BattlePlayerWindow {
 
     draw(context) {
         context.save();
+
         this.window_.draw(context);
         let actor = $game.actors[this.index_];
         this.drawShadowTextAt(context, actor.name, this.window_.x + 8, this.window_.y + 8, 255, 255, 255);
