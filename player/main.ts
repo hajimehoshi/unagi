@@ -71,90 +71,164 @@ namespace BitmapFont {
         }
     }
 
-    const TEXT_FULL_WIDTH = 12;
-    const TEXT_HALF_WIDTH = 6;
-    const TEXT_HEIGHT = data.gridSize;
+    export namespace Regular {
+        const TEXT_FULL_WIDTH = 12;
+        const TEXT_HALF_WIDTH = 6;
+        const TEXT_HEIGHT = data.gridSize;
 
-    function textSize(str: string): {width: number, height: number} {
-        let width = 0;
-        let height = TEXT_HEIGHT;
-        let currentWidth = 0;
-        for (let ch of str) {
-            let code = <number>(<any>ch).codePointAt(0);
-            if (ch == '\n') {
-                height += TEXT_HEIGHT;
-                continue;
-            }
-            if (code <= 0xff) {
-                currentWidth += TEXT_HALF_WIDTH; 
+        function textSize(str: string): {width: number, height: number} {
+
+            let width = 0;
+            let height = TEXT_HEIGHT;
+            let currentWidth = 0;
+            for (let ch of str) {
+                let code = <number>(<any>ch).codePointAt(0);
+                if (ch == '\n') {
+                    height += TEXT_HEIGHT;
+                    continue;
+                }
+                if (code <= 0xff) {
+                    currentWidth += TEXT_HALF_WIDTH; 
+                    width = Math.max(width, currentWidth);
+                    continue;
+                }
+                currentWidth += TEXT_FULL_WIDTH;
                 width = Math.max(width, currentWidth);
-                continue;
             }
-            currentWidth += TEXT_FULL_WIDTH;
-            width = Math.max(width, currentWidth);
+            return {width, height}
         }
-        return {width, height}
-    }
 
-    export function drawAt(context: CanvasRenderingContext2D, str: string, x: number, y: number, r: number, g: number, b: number): void {
-        context.save();
+        export function drawAt(context: CanvasRenderingContext2D, str: string, x: number, y: number, r: number, g: number, b: number): void {
+            context.save();
 
-        let cx = 0;
-        let cy = 0;
-        let size = textSize(str);
+            let cx = 0;
+            let cy = 0;
+            let size = textSize(str);
 
-        let dstCanvas = <HTMLCanvasElement>document.createElement('canvas');
-        dstCanvas.width = size.width;
-        dstCanvas.height = size.height;
-        let dst = dstCanvas.getContext('2d');
+            let dstCanvas = <HTMLCanvasElement>document.createElement('canvas');
+            dstCanvas.width = size.width;
+            dstCanvas.height = size.height;
+            let dst = dstCanvas.getContext('2d');
 
-        for (let ch of str) {
-            let code = <number>(<any>ch).codePointAt(0);
-            if (ch == '\n') {
-                cx = 0;
-                cy += TEXT_HEIGHT;
-                continue;
-            }
-            if (ch == ' ') {
-                cx += TEXT_HALF_WIDTH;
-                continue;
-            }
-            if (code <= 0xff) {
-                let img = mplusImages['latin'];
-                if (!img) {
+            for (let ch of str) {
+                let code = <number>(<any>ch).codePointAt(0);
+                if (ch == '\n') {
+                    cx = 0;
+                    cy += TEXT_HEIGHT;
+                    continue;
+                }
+                if (ch == ' ') {
                     cx += TEXT_HALF_WIDTH;
                     continue;
                 }
-                let sx = (code % 32) * TEXT_HALF_WIDTH;
-                let sy = ((code / 32)|0) * TEXT_HEIGHT;
-                let w = TEXT_HALF_WIDTH;
+                if (code <= 0xff) {
+                    let img = mplusImages['latin'];
+                    if (!img) {
+                        cx += TEXT_HALF_WIDTH;
+                        continue;
+                    }
+                    let sx = (code % 32) * TEXT_HALF_WIDTH;
+                    let sy = ((code / 32)|0) * TEXT_HEIGHT;
+                    let w = TEXT_HALF_WIDTH;
+                    let h = TEXT_HEIGHT;
+                    dst.drawImage(img, sx, sy, w, h, cx, cy, w, h);
+                    cx += TEXT_HALF_WIDTH;
+                    continue;
+                }
+                if (0xffff < code) {
+                    cx += TEXT_FULL_WIDTH;
+                    continue;
+                }
+                let page = (code / 4096)|0;
+                let img = mplusImages[`bmp-${page}`];
+                if (!img) {
+                    cx += TEXT_FULL_WIDTH;
+                    continue;
+                }
+                let sx = (code % 64) * TEXT_FULL_WIDTH;
+                let sy = (((code % 4096) / 64)|0) * TEXT_HEIGHT;
+                let w = TEXT_FULL_WIDTH;
                 let h = TEXT_HEIGHT;
                 dst.drawImage(img, sx, sy, w, h, cx, cy, w, h);
-                cx += TEXT_HALF_WIDTH;
-                continue;
-            }
-            if (0xffff < code) {
                 cx += TEXT_FULL_WIDTH;
-                continue;
             }
-            let page = (code / 4096)|0;
-            let img = mplusImages[`bmp-${page}`];
-            if (!img) {
-                cx += TEXT_FULL_WIDTH;
-                continue;
-            }
-            let sx = (code % 64) * TEXT_FULL_WIDTH;
-            let sy = (((code % 4096) / 64)|0) * TEXT_HEIGHT;
-            let w = TEXT_FULL_WIDTH;
-            let h = TEXT_HEIGHT;
-            dst.drawImage(img, sx, sy, w, h, cx, cy, w, h);
-            cx += TEXT_FULL_WIDTH;
+            dst.globalCompositeOperation = 'source-in';
+            dst.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
+            dst.fillRect(0, 0, size.width, size.height);
+            context.drawImage(dstCanvas, x, y);
+            context.restore();
         }
-        dst.globalCompositeOperation = 'source-in';
-        dst.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
-        dst.fillRect(0, 0, size.width, size.height);
-        context.drawImage(dstCanvas, x, y);
-        context.restore();
+    }
+
+    // TODO: Rename
+    export namespace Number {
+        const TEXT_WIDTH = 8;
+        const TEXT_HEIGHT = 8;
+
+        function textSize(str: string): {width: number, height: number} {
+            let width = 0;
+            let height = TEXT_HEIGHT;
+            let currentWidth = 0;
+            for (let ch of str) {
+                let code = <number>(<any>ch).codePointAt(0);
+                if (ch == '\n') {
+                    height += TEXT_HEIGHT;
+                    continue;
+                }
+                if (code < 0x20) {
+                    continue
+                }
+                if (0x80 <= code) {
+                    continue;
+                }
+                currentWidth += TEXT_WIDTH;
+                width = Math.max(width, currentWidth);
+            }
+            return {width, height}
+        }
+
+        export function drawAt(context: CanvasRenderingContext2D, str: string, x: number, y: number, r: number, g: number, b: number) {
+            context.save();
+
+            let cx = 0;
+            let cy = 0;
+            let size = textSize(str);
+
+            let dstCanvas = <HTMLCanvasElement>document.createElement('canvas');
+            dstCanvas.width = size.width;
+            dstCanvas.height = size.height;
+            let dst = dstCanvas.getContext('2d');
+
+            for (let ch of str) {
+                let code = <number>(<any>ch).codePointAt(0);
+                if (ch == '\n') {
+                    cx = 0;
+                    cy += TEXT_HEIGHT;
+                    continue;
+                }
+                if (ch == ' ') {
+                    cx += TEXT_WIDTH;
+                    continue;
+                }
+                if (code < 0x20) {
+                    continue
+                }
+                if (0x80 <= code) {
+                    continue
+                }
+                let sx = (code % 16) * TEXT_WIDTH;
+                let sy = (((code / 16)|0) - 2) * TEXT_HEIGHT;
+                let w = TEXT_WIDTH;
+                let h = TEXT_HEIGHT;
+                dst.drawImage(arcadeImage, sx, sy, w, h, cx, cy, w, h);
+                cx += TEXT_WIDTH;
+            }
+            dst.globalCompositeOperation = 'source-in';
+            dst.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
+            dst.fillRect(0, 0, size.width, size.height);
+            context.drawImage(dstCanvas, x, y);
+            context.restore();
+        }
     }
 }
 

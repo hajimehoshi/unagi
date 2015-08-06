@@ -13,8 +13,13 @@ class BattlePlayerWindow {
     }
     
     drawShadowTextAt(context, text, x, y) {
-        BitmapFont.drawAt(context, text, x+1, y+1, 0, 0, 0);
-        BitmapFont.drawAt(context, text, x, y, 255, 255, 255);
+        BitmapFont.Regular.drawAt(context, text, x+1, y+1, 0, 0, 0);
+        BitmapFont.Regular.drawAt(context, text, x, y, 255, 255, 255);
+    }
+
+    drawShadowNumberTextAt(context, text, x, y) {
+        BitmapFont.Number.drawAt(context, text, x+1, y+1, 0, 0, 0);
+        BitmapFont.Number.drawAt(context, text, x, y, 255, 255, 255);
     }
 
     draw(context) {
@@ -22,16 +27,16 @@ class BattlePlayerWindow {
 
         this.window_.draw(context);
         let actor = $game.actors[this.index_];
-        this.drawShadowTextAt(context, actor.name, this.window_.x + 8, this.window_.y + 8 + 16, 255, 255, 255);
-        this.drawShadowTextAt(context, "9999", this.window_.x + 8, this.window_.y + 8 + 32, 255, 255, 255);
-        this.drawShadowTextAt(context, "999", this.window_.x + 8, this.window_.y + 8 + 48, 255, 255, 255);
+        this.drawShadowTextAt(context, actor.name, this.window_.x + 8, this.window_.y + 32, 255, 255, 255);
+        this.drawShadowNumberTextAt(context, "HP 9999", this.window_.x + 8, this.window_.y + 52, 255, 255, 255);
+        this.drawShadowNumberTextAt(context, "MP 999", this.window_.x + 8, this.window_.y + 64, 255, 255, 255);
         let actorImg = Images.byId($game, actor.image);
         let sx = 24;
         let sy = 64;
-        let actorWidth = 24;
+        let actorWidth = 24; // TODO: Need to define const in 'data'
         let actorHeight = 32;
         let dx = this.window_.x + (this.window_.width - actorWidth) / 2;
-        let dy = this.window_.y - actorHeight + 4 + 16;
+        let dy = this.window_.y - actorHeight + 32;
         context.drawImage(actorImg, sx, sy, actorWidth, actorHeight, dx, dy, actorWidth, actorHeight);
 
         context.restore();
