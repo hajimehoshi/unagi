@@ -6,20 +6,21 @@ class BattlePlayerWindow {
         // TODO: Centering?
         //this.window_ = new Window(80 * this.index_, 176, 80, 64);
         this.window_ = new Window(80 * this.index_, 160, 80, 80);
+        this.window_.opaque = 128;
     }
 
     update() {
         this.window_.update();
     }
     
-    drawShadowTextAt(context, text, x, y) {
+    drawShadowTextAt(context, text, x, y, r, g, b) {
         BitmapFont.Regular.drawAt(context, text, x+1, y+1, 0, 0, 0);
-        BitmapFont.Regular.drawAt(context, text, x, y, 255, 255, 255);
+        BitmapFont.Regular.drawAt(context, text, x, y, r, g, b);
     }
 
-    drawShadowNumberTextAt(context, text, x, y) {
+    drawShadowNumberTextAt(context, text, x, y, r, g, b) {
         BitmapFont.Number.drawAt(context, text, x+1, y+1, 0, 0, 0);
-        BitmapFont.Number.drawAt(context, text, x, y, 255, 255, 255);
+        BitmapFont.Number.drawAt(context, text, x, y, r, g, b);
     }
 
     draw(context) {
@@ -27,9 +28,14 @@ class BattlePlayerWindow {
 
         this.window_.draw(context);
         let actor = $game.actors[this.index_];
-        this.drawShadowTextAt(context, actor.name, this.window_.x + 8, this.window_.y + 32, 255, 255, 255);
-        this.drawShadowNumberTextAt(context, "HP 9999", this.window_.x + 8, this.window_.y + 52, 255, 255, 255);
-        this.drawShadowNumberTextAt(context, "MP 999", this.window_.x + 8, this.window_.y + 64, 255, 255, 255);
+        this.drawShadowTextAt(context, actor.name, this.window_.x + 8, this.window_.y + 32, 255, 255, 192);
+        let x = this.window_.x + 8;
+        let y = this.window_.y + 52;
+        this.drawShadowNumberTextAt(context, "HP", x, y, 192, 192, 255);
+        this.drawShadowNumberTextAt(context, "9999", x + 32, y, 255, 255, 255);
+        y += 12;
+        this.drawShadowNumberTextAt(context, "MP", x, y, 192, 192, 255);
+        this.drawShadowNumberTextAt(context, " 999", x + 32, y, 255, 255, 255);
         let actorImg = Images.byId($game, actor.image);
         let sx = 24;
         let sy = 64;
