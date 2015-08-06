@@ -39,12 +39,18 @@ namespace Images {
     }
 
     // TODO: Deprecate this
+
+    var imgsByName: {[name: string]: HTMLImageElement} = {};
+
     export function byName(game: data.Game, name: string): HTMLImageElement {
+        if (name in imgsByName) {
+            return imgsByName[name];
+        }
         for (let image of game.images) {
             if (image.name === name) {
                 let img = new Image();
                 img.src = image.data;
-                imgs[image.id] = img;
+                imgsByName[name] = img;
                 return img;
             }
         }
@@ -256,19 +262,11 @@ class Env {
         let context = canvas.getContext('2d');
         (<any>context).imageSmoothingEnabled = false;
 
-        let offscreenCanvas = <HTMLCanvasElement>document.createElement('canvas');
-        offscreenCanvas.width = width;
-        offscreenCanvas.height = height;
-        let offscreenContext = offscreenCanvas.getContext('2d');
-
         let loop = () => {
-            offscreenContext.save();
-            offscreenContext.clearRect(0, 0, width, height);
-            f(offscreenContext);
-            offscreenContext.restore();
-
+            context.save();
             context.clearRect(0, 0, width, height);
-            context.drawImage(offscreenCanvas, 0, 0, width, height);
+            f(context);
+            context.restore();
 
             window.requestAnimationFrame(loop);
         };
