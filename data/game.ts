@@ -67,8 +67,9 @@ namespace data {
     }
 
     export declare type System = {
-        title:        string,
-        initialParty: string[],
+        title:           string,
+        initialParty:    string[],
+        numberFontImage: string,
     }
 
     export enum ImageType {
@@ -76,6 +77,7 @@ namespace data {
         Character,
         Enemy,
         TileSet,
+        Picture,
     }
 
     export declare type Image = {

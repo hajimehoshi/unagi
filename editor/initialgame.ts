@@ -130,8 +130,9 @@ namespace editor {
             }
         ],
         system: {
-            title:        'New RPG',
-            initialParty: actorIds.slice(),
+            title:           'New RPG',
+            initialParty:    actorIds.slice(),
+            numberFontImage: data.NullImage.id,
         },
         images: [
         ],
@@ -154,7 +155,7 @@ namespace editor {
 
     (() => {
         for (let image of defaultImages) {
-            let type: data.ImageType;
+            let type = data.ImageType.Picture;
             if (image.name.match(/^character/)) {
                 type = data.ImageType.Character;
             } else if (image.name.match(/^enemy/)) {
@@ -174,5 +175,6 @@ namespace editor {
         initialGame.actors[2].image = idFromName(initialGame.images, 'character4');
         initialGame.actors[3].image = idFromName(initialGame.images, 'character7');
         initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_demo');
+        initialGame.system.numberFontImage = idFromName(initialGame.images, 'font_arcade');
     })()
 }

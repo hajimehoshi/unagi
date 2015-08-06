@@ -12,18 +12,49 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace BitmapText {
-    let mplusImages: {[key:string]: HTMLImageElement} = {};
+namespace Images {
+    var imgs: {[id: string]: HTMLImageElement} = {};
 
+    export function byId(game: data.Game, id: string): HTMLImageElement {
+        if (id in imgs) {
+            return imgs[id];
+        }
+
+        if (id === data.NullImage.id) {
+            let image = data.NullImage;
+            let img = new Image();
+            img.src = image.data;
+            imgs[id] = img;
+            return img;
+        }
+        for (let image of game.images) {
+            if (image.id === id) {
+                let img = new Image();
+                img.src = image.data;
+                imgs[id] = img;
+                return img;
+            }
+        }
+        return null;
+    }
+}
+
+namespace BitmapFont {
+    let mplusImages: {[key:string]: HTMLImageElement} = {};
     let mplusFontNames = ['latin', 'bmp-0', 'bmp-2', 'bmp-3', 'bmp-4', 'bmp-5', 'bmp-6', 'bmp-7', 'bmp-8', 'bmp-9', 'bmp-15'];
-    mplusFontNames.forEach((key) => {
-        let img = new Image();
-        img.src = './images/mplus-bitmap-images/' + key + '.png';
-        img.onload = () => {
-            mplusImages[key] = img;
-        };
-        // TODO: Wait until all images are loaded.
-    });
+    let arcadeImage: HTMLImageElement;
+
+    export function initialize(game: data.Game) {
+        mplusFontNames.forEach((key) => {
+            let img = new Image();
+            img.src = './images/mplus-bitmap-images/' + key + '.png';
+            img.onload = () => {
+                mplusImages[key] = img;
+            };
+            // TODO: Wait until all images are loaded.
+        });
+        arcadeImage = Images.byId(game, game.system.numberFontImage);
+    }
 
     function drawBinaryBitmap(dst: ImageData, src: ImageData, dstX: number, dstY: number, width: number, height: number, srcX: number, srcY: number, r: number, g: number, b: number) {
         for (let j = 0; j < height; j++) {
@@ -166,6 +197,7 @@ let $game: data.Game;
     window.addEventListener('message', (e) => {
         let game = <data.Game>e.data;
         $game = game;
+        BitmapFont.initialize($game);
 
         let script = "";
         for (let s of game.scripts) {

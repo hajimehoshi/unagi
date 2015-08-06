@@ -1,30 +1,5 @@
 'use strict'
 
-var imgs = new Map();
-
-function imageById(id) {
-    if (imgs.has(id)) {
-        return imgs.get(id)
-    }
-
-    if (id === data.NullImage.id) {
-        let image = data.NullImage;
-        let img = new Image();
-        img.src = image.data;
-        imgs.set(id, img);
-        return img;
-    }
-    for (let image of $game.images) {
-        if (image.id === id) {
-            let img = new Image();
-            img.src = image.data;
-            imgs.set(id, img);
-            return img;
-        }
-    }
-    return null;
-}
-
 class BattlePlayerWindow {
     constructor(index) {
         this.index_ = index;
@@ -38,8 +13,8 @@ class BattlePlayerWindow {
     }
     
     drawShadowTextAt(context, text, x, y) {
-        BitmapText.drawAt(context, text, x+1, y+1, 0, 0, 0);
-        BitmapText.drawAt(context, text, x, y, 255, 255, 255);
+        BitmapFont.drawAt(context, text, x+1, y+1, 0, 0, 0);
+        BitmapFont.drawAt(context, text, x, y, 255, 255, 255);
     }
 
     draw(context) {
@@ -50,7 +25,7 @@ class BattlePlayerWindow {
         this.drawShadowTextAt(context, actor.name, this.window_.x + 8, this.window_.y + 8 + 16, 255, 255, 255);
         this.drawShadowTextAt(context, "9999", this.window_.x + 8, this.window_.y + 8 + 32, 255, 255, 255);
         this.drawShadowTextAt(context, "999", this.window_.x + 8, this.window_.y + 8 + 48, 255, 255, 255);
-        let actorImg = imageById(actor.image);
+        let actorImg = Images.byId($game, actor.image);
         let sx = 24;
         let sy = 64;
         let actorWidth = 24;
@@ -93,7 +68,7 @@ class BattleScene {
         // TODO: Make a troop
         {
             let enemy = $game.enemies[0];
-            let enemyImg = imageById(enemy.image);
+            let enemyImg = Images.byId($game, enemy.image);
             let dx = (320 - enemyImg.width) / 2;
             let dy = (160 - enemyImg.height) / 2;
             context.drawImage(enemyImg, dx, dy, enemyImg.width, enemyImg.height);
