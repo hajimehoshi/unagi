@@ -37,6 +37,19 @@ namespace Images {
         }
         return null;
     }
+
+    // TODO: Deprecate this
+    export function byName(game: data.Game, name: string): HTMLImageElement {
+        for (let image of game.images) {
+            if (image.name === name) {
+                let img = new Image();
+                img.src = image.data;
+                imgs[image.id] = img;
+                return img;
+            }
+        }
+        return null;
+    }
 }
 
 namespace BitmapFont {

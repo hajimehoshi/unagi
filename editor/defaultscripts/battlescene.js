@@ -66,9 +66,9 @@ class BattleScene {
     draw(context) {
         context.save();
 
-        // background
-        context.fillStyle = 'rgba(128, 128, 128, 1)';
-        context.fillRect(0, 0, 320, 240);
+        // TODO: Do not use name to specify an image. We should use ID in any cases.
+        let bgImg = Images.byName($game, 'background_field');
+        context.drawImage(bgImg, 0, 0);
 
         for (let window of this.playerWindows_) {
             window.draw(context);

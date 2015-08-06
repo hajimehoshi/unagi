@@ -174,7 +174,8 @@ namespace editor {
         initialGame.actors[1].image = idFromName(initialGame.images, 'character3');
         initialGame.actors[2].image = idFromName(initialGame.images, 'character4');
         initialGame.actors[3].image = idFromName(initialGame.images, 'character7');
-        initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_demo');
+        initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_ebiten');
+        //initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_demo');
         initialGame.system.numberFontImage = idFromName(initialGame.images, 'font_arcade');
     })()
 }
