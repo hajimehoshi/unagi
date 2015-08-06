@@ -1,12 +1,25 @@
 'use strict'
 
+var imgs = new Map();
+
 function imageById(id) {
+    if (imgs.has(id)) {
+        return imgs.get(id)
+    }
+
     if (id === data.NullImage.id) {
-        return data.NullImage;
+        let image = data.NullImage;
+        let img = new Image();
+        img.src = image.data;
+        imgs.set(id, img);
+        return img;
     }
     for (let image of $game.images) {
         if (image.id === id) {
-            return image;
+            let img = new Image();
+            img.src = image.data;
+            imgs.set(id, img);
+            return img;
         }
     }
     return null;
@@ -16,7 +29,8 @@ class BattlePlayerWindow {
     constructor(index) {
         this.index_ = index;
         // TODO: Centering?
-        this.window_ = new Window(80 * this.index_, 176, 80, 64);
+        //this.window_ = new Window(80 * this.index_, 176, 80, 64);
+        this.window_ = new Window(80 * this.index_, 160, 80, 80);
     }
 
     update() {
@@ -33,18 +47,16 @@ class BattlePlayerWindow {
 
         this.window_.draw(context);
         let actor = $game.actors[this.index_];
-        this.drawShadowTextAt(context, actor.name, this.window_.x + 8, this.window_.y + 8, 255, 255, 255);
-        this.drawShadowTextAt(context, "9999", this.window_.x + 8, this.window_.y + 8 + 16, 255, 255, 255);
-        this.drawShadowTextAt(context, "999", this.window_.x + 8, this.window_.y + 8 + 32, 255, 255, 255);
-        let actorImage = imageById(actor.image);
-        let actorImg = new Image();
-        actorImg.src = actorImage.data;
+        this.drawShadowTextAt(context, actor.name, this.window_.x + 8, this.window_.y + 8 + 16, 255, 255, 255);
+        this.drawShadowTextAt(context, "9999", this.window_.x + 8, this.window_.y + 8 + 32, 255, 255, 255);
+        this.drawShadowTextAt(context, "999", this.window_.x + 8, this.window_.y + 8 + 48, 255, 255, 255);
+        let actorImg = imageById(actor.image);
         let sx = 24;
         let sy = 64;
         let actorWidth = 24;
         let actorHeight = 32;
         let dx = this.window_.x + (this.window_.width - actorWidth) / 2;
-        let dy = this.window_.y - actorHeight + 8;
+        let dy = this.window_.y - actorHeight + 4 + 16;
         context.drawImage(actorImg, sx, sy, actorWidth, actorHeight, dx, dy, actorWidth, actorHeight);
 
         context.restore();
@@ -81,9 +93,7 @@ class BattleScene {
         // TODO: Make a troop
         {
             let enemy = $game.enemies[0];
-            let enemyImage = imageById(enemy.image);
-            let enemyImg = new Image();
-            enemyImg.src = enemyImage.data;
+            let enemyImg = imageById(enemy.image);
             let dx = (320 - enemyImg.width) / 2;
             let dy = (160 - enemyImg.height) / 2;
             context.drawImage(enemyImg, dx, dy, enemyImg.width, enemyImg.height);

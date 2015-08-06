@@ -20,12 +20,6 @@ namespace BitmapText {
         let img = new Image();
         img.src = './images/mplus-bitmap-images/' + key + '.png';
         img.onload = () => {
-            /*let canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            let context = canvas.getContext('2d');
-            context.drawImage(img, 0, 0);
-            mplusImages[key] = context.getImageData(0, 0, canvas.width, canvas.height);*/
             mplusImages[key] = img;
         };
         // TODO: Wait until all images are loaded.
@@ -137,27 +131,26 @@ class Env {
     public static run(f: (CanvasRenderingContext2D) => void): void {
         const width = 320;
         const height = 240;
-        const scale = 2;
 
         let canvas = <HTMLCanvasElement>window.document.querySelector('canvas');
-        canvas.width = width * scale * window.devicePixelRatio;
-        canvas.height = height * scale * window.devicePixelRatio;
+        canvas.width = width;
+        canvas.height = height;
         let context = canvas.getContext('2d');
         (<any>context).imageSmoothingEnabled = false;
 
         let offscreenCanvas = <HTMLCanvasElement>document.createElement('canvas');
         offscreenCanvas.width = width;
         offscreenCanvas.height = height;
+        let offscreenContext = offscreenCanvas.getContext('2d');
 
         let loop = () => {
-            let offscreenContext = offscreenCanvas.getContext('2d');
             offscreenContext.save();
             offscreenContext.clearRect(0, 0, width, height);
             f(offscreenContext);
             offscreenContext.restore();
 
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.drawImage(offscreenCanvas, 0, 0, canvas.width, canvas.height);
+            context.clearRect(0, 0, width, height);
+            context.drawImage(offscreenCanvas, 0, 0, width, height);
 
             window.requestAnimationFrame(loop);
         };
