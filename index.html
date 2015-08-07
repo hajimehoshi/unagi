@@ -380,7 +380,7 @@
     img, canvas {
       image-rendering: pixelated; /* TODO: Let's use this for other canvases! */
     }
-    canvas {
+    canvas.current {
       background-color: #9e9e9e;
       border-color: #9e9e9e;
       border-style: solid;
@@ -405,7 +405,7 @@
       height: 100%;
       width: 128px;
     }
-    dialog div {
+    dialog canvas {
       display: block;
       height: 100%;
       left: 129px;
@@ -415,11 +415,11 @@
       width: calc(100% - 129px);
     }
   </style>
-  <canvas></canvas>
+  <canvas class="current"></canvas>
   <dialog>
     <unagi-listbox contextmenu="none">
     </unagi-listbox>
-    <div><img></div>
+    <canvas></canvas>
   </dialog>
 </template>
 <title>Unagi - RPG Editor</title>

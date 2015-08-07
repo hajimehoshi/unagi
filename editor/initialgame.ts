@@ -117,7 +117,7 @@ namespace editor {
         enemies: [
             {
                 id:           data.UUID.generate(),
-                name:         'New Enemy',
+                name:         'Ebiten',
                 image:        data.NullImage.id,
                 level:        1,
                 maxHP:        10,
@@ -175,7 +175,6 @@ namespace editor {
         initialGame.actors[2].image = idFromName(initialGame.images, 'character4');
         initialGame.actors[3].image = idFromName(initialGame.images, 'character7');
         initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_ebiten');
-        //initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_demo');
         initialGame.system.numberFontImage = idFromName(initialGame.images, 'font_arcade');
     })()
 }

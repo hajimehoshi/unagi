@@ -20,7 +20,7 @@ namespace editor {
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
 
-            let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas');
+            let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas.current');
             canvas.addEventListener('click', (e: MouseEvent) => {
                 e.preventDefault();
                 let dialog = <any>shadowRoot.querySelector('dialog');
@@ -35,7 +35,7 @@ namespace editor {
 
             let dialog = <any>shadowRoot.querySelector('dialog');
             dialog.addEventListener('click', (e: MouseEvent) => {
-                var rect = dialog.getBoundingClientRect();
+                let rect = dialog.getBoundingClientRect();
                 if (e.clientY <= rect.top + rect.height && rect.top <= e.clientY &&
                     e.clientX <= rect.left + rect.width && rect.left <= e.clientX) {
                     return;
@@ -51,7 +51,26 @@ namespace editor {
                     }
                 });
                 (<HTMLElement><any>this).dispatchEvent(ce);
-            })
+            });
+
+            let dialogCanvas = <HTMLCanvasElement>dialog.querySelector('dialog canvas');
+            dialogCanvas.width = 383;
+            dialogCanvas.height = 384;
+        }
+
+        private drawAtCenter(canvas: HTMLCanvasElement, img: HTMLImageElement, offsetX: number, offsetY: number): void {
+            let context = canvas.getContext('2d');
+
+            context.save();
+            (<any>context).imageSmoothingEnabled = false;
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            let sx = Math.max(0, (img.width - canvas.width)/2 + offsetX);
+            let sy = Math.max(0, (img.height - canvas.height)/2 + offsetY);
+            let dx = Math.max(0, (canvas.width - img.width)/2);
+            let dy = Math.max(0, (canvas.height - img.height)/2);
+            context.drawImage(img, sx, sy, img.width, img.height, dx, dy, img.width, img.height);
+
+            context.restore();
         }
 
         public render(game: data.Game, imageId: string): void {
@@ -60,24 +79,13 @@ namespace editor {
             let img = new Image();
             let image = this.imageById(game.images, imageId);
             img.src = image.data;
-            img.addEventListener('load', () => {
-                let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas');
-                let context = canvas.getContext('2d');
-                (<any>context).imageSmoothingEnabled = false;
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                let sx = (img.width - canvas.width)/2;
-                let sy = (img.height - canvas.height)/2;
-                let srcoffsetx = (<HTMLElement><any>this).getAttribute('srcoffsetx');
-                if (srcoffsetx) {
-                    sx += parseInt(srcoffsetx, 10);
-                }
-                let srcoffsety = (<HTMLElement><any>this).getAttribute('srcoffsety');
-                if (srcoffsety) {
-                    sy += parseInt(srcoffsety, 10);
-                }
-                context.drawImage(img, sx, sy, canvas.width, canvas.height,
-                                  0, 0, canvas.width, canvas.height);
-            });
+
+            let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas.current');
+            let srcOffsetX = (<HTMLElement><any>this).getAttribute('srcoffsetx');
+            let srcOffsetY = (<HTMLElement><any>this).getAttribute('srcoffsety');
+            let offsetX = (srcOffsetX !== null) ? parseInt(srcOffsetX, 10) : 0;
+            let offsetY = (srcOffsetY !== null) ? parseInt(srcOffsetY, 10) : 0;
+            this.drawAtCenter(canvas, img, offsetX, offsetY);
 
             let dialog = <any>shadowRoot.querySelector('dialog');
             let dialogList = <ListBoxElement><any>dialog.querySelector('unagi-listbox');
@@ -94,9 +102,8 @@ namespace editor {
             dialogList.replaceItems(items);
             dialogList.selectedId = imageId;
 
-            let dialogImg = <HTMLImageElement>dialog.querySelector('img');
-            let dialogImage = this.imageById(game.images, dialogList.selectedId);
-            dialogImg.src = dialogImage.data
+            let dialogCanvas = <HTMLCanvasElement>dialog.querySelector('dialog canvas');
+            this.drawAtCenter(dialogCanvas, img, 0, 0);
         }
 
         private imageById(images: data.Image[], id: string): data.Image {
