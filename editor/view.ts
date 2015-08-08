@@ -122,7 +122,6 @@ namespace editor {
             } else {
                 (<HTMLElement><any>this.database).style.display = 'none';
             }
-            this.palette.editingMode = editingMode;
             this.tiles.editingMode = editingMode;
         }
 

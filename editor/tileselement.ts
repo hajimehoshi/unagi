@@ -200,6 +200,16 @@ namespace editor {
                 this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_, this.editingMode_ == EditingMode.Event);
             }
 
+            if (this.editingMode_ === EditingMode.Event) {
+                const ratio = window.devicePixelRatio;
+                let x = this.cursorPositionX_ * data.gridSize * this.scale_ * ratio - this.offsetX_ * ratio;
+                let y = this.cursorPositionY_ * data.gridSize * this.scale_ * ratio - this.offsetY_ * ratio;
+                let width = data.gridSize * PaletteElement.scale * ratio;
+                let height = data.gridSize * PaletteElement.scale * ratio;
+                Canvas.drawFrame(context, x, y, width, height);
+                return;
+            }
+
             if (this.selectedTiles_ && this.cursorPositionX_ !== void(0) && this.cursorPositionY_ !== void(0)) {
                 const ratio = window.devicePixelRatio;
                 if (this.cursorPositionX_ < 0 || this.cursorPositionY_ < 0) {

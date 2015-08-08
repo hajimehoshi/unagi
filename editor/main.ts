@@ -26,7 +26,7 @@ namespace editor {
         registerElement(name: string, proto: Object);
     }
 
-    class Canvas {
+    export class Canvas {
         public static drawFrame(context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): void {
             const ratio = window.devicePixelRatio;
 

@@ -141,11 +141,6 @@ namespace editor {
         public updateEditingMode(editingMode: EditingMode): void {
             this.editingMode_ = editingMode;
             this.view_.updateEditingMode(editingMode);
-
-            if (this.editingMode_ === EditingMode.Event && this.selectedTiles_) {
-                this.selectedTiles_.shrink();
-                this.updateSelectedTiles(this.selectedTiles_);
-            }
         }
 
         public updateDatabaseMode(databaseMode: DatabaseMode): void {
