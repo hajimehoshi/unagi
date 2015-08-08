@@ -34,7 +34,12 @@ namespace editor {
             let template = <HTMLTemplateElement>document.getElementById('unagi-tiles-template');
             let clone = document.importNode(template.content, true);
             let self = <HTMLElementES6><any>this;
-            self.createShadowRoot().appendChild(clone);
+            let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
+            shadowRoot.appendChild(clone);
+
+            let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-dialog-style-template');
+            let styleClone = document.importNode(styleTemplate.content, true);
+            shadowRoot.appendChild(styleClone);
 
             let canvas = this.canvas;
             canvas.width = canvas.offsetWidth * window.devicePixelRatio;

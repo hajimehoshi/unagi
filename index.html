@@ -76,6 +76,19 @@
     }
   </style>
 </template>
+<template id="unagi-dialog-style-template">
+  <style>
+    dialog {
+      background-color: #9e9e9e;
+      border-color: #9e9e9e;
+      border-style: solid;
+      border-width: 1px;
+    }
+    dialog::backdrop {
+      background-color: rgba(0, 0, 0, 0.56);
+    }
+  </style>
+</template>
 <template id="unagi-toolbar-template">
   <style>
     :host {
@@ -329,17 +342,9 @@
       position: relative;
     }
     dialog {
-      background-color: #9e9e9e;
-      border-color: #9e9e9e;
-      border-style: solid;
-      border-width: 1px;
       height: 384px;
       padding: 0;
       width: 512px;
-      z-index: 1;
-    }
-    dialog::backdrop {
-      background-color: rgba(0, 0, 0, 0.56);
     }
     dialog unagi-listbox {
       height: 100%;

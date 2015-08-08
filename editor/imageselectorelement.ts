@@ -20,6 +20,10 @@ namespace editor {
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
             shadowRoot.appendChild(clone);
 
+            let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-dialog-style-template');
+            let styleClone = document.importNode(styleTemplate.content, true);
+            shadowRoot.appendChild(styleClone);
+
             let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas.current');
             canvas.addEventListener('click', (e: MouseEvent) => {
                 e.preventDefault();
