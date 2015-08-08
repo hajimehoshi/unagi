@@ -31,7 +31,7 @@ namespace editor {
     }
 
     export class Store {
-        private mainElement_: MainElement;
+        private view_: View;
         private game_: data.Game;
         private idToMap_: {[id: string]: data.Map};
         private currentMapId_: string;
@@ -41,8 +41,8 @@ namespace editor {
         private tilesOffset_: {[id: string]: {x: number, y: number}};
         private editingMode_: EditingMode;
 
-        public constructor(mapEditorMain: MainElement) {
-            this.mainElement_ = mapEditorMain;
+        public constructor(view: View) {
+            this.view_ = view;
             this.updateEditingMode(EditingMode.Map);
             this.updateDatabaseMode(DatabaseMode.Actors);
             this.tilesOffset_ = {};
@@ -60,40 +60,40 @@ namespace editor {
             for (let map of this.game_.maps) {
                 this.idToMap_[map.id] = map;
             }
-            this.mainElement_.render(this.game_);
+            this.view_.render(this.game_);
             // TODO: What if no map exists?
             if (!this.currentMapId_) {
                 this.currentMapId_ = this.game_.maps[0].id;
             }
             // TODO: Unify to render?
-            this.mainElement_.updateMap(this.currentMap);
-            this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
+            this.view_.updateMap(this.currentMap);
+            this.view_.updateMapList(this.currentMapId_, this.game_.maps);
 
             for (let map of this.game_.maps) {
                 this.tilesOffset_[map.id] = {x: -16, y: -16};
             }
             let offset = this.tilesOffset_[this.currentMapId_];
-            this.mainElement_.updateTilesOffset(offset.x, offset.y);
+            this.view_.updateTilesOffset(offset.x, offset.y);
         }
 
         public updateCurrentMap(id: string): void {
             this.currentMapId_ = id;
-            this.mainElement_.updateMap(this.currentMap);
-            this.mainElement_.updateMapList(this.currentMapId_, this.game_.maps);
+            this.view_.updateMap(this.currentMap);
+            this.view_.updateMapList(this.currentMapId_, this.game_.maps);
 
             let offset = this.tilesOffset_[this.currentMapId_];
-            this.mainElement_.updateTilesOffset(offset.x, offset.y);
+            this.view_.updateTilesOffset(offset.x, offset.y);
         }
 
         public updateSelectedTiles(s: SelectedTiles): void {
             this.selectedTiles_ = s;
-            this.mainElement_.updateSelectedTiles(s);
+            this.view_.updateSelectedTiles(s);
         }
 
         public updateTilesCursorPosition(x: number, y: number): void {
             this.tilesCursorX_ = x;
             this.tilesCursorY_ = y;
-            this.mainElement_.updateTilesCursorPosition(x, y);
+            this.view_.updateTilesCursorPosition(x, y);
         }
 
         public drawTiles(): void {
@@ -107,7 +107,7 @@ namespace editor {
                 return;
             }
             this.currentMap.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
-            this.mainElement_.updateMap(this.currentMap);
+            this.view_.updateMap(this.currentMap);
         }
 
         public moveTilesOffset(x: number, y: number, scale: number, canvasWidth: number, canvasHeight: number): void {
@@ -127,20 +127,20 @@ namespace editor {
             offset.x = Math.min(Math.max(offset.x, minX), maxX);
             offset.y = Math.min(Math.max(offset.y, minY), maxY);
 
-            this.mainElement_.updateTilesOffset(offset.x, offset.y);
+            this.view_.updateTilesOffset(offset.x, offset.y);
         }
 
         public playGame(): void {
-            this.mainElement_.playGame(this.game_);
+            this.view_.playGame(this.game_);
         }
 
         public stopGame(): void {
-            this.mainElement_.stopGame();
+            this.view_.stopGame();
         }
 
         public updateEditingMode(editingMode: EditingMode): void {
             this.editingMode_ = editingMode;
-            this.mainElement_.updateEditingMode(editingMode);
+            this.view_.updateEditingMode(editingMode);
 
             if (this.editingMode_ === EditingMode.Event && this.selectedTiles_) {
                 this.selectedTiles_.shrink();
@@ -149,11 +149,11 @@ namespace editor {
         }
 
         public updateDatabaseMode(databaseMode: DatabaseMode): void {
-            this.mainElement_.updateDatabaseMode(databaseMode);
+            this.view_.updateDatabaseMode(databaseMode);
         }
 
         public updateCurrentActor(id: string) {
-            this.mainElement_.render(this.game_);
+            this.view_.render(this.game_);
         }
 
         private getFromPath(path: string): any {
@@ -210,7 +210,7 @@ namespace editor {
                 }
             }
             if (updated) {
-                this.mainElement_.render(this.game_);
+                this.view_.render(this.game_);
             }
         }
 
@@ -219,7 +219,7 @@ namespace editor {
                 id:   data.UUID.generate(),
                 name: '',
             });
-            this.mainElement_.render(this.game_);
+            this.view_.render(this.game_);
         }
     }
 }

@@ -13,65 +13,51 @@
 // limitations under the License.
 
 namespace editor {
-    export class MainElement {
-        private createdCallback(): void {
-            let template = <HTMLTemplateElement>document.getElementById('unagi-main-template');
-            let clone = document.importNode(template.content, true);
-            let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
-            shadowRoot.appendChild(clone);
+    export class View {
+        constructor() {
+            let tileSetImage = new Image();
+            tileSetImage.src = './images/tileset.png';
+            tileSetImage.addEventListener('load', () => {
+                tileSetImage.dataset['loaded'] = 'true';
+            });
 
-            window.addEventListener('load', () => {
-                let tileSetImage = new Image();
-                tileSetImage.src = './images/tileset.png';
-                tileSetImage.addEventListener('load', () => {
-                    tileSetImage.dataset['loaded'] = 'true';
-                });
+            this.palette.tileSetImage = tileSetImage;
+            this.tiles.tileSetImage = tileSetImage;
 
-                let palette = this.palette;
-                palette.tileSetImage = tileSetImage;
-
-                let tiles = this.tiles;
-                tiles.tileSetImage = tileSetImage;
-
-                tileSetImage.addEventListener('load', () => {
-                    this.palette.render();
-                    this.tiles.render();
-                });
-            })
+            tileSetImage.addEventListener('load', () => {
+                this.palette.render();
+                this.tiles.render();
+            });
             
             window.addEventListener('message', (e: MessageEvent) => {
                 if (e.data === 'quit') {
                     Dispatcher.onStopGame();
                 }
             });
+
             (<HTMLElement><any>this.mapList).addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Dispatcher.onCurrentMapChanged(e.detail.id);
             });
         }
 
         private get toolbar(): ToolbarElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <ToolbarElement><any>shadowRoot.querySelector('unagi-toolbar');
+            return <ToolbarElement><any>document.querySelector('unagi-toolbar');
         }
 
         private get palette(): PaletteElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <PaletteElement><any>shadowRoot.querySelector('unagi-palette');
+            return <PaletteElement><any>document.querySelector('unagi-palette');
         }
 
         private get mapList(): ListBoxElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <ListBoxElement><any>shadowRoot.querySelector('unagi-listbox');
+            return <ListBoxElement><any>document.querySelector('unagi-listbox.maps');
         }
 
         private get tiles(): TilesElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return <TilesElement><any>shadowRoot.querySelector('unagi-tiles');
+            return <TilesElement><any>document.querySelector('unagi-tiles');
         }
 
         private get database(): DatabaseElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return (<DatabaseElement><any>shadowRoot.querySelector('unagi-database'));
+            return <DatabaseElement><any>document.querySelector('unagi-database');
         }
 
         public render(game: data.Game): void {
@@ -111,8 +97,7 @@ namespace editor {
         public playGame(game: data.Game): void {
             this.toolbar.playGame();
 
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe.player'));
+            let iframe = <HTMLIFrameElement>document.querySelector('iframe.player');
             iframe.src = './player.html';
             iframe.style.display = 'block';
             let f = (e) => {
@@ -125,8 +110,7 @@ namespace editor {
         public stopGame(): void {
             this.toolbar.stopGame();
 
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let iframe = <HTMLIFrameElement>(shadowRoot.querySelector('iframe.player'));
+            let iframe = <HTMLIFrameElement>document.querySelector('iframe.player');
             iframe.src = 'about:blank';
             iframe.style.display = 'none';
         }
@@ -147,8 +131,3 @@ namespace editor {
         }
     }
 }
-
-(() => {
-    (<any>editor.MainElement.prototype).__proto__ = HTMLElement.prototype;
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-main', editor.MainElement);
-})();

@@ -197,8 +197,7 @@ namespace editor {
 
 (() => {
     window.addEventListener('load', () => {
-        let main = <editor.MainElement><any>document.querySelector('unagi-main');
-        let store = new editor.Store(main);
+        let store = new editor.Store(new editor.View());
         editor.Dispatcher.store = store;
         editor.Dispatcher.onInitialized(editor.initialGame);
     });
