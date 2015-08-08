@@ -14,10 +14,33 @@
 
 namespace data {
     export declare type Map = {
+        id:     string,
+        name:   string,
+        tiles:  Int16Array,
+        xNum:   number,
+        yNum:   number,
+        events: Event[],
+    };
+
+    export declare type Event = {
         id:    string,
-        name:  string,
-        tiles: Int16Array,
-        xNum:  number,
-        yNum:  number,
+        x:     number,
+        y:     number,
+        pages: EventPage[],
+    };
+
+    export declare type EventPage = {
+        image:    string,
+        // condition
+        commands: EventCommand[],
+    };
+
+    export declare type EventCommand = {
+        type: EventCommandType,
+        args: {[key: string]: any},
+    };
+
+    export enum EventCommandType {
+        ShowMessage,
     };
 }

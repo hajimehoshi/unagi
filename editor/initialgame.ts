@@ -46,18 +46,20 @@ namespace editor {
     export const initialGame: data.Game = {
         maps:   [
             {
-                id:    mapId,
-                name:  'New Map',
-                xNum:  100,
-                yNum:  100,
-                tiles: new Int16Array(100 * 100),
+                id:     mapId,
+                name:   'New Map',
+                xNum:   100,
+                yNum:   100,
+                tiles:  new Int16Array(100 * 100),
+                events: [],
             },
             {
-                id:    data.UUID.generate(),
-                name:  'New Map 2',
-                xNum:  20,
-                yNum:  15,
-                tiles: new Int16Array(20 * 15),
+                id:     data.UUID.generate(),
+                name:   'New Map 2',
+                xNum:   20,
+                yNum:   15,
+                tiles:  new Int16Array(20 * 15),
+                events: [],
             },
         ],
         actors: [
