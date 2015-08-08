@@ -41,6 +41,9 @@ namespace editor {
         }
 
         public tilePosition(x: number, y: number, scale: number): {x: number, y: number} {
+            if (x < 0 || y < 0) {
+                return {x: void(0), y: void(0)};
+            }
             let tileX = (((x / data.gridSize)|0) / scale)|0;
             let tileY = (((y / data.gridSize)|0) / scale)|0;
             return {x: tileX, y: tileY};

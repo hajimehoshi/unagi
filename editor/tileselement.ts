@@ -55,13 +55,21 @@ namespace editor {
             self.addEventListener('contextmenu', (e: MouseEvent) => {
                 e.preventDefault();
             });
+
+            let eventDialog = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
             self.addEventListener('mousedown', (e: MouseEvent) => {
+                if (eventDialog.open) {
+                    return;
+                }
                 if (!e.buttons) {
                     return;
                 }
                 if (e.buttons === 1) {
                     this.isDrawing_ = true;
-                    Dispatcher.onDrawingTiles();
+                    if (this.isCursorInMap) {
+                        Dispatcher.onDrawingTiles();
+                    }
+                    return;
                 }
                 if (this.editingMode_ != EditingMode.Map) {
                     return;
@@ -76,6 +84,9 @@ namespace editor {
                 }
             });
             self.addEventListener('mousemove', (e: MouseEvent) => {
+                if (eventDialog.open) {
+                    return;
+                }
                 if (e.buttons !== 2) {
                     let x = e.offsetX + this.offsetX_;
                     let y = e.offsetY + this.offsetY_;
@@ -86,7 +97,10 @@ namespace editor {
                     if (!this.isDrawing_) {
                         return;
                     }
-                    Dispatcher.onDrawingTiles();
+                    if (this.isCursorInMap) {
+                        Dispatcher.onDrawingTiles();
+                    }
+                    return;
                 }
                 if (this.editingMode_ != EditingMode.Map) {
                     return;
@@ -107,6 +121,9 @@ namespace editor {
                 }
             });
             self.addEventListener('mouseup', (e: MouseEvent) => {
+                if (eventDialog.open) {
+                    return;
+                }
                 this.isDrawing_ = false;
                 if (this.editingMode_ != EditingMode.Map) {
                     return;
@@ -128,7 +145,6 @@ namespace editor {
                 Dispatcher.onTilesCursorPositionChanged(void(0), void(0));
             });
 
-            let eventDialog = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
             self.addEventListener('dblclick', (e: MouseEvent) => {
                 if (this.editingMode_ != EditingMode.Event) {
                     return;
@@ -147,6 +163,11 @@ namespace editor {
 
             self.addEventListener('wheel', (e: WheelEvent) => {
                 e.preventDefault();
+
+                if (eventDialog.open) {
+                    return;
+                }
+
                 // TODO: Configure the wheel direction
                 Dispatcher.onTilesCursorPositionChanged(void(0), void(0));
                 let canvas = this.canvas;
@@ -190,6 +211,16 @@ namespace editor {
             this.render();
         }
 
+        private get isCursorInMap(): boolean {
+            if (this.cursorPositionX_ < 0 || this.cursorPositionY_ < 0) {
+                    return false;
+            }
+            if (this.map_.xNum <= this.cursorPositionX_ || this.map_.yNum <= this.cursorPositionY_) {
+                return false;
+            }
+            return true;
+        }
+
         public render(): void {
             let canvas = this.canvas;
             let context = canvas.getContext('2d');
@@ -200,27 +231,23 @@ namespace editor {
                 this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_, this.editingMode_ == EditingMode.Event);
             }
 
-            if (this.editingMode_ === EditingMode.Event) {
+            if (this.editingMode_ === EditingMode.Event ||
+                (this.selectedTiles_ && this.cursorPositionX_ !== void(0))) {
+
+                if (!this.isCursorInMap) {
+                    return;
+                }
+
                 const ratio = window.devicePixelRatio;
                 let x = this.cursorPositionX_ * data.gridSize * this.scale_ * ratio - this.offsetX_ * ratio;
                 let y = this.cursorPositionY_ * data.gridSize * this.scale_ * ratio - this.offsetY_ * ratio;
+                if (this.editingMode_ !== EditingMode.Event) {
+                    this.selectedTiles_.renderFrameAt(context, x, y);
+                    return;
+                }
                 let width = data.gridSize * PaletteElement.scale * ratio;
                 let height = data.gridSize * PaletteElement.scale * ratio;
                 Canvas.drawFrame(context, x, y, width, height);
-                return;
-            }
-
-            if (this.selectedTiles_ && this.cursorPositionX_ !== void(0) && this.cursorPositionY_ !== void(0)) {
-                const ratio = window.devicePixelRatio;
-                if (this.cursorPositionX_ < 0 || this.cursorPositionY_ < 0) {
-                    return;
-                }
-                if (this.map_.xNum <= this.cursorPositionX_ || this.map_.yNum <= this.cursorPositionY_) {
-                    return;
-                }
-                let x = this.cursorPositionX_ * data.gridSize * this.scale_ * ratio - this.offsetX_ * ratio;
-                let y = this.cursorPositionY_ * data.gridSize * this.scale_ * ratio - this.offsetY_ * ratio;
-                this.selectedTiles_.renderFrameAt(context, x, y);
             }
         }
     }
