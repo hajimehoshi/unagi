@@ -15,11 +15,11 @@
 namespace graphics {
     export namespace webgl {
         function u(x: number, width: number): number {
-            return ((1 << 15) * x / nextPowerOf2(width))|0;
+            return (((1 << 15) - 1) * x / nextPowerOf2(width))|0;
         }
 
         function v(y: number, height: number): number {
-            return ((1 << 15) * y / nextPowerOf2(height))|0;
+            return (((1 << 15) - 1) * y / nextPowerOf2(height))|0;
         }
 
         export function toTextureQuad(parts: ImagePart, width: number, height: number): TextureQuad {
@@ -79,7 +79,7 @@ namespace graphics {
             constructor(gl: WebGLRenderingContext, texture: Texture);
             constructor(gl: WebGLRenderingContext, arg1: any, arg2?: number) {
                 this.gl_ = gl;
-                if (typeof(arg2) !== 'number') {
+                if (arg1 instanceof Texture && typeof(arg2) === 'undefined') {
                     let texture = <Texture>arg1;
                     this.width_ = texture.width;
                     this.height_ = texture.height;
