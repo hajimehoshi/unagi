@@ -57,11 +57,15 @@ namespace graphics {
 	        let e24 = -1 * (top+bottom) / (top-bottom);
 
 	        return [
-		    e11, 0, 0, e14,
-		    0, e22, 0, e24,
-		    0, 0, 1, 0,
-		    0, 0, 0, 1,
+		    e11, 0,   0, e14,
+		    0,   e22, 0, e24,
+		    0,   0,   1, 0,
+		    0,   0,   0, 1,
                 ];
+            }
+
+            private static get zero(): WebGLFramebuffer {
+                return null;
             }
 
             private gl_: WebGLRenderingContext;
@@ -93,7 +97,7 @@ namespace graphics {
 
                 let width = <number>arg1;
                 let height = <number>arg2;
-                this.native_ = 0;
+                this.native_ = Framebuffer.zero;
                 this.width_ = width;
                 this.height_ = height;
                 this.flipY_ = true;
@@ -108,7 +112,7 @@ namespace graphics {
             }
 
             public dispose(): void {
-                if (this.native_ === 0) {
+                if (this.native_ === Framebuffer.zero) {
                     return;
                 }
                 let gl = this.gl_;
@@ -138,6 +142,8 @@ namespace graphics {
             }
 
             public fill(color: Color): void {
+                this.setAsViewport();
+
                 let gl = this.gl_;
                 let r = color.r / 255;
                 let g = color.g / 255;
@@ -151,13 +157,14 @@ namespace graphics {
                 this.setAsViewport();
 
                 let proj = this.projectionMatrix;
-                webgl.drawTexture(this.gl_, texture, proj, quads, geoM, colorM);
+                webgl.drawTexture(this.gl_, texture.native, proj, quads, geoM, colorM);
             }
 
             public get pixels(): Uint8Array {
                 let width = nextPowerOf2(this.width_);
                 let height = nextPowerOf2(this.height_);
                 let gl = this.gl_;
+
                 gl.flush();
                 Framebuffer.bind(gl, this.native_);
                 let pixels = new Uint8Array(4 * width * height);

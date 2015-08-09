@@ -65,9 +65,13 @@ namespace graphics {
                     let height = <number>arg2;
                     this.width_ = nextPowerOf2(width);
                     this.height_ = nextPowerOf2(height);
-                } else {
+                } else if (arg1 instanceof ImageData) {
                     imageData = <ImageData>arg1;
+                    this.width_ = nextPowerOf2(imageData.width);
+                    this.height_ = nextPowerOf2(imageData.height);
                     imageData = Texture.adjustImage(imageData);
+                } else {
+                    throw 'graphics.webgl.Texture.constructor: invalid arguments';
                 }
 
                 let t = gl.createTexture();
@@ -75,11 +79,11 @@ namespace graphics {
 		    throw 'gl.createTexture failed';
 	        }
 
-	        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4)
-	        gl.bindTexture(gl.TEXTURE_2D, t)
+	        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
+	        gl.bindTexture(gl.TEXTURE_2D, t);
 
-	        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
-	        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+	        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+	        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 
 	        // TODO: Can we use glTexSubImage2D with linear filtering?
 

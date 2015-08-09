@@ -32,19 +32,60 @@ namespace graphics {
     };
 
     export class Image {
+        private static canvas_: HTMLCanvasElement;
         private static gl_: WebGLRenderingContext;
+        private static defaultRenderTarget_: Image;
 
-        public static initialize(gl: WebGLRenderingContext) {
-            Image.gl_ = gl;
+        public static initialize(canvas: HTMLCanvasElement) {
+            Image.canvas_ = canvas;
+            Image.gl_ = <WebGLRenderingContext>Image.canvas_.getContext('webgl', {
+                'alpha':              true,
+                'premultipliedAlpha': true,
+            });
+            let gl = Image.gl_;
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        }
+
+        public static get defaultRenderTarget(): Image {
+            if (Image.defaultRenderTarget_) {
+                return Image.defaultRenderTarget_;
+            }
+            let framebuffer = new webgl.Framebuffer(Image.gl_, Image.canvas_.width, Image.canvas_.height);
+            return Image.defaultRenderTarget_ = new Image(framebuffer);
         }
 
         private texture_: webgl.Texture;
         private framebuffer_: webgl.Framebuffer;
+        private pixels_: Uint8Array;
 
-        constructor(width: number, height: number) {
-            this.texture_ = new webgl.Texture(Image.gl_, width, height);
-            this.framebuffer_ = new webgl.Framebuffer(Image.gl_, this.texture_);
-            this.clear();
+        constructor(imageData: ImageData);
+        constructor(width: number, height: number);
+        constructor(framebuffer: webgl.Framebuffer);
+        constructor(arg1: any, arg2?: number) {
+            if (typeof(arg1) === 'number' && typeof(arg2) === 'number') {
+                let width = <number>arg1;
+                let height = <number>arg2;
+                this.texture_ = new webgl.Texture(Image.gl_, width, height);
+                this.framebuffer_ = new webgl.Framebuffer(Image.gl_, this.texture_);
+                this.clear();
+                return;
+            }
+            if ((arg1 instanceof ImageData) && typeof(arg2) === 'undefined') {
+                let imageData = <ImageData>arg1;
+                let width = imageData.width;
+                let height = imageData.height;
+                this.texture_ = new webgl.Texture(Image.gl_, imageData);
+                this.framebuffer_ = new webgl.Framebuffer(Image.gl_, this.texture_);
+                return;
+            }
+            if ((arg1 instanceof <any>webgl.Framebuffer) && typeof(arg2) === 'undefined') {
+                this.texture_ = null;
+                this.framebuffer_ = arg1;
+                this.pixels_ = null;
+                return;
+            }
+            throw 'graphics.Image.constructor: invalid argments';
         }
 
         public get width(): number {
@@ -56,18 +97,21 @@ namespace graphics {
         }
 
         public clear(): void {
+            this.pixels_ = null;
             this.fill({r: 0, g: 0, b: 0, a: 0});
         }
 
         public fill(color: Color): void {
+            this.pixels_ = null;
             this.framebuffer_.fill(color)
         }
 
         public drawImage(image: Image, options?: {[key: string]: any}) {
+            this.pixels_ = null;
             let geoM = new GeometryMatrix();
             let colorM = new ColorMatrix();
-            let w = this.width;
-            let h = this.height;
+            let w = image.width;
+            let h = image.height;
             let imageParts = [
                 {
                     srcX:      0,
@@ -93,9 +137,23 @@ namespace graphics {
             }
             let quads = <webgl.TextureQuad[]>[];
             for (let imagePart of imageParts) {
-                quads.push(webgl.toTextureQuad(imagePart, this.width, this.height));
+                quads.push(webgl.toTextureQuad(imagePart, image.width, image.height));
             }
-            this.framebuffer_.drawTexture(this.texture_, quads, geoM, colorM);
+            this.framebuffer_.drawTexture(image.texture_, quads, geoM, colorM);
         }
+
+        /*public at(i: number, j: number): Color {
+            if (this.pixels_ === null) {
+                this.pixels_ = this.framebuffer_.pixels();
+            }
+            let width = nextPowerOf2(this.width);
+            let idx = (4 * j * width) + 4 * i;
+            return {
+                r: this.pixels_[idx],
+                g: this.pixels_[idx+1],
+                b: this.pixels_[idx+2],
+                a: this.pixels_[idx+3],
+            };
+        }*/
     }
 }

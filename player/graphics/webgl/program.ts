@@ -14,26 +14,27 @@
 
 namespace graphics {
     export namespace webgl {
+        // TODO: Check gl.getShaderPrecisionFormat
         const shaders = {
             'vertexModelView': `
-uniform mat4 projection_matrix;
-uniform mat4 modelview_matrix;
-attribute vec2 vertex;
-attribute vec2 tex_coord;
-varying vec2 vertex_out_tex_coord;
+uniform highp mat4 projection_matrix;
+uniform highp mat4 modelview_matrix;
+attribute highp vec2 vertex;
+attribute highp vec2 tex_coord;
+varying highp vec2 vertex_out_tex_coord;
 
 void main(void) {
   vertex_out_tex_coord = tex_coord;
   gl_Position = projection_matrix * modelview_matrix * vec4(vertex, 0, 1);
 }`,
             'fragmentTexture': `
-uniform sampler2D texture;
-uniform mat4 color_matrix;
-uniform vec4 color_matrix_translation;
-varying vec2 vertex_out_tex_coord;
+uniform lowp sampler2D texture;
+uniform lowp mat4 color_matrix;
+uniform lowp vec4 color_matrix_translation;
+varying highp vec2 vertex_out_tex_coord;
 
 void main(void) {
-  vec4 color = texture2D(texture, vertex_out_tex_coord);
+  lowp vec4 color = texture2D(texture, vertex_out_tex_coord);
 
   if (color_matrix != mat4(1.0) || color_matrix_translation != vec4(0.0)) {
     // Un-premultiply alpha
@@ -87,6 +88,12 @@ void main(void) {
             return dst;
         }
 
+        var lastProgram: any = null;
+
+        interface ProgramFinisher {
+            (): void;
+        };
+
         export class ProgramForTexture {
             private gl_: WebGLRenderingContext;
             private locationCache_: LocationCache;
@@ -117,12 +124,26 @@ void main(void) {
                 gl.deleteShader(shaderVertexModelviewNative);
 
                 this.locationCache_ = new LocationCache(gl, this.program_);
+
+                this.resetStates();
             }
 
-            public use(projectionMatrix: number[], texture: WebGLTexture, geoM: GeometryMatrix, colorM: ColorMatrix): {(): void} {
-                let gl = this.gl_;
-                //gl.bindElementArrayBuffer(indexBufferQuads);
+            private resetStates(): void {
+                this.lastProjectionMatrix_ = null;
+                this.lastModelviewMatrix_ = null;
+                this.lastColorMatrix_ = null;
+                this.lastColorMatrixTranslation_ = null;
+            }
 
+            public use(projectionMatrix: number[], texture: WebGLTexture, geoM: GeometryMatrix, colorM: ColorMatrix): ProgramFinisher {
+                let gl = this.gl_;
+                if (lastProgram !== this.program_) {
+                    gl.useProgram(this.program_);
+                    lastProgram = this.program_;
+                    this.resetStates();
+                }
+                //gl.bindElementArrayBuffer(indexBufferQuads);
+                
                 if (!areSameArrays(this.lastProjectionMatrix_, projectionMatrix)) {
                     let location = this.locationCache_.getUniformLocation('projection_matrix');
                     gl.uniformMatrix4fv(location, false, projectionMatrix);
@@ -146,7 +167,6 @@ void main(void) {
                     gl.uniformMatrix4fv(location, false, modelviewMatrix);
                     this.lastModelviewMatrix_ = copyArray(modelviewMatrix);
                 }
-
                 gl.uniform1i(this.locationCache_.getUniformLocation('texture'), 0);
 
                 let c = colorM;
@@ -168,7 +188,6 @@ void main(void) {
                 if (!areSameArrays(this.lastColorMatrixTranslation_, colorMatrixTranslation)) {
                     let location = this.locationCache_.getUniformLocation('color_matrix_translation');
                     gl.uniform4fv(location, colorMatrixTranslation);
-                    gl.uniformMatrix4fv(location, false, colorMatrixTranslation);
                     this.lastColorMatrixTranslation_ = copyArray(colorMatrixTranslation);
                 }
 

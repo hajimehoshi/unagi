@@ -57,7 +57,7 @@ namespace graphics {
 
         export function drawTexture(
             gl: WebGLRenderingContext,
-            texture: Texture,
+            texture: WebGLTexture,
             projectionMatrix: number[],
             quads: TextureQuad[],
             geoM: GeometryMatrix,
@@ -106,7 +106,7 @@ namespace graphics {
                 return;
             }
 
-            gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertices.slice(0, num * 16));
+            gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertices.subarray(0, num * 16));
             gl.drawElements(gl.TRIANGLES, num * 6, gl.UNSIGNED_SHORT, 0);
             f();
         }
