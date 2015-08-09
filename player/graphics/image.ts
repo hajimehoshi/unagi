@@ -59,8 +59,9 @@ namespace graphics {
         private framebuffer_: webgl.Framebuffer;
         private pixels_: Uint8Array;
 
-        constructor(imageData: ImageData);
         constructor(width: number, height: number);
+        constructor(imageData: ImageData);
+        constructor(image: HTMLImageElement);
         constructor(framebuffer: webgl.Framebuffer);
         constructor(arg1: any, arg2?: number) {
             if (typeof(arg1) === 'number' && typeof(arg2) === 'number') {
@@ -73,8 +74,20 @@ namespace graphics {
             }
             if ((arg1 instanceof ImageData) && typeof(arg2) === 'undefined') {
                 let imageData = <ImageData>arg1;
-                let width = imageData.width;
-                let height = imageData.height;
+                this.texture_ = new webgl.Texture(Image.gl_, imageData);
+                this.framebuffer_ = new webgl.Framebuffer(Image.gl_, this.texture_);
+                return;
+            }
+            if ((arg1 instanceof HTMLImageElement) && typeof(arg2) === 'undefined') {
+                let img = <HTMLImageElement>arg1;
+                let canvas = <HTMLCanvasElement>document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                canvas.width = width;
+                canvas.height = height;
+                let context = canvas.getContext('2d');
+                context.drawImage(img, 0, 0);
+                let imageData = context.getImageData(0, 0, width, height);
                 this.texture_ = new webgl.Texture(Image.gl_, imageData);
                 this.framebuffer_ = new webgl.Framebuffer(Image.gl_, this.texture_);
                 return;

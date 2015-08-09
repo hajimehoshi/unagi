@@ -102,10 +102,10 @@ namespace graphics {
             }
         }
 
-        public translte(tx: number, ty: number) {
+        public translate(tx: number, ty: number) {
             let dim = this.dim;
-            this.es_[0 * dim + 4] += tx;
-            this.es_[1 * dim + 4] += ty;
+            this.es_[0 * dim + 2] += tx;
+            this.es_[1 * dim + 2] += ty;
         }
 
         public rotate(theta: number) {
@@ -188,7 +188,7 @@ namespace graphics {
             }
         }
 
-        public translte(r: number, g: number, b: number, a: number) {
+        public translate(r: number, g: number, b: number, a: number) {
             let dim = this.dim;
             this.es_[0 * dim + 4] += r;
             this.es_[1 * dim + 4] += g;

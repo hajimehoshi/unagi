@@ -61,14 +61,12 @@ namespace graphics {
                 this.gl_ = gl;
                 let imageData = <ImageData>null;
                 if (typeof(arg2) === 'number') {
-                    let width = <number>arg1;
-                    let height = <number>arg2;
-                    this.width_ = nextPowerOf2(width);
-                    this.height_ = nextPowerOf2(height);
+                    this.width_ = <number>arg1;
+                    this.height_ = <number>arg2;
                 } else if (arg1 instanceof ImageData) {
                     imageData = <ImageData>arg1;
-                    this.width_ = nextPowerOf2(imageData.width);
-                    this.height_ = nextPowerOf2(imageData.height);
+                    this.width_ = imageData.width;
+                    this.height_ = imageData.height;
                     imageData = Texture.adjustImage(imageData);
                 } else {
                     throw 'graphics.webgl.Texture.constructor: invalid arguments';
@@ -87,7 +85,14 @@ namespace graphics {
 
 	        // TODO: Can we use glTexSubImage2D with linear filtering?
 
-	        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width_, this.height_, 0, gl.RGBA, gl.UNSIGNED_BYTE, <any>imageData);
+                let width = nextPowerOf2(this.width_);
+                let height = nextPowerOf2(this.height_);
+
+                let p = <Uint8Array>null;
+                if (imageData) {
+                    p = new Uint8Array(imageData.data);
+                }
+	        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, p);
                 this.native_ = t;
             }
 
@@ -98,8 +103,10 @@ namespace graphics {
 
             public replacePixels(pixels: Uint8Array): void {
                 let gl = this.gl_;
+                let width = nextPowerOf2(this.width_);
+                let height = nextPowerOf2(this.height_);
                 gl.bindTexture(gl.TEXTURE_2D, this.native_);
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, this.width_, this.height_, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             }
 
             public get native(): WebGLTexture {
