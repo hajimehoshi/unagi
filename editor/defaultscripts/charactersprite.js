@@ -38,11 +38,11 @@ class CharacterSprite {
     }
 
     get width() {
-        return this.image_.width / 4 / 3;
+        return this.image_.width / 3;
     }
 
     get height() {
-        return this.image_.height / 2 / 4;
+        return this.image_.height / 4;
     }
 
     startMoving(direction, poseTime) {
@@ -72,11 +72,21 @@ class CharacterSprite {
         }
     }
 
-    draw(context) {
-        context.save();
+    draw(screen) {
         let sx = 0 + this.pose_ * this.width;
         let sy = 0 + this.direction_ * this.height;
-        context.drawImage(this.image_, sx, sy, this.width, this.height, this.x, this.y, this.width, this.height);
-        context.restore();
+        let imageParts = [
+            {
+                srcX:      sx,
+                srcY:      sy,
+                srcWidth:  this.width,
+                srcHeight: this.height,
+                dstX:      this.x,
+                dstY:      this.y,
+                dstWidth:  this.width,
+                dstHeight: this.height,
+            }
+        ];
+        screen.drawImage(this.image_, {imageParts});
     }
 }

@@ -1,11 +1,7 @@
 'use strict';
 
-// TODO: Tileset image should be registered in $game.
-let tileSetImage = new Image();
-tileSetImage.src = 'images/tileset.png';
-
-let characterSetImage = new Image();
-characterSetImage.src = 'images/characterset.png';
+let tileSetImage = Images.byName($game, 'tileset');
+let characterSetImage = Images.byId($game, $game.actors[0].image);
 
 let $gameState = new GameState();
 
@@ -39,14 +35,14 @@ let $sceneStack = new SceneStack();
     $gameState.moveTo(initialPosition.mapId, initialPosition.x, initialPosition.y);
 })()
 
-function update(context) {
+function update(screen) {
     if (!$sceneStack.current) {
         return;
     }
 
     $input.update();
     $sceneStack.current.update();
-    $sceneStack.current.draw(context);
+    $sceneStack.current.draw(screen);
 }
 
 Env.run(update);

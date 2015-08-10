@@ -13,9 +13,9 @@
 // limitations under the License.
 
 namespace Images {
-    var imgs: {[id: string]: HTMLImageElement} = {};
+    var imgs: {[id: string]: graphics.Image} = {};
 
-    export function byId(game: data.Game, id: string): HTMLImageElement {
+    export function byId(game: data.Game, id: string): graphics.Image {
         if (id in imgs) {
             return imgs[id];
         }
@@ -24,25 +24,22 @@ namespace Images {
             let image = data.NullImage;
             let img = new Image();
             img.src = image.data;
-            imgs[id] = img;
-            return img;
+            return imgs[id] = new graphics.Image(img);
         }
         for (let image of game.images) {
             if (image.id === id) {
                 let img = new Image();
                 img.src = image.data;
-                imgs[id] = img;
-                return img;
+                return imgs[id] = new graphics.Image(img);
             }
         }
         return null;
     }
 
     // TODO: Deprecate this
+    var imgsByName: {[name: string]: graphics.Image} = {};
 
-    var imgsByName: {[name: string]: HTMLImageElement} = {};
-
-    export function byName(game: data.Game, name: string): HTMLImageElement {
+    export function byName(game: data.Game, name: string): graphics.Image {
         if (name in imgsByName) {
             return imgsByName[name];
         }
@@ -50,8 +47,7 @@ namespace Images {
             if (image.name === name) {
                 let img = new Image();
                 img.src = image.data;
-                imgsByName[name] = img;
-                return img;
+                return imgsByName[name] = new graphics.Image(img);
             }
         }
         return null;
@@ -59,35 +55,20 @@ namespace Images {
 }
 
 namespace BitmapFont {
-    let mplusImages: {[key:string]: HTMLImageElement} = {};
+    let mplusImages: {[key:string]: graphics.Image} = {};
     let mplusFontNames = ['latin', 'bmp-0', 'bmp-2', 'bmp-3', 'bmp-4', 'bmp-5', 'bmp-6', 'bmp-7', 'bmp-8', 'bmp-9', 'bmp-15'];
-    let arcadeImage: HTMLImageElement;
+    let arcadeImage: graphics.Image;
 
     export function initialize(game: data.Game) {
         mplusFontNames.forEach((key) => {
             let img = new Image();
             img.src = './images/mplus-bitmap-images/' + key + '.png';
             img.onload = () => {
-                mplusImages[key] = img;
+                mplusImages[key] = new graphics.Image(img);
             };
             // TODO: Wait until all images are loaded.
         });
         arcadeImage = Images.byId(game, game.system.numberFontImage);
-    }
-
-    function drawBinaryBitmap(dst: ImageData, src: ImageData, dstX: number, dstY: number, width: number, height: number, srcX: number, srcY: number, r: number, g: number, b: number) {
-        for (let j = 0; j < height; j++) {
-            for (let i = 0; i < width; i++) {
-                let srcP = ((srcY + j) * src.width + (srcX + i)) * 4;
-                if (src.data[srcP + 3]) {
-                    let dstP = ((dstY + j) * dst.width + (dstX + i)) * 4;
-                    dst.data[dstP]     = r;
-                    dst.data[dstP + 1] = g;
-                    dst.data[dstP + 2] = b;
-                    dst.data[dstP + 3] = 255;
-                }
-            }
-        }
     }
 
     export namespace Regular {
@@ -117,17 +98,14 @@ namespace BitmapFont {
             return {width, height}
         }
 
-        export function drawAt(context: CanvasRenderingContext2D, str: string, x: number, y: number, r: number, g: number, b: number): void {
-            context.save();
-
+        export function drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color): void {
             let cx = 0;
             let cy = 0;
             let size = textSize(str);
-
-            let dstCanvas = <HTMLCanvasElement>document.createElement('canvas');
-            dstCanvas.width = size.width;
-            dstCanvas.height = size.height;
-            let dst = dstCanvas.getContext('2d');
+            let keyToImageParts: {[key: string]: graphics.ImagePart[]} = {};
+            for (let key in mplusImages) {
+                keyToImageParts[key] = [];
+            }
 
             for (let ch of str) {
                 let code = <number>(<any>ch).codePointAt(0);
@@ -141,16 +119,14 @@ namespace BitmapFont {
                     continue;
                 }
                 if (code <= 0xff) {
-                    let img = mplusImages['latin'];
-                    if (!img) {
-                        cx += TEXT_HALF_WIDTH;
-                        continue;
-                    }
                     let sx = (code % 32) * TEXT_HALF_WIDTH;
                     let sy = ((code / 32)|0) * TEXT_HEIGHT;
                     let w = TEXT_HALF_WIDTH;
                     let h = TEXT_HEIGHT;
-                    dst.drawImage(img, sx, sy, w, h, cx, cy, w, h);
+                    keyToImageParts['latin'].push({
+                        srcX: sx, srcY: sy, srcWidth: w, srcHeight: h,
+                        dstX: cx, dstY: cy, dstWidth: w, dstHeight: h,
+                    });
                     cx += TEXT_HALF_WIDTH;
                     continue;
                 }
@@ -159,23 +135,29 @@ namespace BitmapFont {
                     continue;
                 }
                 let page = (code / 4096)|0;
-                let img = mplusImages[`bmp-${page}`];
-                if (!img) {
-                    cx += TEXT_FULL_WIDTH;
-                    continue;
-                }
+                let key = `bmp-${page}`;
                 let sx = (code % 64) * TEXT_FULL_WIDTH;
                 let sy = (((code % 4096) / 64)|0) * TEXT_HEIGHT;
                 let w = TEXT_FULL_WIDTH;
                 let h = TEXT_HEIGHT;
-                dst.drawImage(img, sx, sy, w, h, cx, cy, w, h);
+                keyToImageParts[key].push({
+                    srcX: sx, srcY: sy, srcWidth: w, srcHeight: h,
+                    dstX: cx, dstY: cy, dstWidth: w, dstHeight: h,
+                });
                 cx += TEXT_FULL_WIDTH;
             }
-            dst.globalCompositeOperation = 'source-in';
-            dst.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
-            dst.fillRect(0, 0, size.width, size.height);
-            context.drawImage(dstCanvas, x, y);
-            context.restore();
+            let geoM = new graphics.GeometryMatrix();
+            geoM.translate(x, y);
+            let colorM = new graphics.ColorMatrix();
+            colorM.scale(color.r / 255, color.g / 255, color.b / 255, color.a / 255);
+            for (let key in keyToImageParts) {
+                let img = mplusImages[key];
+                screen.drawImage(img, {
+                    geoM:       geoM,
+                    colorM:     colorM,
+                    imageParts: keyToImageParts[key],
+                });
+            }
         }
     }
 
@@ -206,9 +188,7 @@ namespace BitmapFont {
             return {width, height}
         }
 
-        export function drawAt(context: CanvasRenderingContext2D, str: string, x: number, y: number, r: number, g: number, b: number) {
-            context.save();
-
+        export function drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color) {
             let cx = 0;
             let cy = 0;
             let size = textSize(str);
@@ -216,8 +196,8 @@ namespace BitmapFont {
             let dstCanvas = <HTMLCanvasElement>document.createElement('canvas');
             dstCanvas.width = size.width;
             dstCanvas.height = size.height;
-            let dst = dstCanvas.getContext('2d');
 
+            let imageParts = <graphics.ImagePart[]>[];
             for (let ch of str) {
                 let code = <number>(<any>ch).codePointAt(0);
                 if (ch == '\n') {
@@ -239,34 +219,34 @@ namespace BitmapFont {
                 let sy = (((code / 16)|0) - 2) * TEXT_HEIGHT;
                 let w = TEXT_WIDTH;
                 let h = TEXT_HEIGHT;
-                dst.drawImage(arcadeImage, sx, sy, w, h, cx, cy, w, h);
+                imageParts.push({
+                    srcX: sx, srcY: sy, srcWidth: w, srcHeight: h,
+                    dstX: cx, dstY: cy, dstWidth: w, dstHeight: h,
+                });
                 cx += TEXT_WIDTH;
             }
-            dst.globalCompositeOperation = 'source-in';
-            dst.fillStyle = `rgba(${r}, ${g}, ${b}, 1)`;
-            dst.fillRect(0, 0, size.width, size.height);
-            context.drawImage(dstCanvas, x, y);
-            context.restore();
+
+            let geoM = new graphics.GeometryMatrix();
+            geoM.translate(x, y);
+            let colorM = new graphics.ColorMatrix();
+            colorM.scale(color.r / 255, color.g / 255, color.b / 255, color.a / 255);
+            screen.drawImage(arcadeImage, {geoM, colorM, imageParts});
         }
     }
 }
 
 class Env {
     public static run(f: (CanvasRenderingContext2D) => void): void {
-        const width = 320;
-        const height = 240;
-
         let canvas = <HTMLCanvasElement>window.document.querySelector('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        let context = canvas.getContext('2d');
-        (<any>context).imageSmoothingEnabled = false;
+        let offscreen = new graphics.Image(canvas.width, canvas.height);
+        let defaultRenderTarget = graphics.Image.defaultRenderTarget;
 
         let loop = () => {
-            context.save();
-            context.clearRect(0, 0, width, height);
-            f(context);
-            context.restore();
+            offscreen.clear();
+            f(offscreen);
+
+            defaultRenderTarget.clear();
+            defaultRenderTarget.drawImage(offscreen);
 
             window.requestAnimationFrame(loop);
         };
@@ -277,7 +257,14 @@ class Env {
 let $game: data.Game;
 
 (() => {
-    let canvas = document.body.querySelector('canvas');
+    const width = 320;
+    const height = 240;
+
+    let canvas = <HTMLCanvasElement>window.document.querySelector('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    graphics.Image.initialize(canvas);
+
     (<HTMLElement>canvas).focus();
     window.addEventListener('message', (e) => {
         let game = <data.Game>e.data;

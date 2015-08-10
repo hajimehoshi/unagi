@@ -61,11 +61,10 @@ class MapScene {
         this.playerSprite_.stopMoving();
     }
 
-    draw(context) {
+    draw(screen) {
         this.playerSprite_.x = (320 - this.playerSprite_.width) / 2;
         this.playerSprite_.y = data.gridSize * 8 - this.playerSprite_.height;
 
-        context.save();
         let map = $game.maps[0];
         let offsetX = this.playerSprite_.x + this.playerSprite_.width / 2 - data.gridSize / 2;
         let offsetY = this.playerSprite_.y + this.playerSprite_.height - data.gridSize;
@@ -84,6 +83,7 @@ class MapScene {
         let maxI = Math.min($gameState.playerPosition.x + 11, map.xNum);
         let minJ = Math.max($gameState.playerPosition.y - 8, 0);
         let maxJ = Math.min($gameState.playerPosition.y + 8, map.yNum);
+        let imageParts = [];
         for (let j = minJ; j <= maxJ; j++) {
             for (let i = minI; i <= maxI; i++) {
                 let tile = map.tiles[i + map.xNum * j];
@@ -91,11 +91,20 @@ class MapScene {
                 let sy = ((tile / 8)|0) * data.gridSize;
                 let dx = i * data.gridSize + offsetX;
                 let dy = j * data.gridSize + offsetY;
-                context.drawImage(tileSetImage, sx, sy, data.gridSize, data.gridSize, dx, dy, data.gridSize, data.gridSize);
+                imageParts.push({
+                    srcX:      sx,
+                    srcY:      sy,
+                    srcWidth:  data.gridSize,
+                    srcHeight: data.gridSize,
+                    dstX:      dx,
+                    dstY:      dy,
+                    dstWidth:  data.gridSize,
+                    dstHeight: data.gridSize,
+                });
             }
         }
-        this.playerSprite_.draw(context);
+        screen.drawImage(tileSetImage, {imageParts});
+        this.playerSprite_.draw(screen);
 
-        context.restore();
     }
 }

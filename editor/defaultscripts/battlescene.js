@@ -12,29 +12,28 @@ class BattlePlayerWindow {
         this.window_.update();
     }
     
-    drawShadowTextAt(context, text, x, y, r, g, b) {
-        BitmapFont.Regular.drawAt(context, text, x+1, y+1, 0, 0, 0);
-        BitmapFont.Regular.drawAt(context, text, x, y, r, g, b);
+    drawShadowTextAt(screen, text, x, y, color) {
+        BitmapFont.Regular.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
+        BitmapFont.Regular.drawAt(screen, text, x, y, color);
     }
 
-    drawShadowNumberTextAt(context, text, x, y, r, g, b) {
-        BitmapFont.Number.drawAt(context, text, x+1, y+1, 0, 0, 0);
-        BitmapFont.Number.drawAt(context, text, x, y, r, g, b);
+    drawShadowNumberTextAt(screen, text, x, y, color) {
+        BitmapFont.Number.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
+        BitmapFont.Number.drawAt(screen, text, x, y, color);
     }
 
-    draw(context) {
-        context.save();
-
-        this.window_.draw(context);
+    draw(screen) {
+        this.window_.draw(screen);
         let actor = $game.actors[this.index_];
-        this.drawShadowTextAt(context, actor.name, this.window_.x + 8, this.window_.y + 32, 255, 255, 192);
+        this.drawShadowTextAt(screen, actor.name, this.window_.x + 8, this.window_.y + 32,
+                              {r: 255, g: 255, b: 192, a: 255});
         let x = this.window_.x + 8;
         let y = this.window_.y + 52;
-        this.drawShadowNumberTextAt(context, "HP", x, y, 192, 192, 255);
-        this.drawShadowNumberTextAt(context, "9999", x + 32, y, 255, 255, 255);
+        this.drawShadowNumberTextAt(screen, "HP", x, y, {r: 192, g: 192, b: 255, a: 255});
+        this.drawShadowNumberTextAt(screen, "9999", x + 32, y, {r: 255, g: 255, b: 255, a: 255});
         y += 12;
-        this.drawShadowNumberTextAt(context, "MP", x, y, 192, 192, 255);
-        this.drawShadowNumberTextAt(context, " 999", x + 32, y, 255, 255, 255);
+        this.drawShadowNumberTextAt(screen, "MP", x, y, {r: 192, g: 192, b: 255, a: 255});
+        this.drawShadowNumberTextAt(screen, " 999", x + 32, y, {r: 255, g: 255, b: 255, a: 255});
         let actorImg = Images.byId($game, actor.image);
         let sx = 24;
         let sy = 64;
@@ -42,9 +41,17 @@ class BattlePlayerWindow {
         let actorHeight = 32;
         let dx = this.window_.x + (this.window_.width - actorWidth) / 2;
         let dy = this.window_.y - actorHeight + 32;
-        context.drawImage(actorImg, sx, sy, actorWidth, actorHeight, dx, dy, actorWidth, actorHeight);
-
-        context.restore();
+        let imageParts = [{
+            srcX: sx,
+            srcY: sy,
+            srcWidth: actorWidth,
+            srcHeight: actorHeight,
+            dstX: dx,
+            dstY: dy,
+            dstWidth: actorWidth,
+            dstHeight: actorHeight,
+        }];
+        screen.drawImage(actorImg, {imageParts})
     }
 }
 
@@ -62,18 +69,10 @@ class BattleScene {
         }
     }
 
-    draw(context) {
-        context.save();
-
+    draw(screen) {
         // TODO: Do not use name to specify an image. We should use ID in any cases.
         let bgImg = Images.byName($game, 'background_field');
-        context.drawImage(bgImg, 0, 0);
-
-        for (let window of this.playerWindows_) {
-            window.draw(context);
-        }
-        //this.window_.draw(context);
-        //util.drawBitmapTextAt(context, "敵が出現!", this.window_.x + 8, this.window_.y + 8);
+        screen.drawImage(bgImg);
 
         // TODO: Make a troop
         {
@@ -81,9 +80,15 @@ class BattleScene {
             let enemyImg = Images.byId($game, enemy.image);
             let dx = (320 - enemyImg.width) / 2;
             let dy = (160 - enemyImg.height) / 2;
-            context.drawImage(enemyImg, dx, dy, enemyImg.width, enemyImg.height);
+            let geoM = new graphics.GeometryMatrix();
+            geoM.translate(dx, dy);
+            screen.drawImage(enemyImg, {geoM});
         }
 
-        context.restore();
+        for (let window of this.playerWindows_) {
+            window.draw(screen);
+        }
+        //this.window_.draw(context);
+        //util.drawBitmapTextAt(context, "敵が出現!", this.window_.x + 8, this.window_.y + 8);
     }
 }
