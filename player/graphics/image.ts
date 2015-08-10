@@ -64,6 +64,7 @@ namespace graphics {
         constructor(image: HTMLImageElement);
         constructor(framebuffer: webgl.Framebuffer);
         constructor(arg1: any, arg2?: number) {
+            this.pixels_ = null;
             if (typeof(arg1) === 'number' && typeof(arg2) === 'number') {
                 let width = <number>arg1;
                 let height = <number>arg2;
@@ -86,6 +87,7 @@ namespace graphics {
                 canvas.width = width;
                 canvas.height = height;
                 let context = canvas.getContext('2d');
+                context.globalCompositeOperation = 'copy';
                 context.drawImage(img, 0, 0);
                 let imageData = context.getImageData(0, 0, width, height);
                 this.texture_ = new webgl.Texture(Image.gl_, imageData);
@@ -95,7 +97,6 @@ namespace graphics {
             if ((arg1 instanceof <any>webgl.Framebuffer) && typeof(arg2) === 'undefined') {
                 this.texture_ = null;
                 this.framebuffer_ = arg1;
-                this.pixels_ = null;
                 return;
             }
             throw 'graphics.Image.constructor: invalid argments';
@@ -155,11 +156,11 @@ namespace graphics {
             this.framebuffer_.drawTexture(image.texture_, quads, geoM, colorM);
         }
 
-        /*public at(i: number, j: number): Color {
+        public at(i: number, j: number): Color {
             if (this.pixels_ === null) {
-                this.pixels_ = this.framebuffer_.pixels();
+                this.pixels_ = this.framebuffer_.pixels;
             }
-            let width = nextPowerOf2(this.width);
+            let width = webgl.nextPowerOf2(this.width);
             let idx = (4 * j * width) + 4 * i;
             return {
                 r: this.pixels_[idx],
@@ -167,6 +168,6 @@ namespace graphics {
                 b: this.pixels_[idx+2],
                 a: this.pixels_[idx+3],
             };
-        }*/
+        }
     }
 }

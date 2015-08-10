@@ -46,6 +46,7 @@ namespace graphics {
                 canvas.width = width;
                 canvas.height = height;
                 let context = canvas.getContext('2d');
+                context.globalCompositeOperation = 'copy';
                 context.putImageData(imageData, 0, 0);
                 return context.getImageData(0, 0, width, height);
             }
@@ -78,6 +79,7 @@ namespace graphics {
 	        }
 
 	        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
+	        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
 	        gl.bindTexture(gl.TEXTURE_2D, t);
 
 	        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
