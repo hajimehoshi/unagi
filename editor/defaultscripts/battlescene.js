@@ -2,7 +2,7 @@
 
 class BattlePlayerWindow {
     constructor(index) {
-        this.actor_ = $game.actorById($gameState.party[index]);
+        this.actor_ = $actors[$gameState.party[index]];
         // TODO: Centering?
         this.window_ = new Window(80 * index, 160, 80, 80);
         this.window_.opaque = 128;
@@ -33,7 +33,7 @@ class BattlePlayerWindow {
         y += 12;
         this.drawShadowNumberTextAt(screen, "MP", x, y, {r: 192, g: 192, b: 255, a: 255});
         this.drawShadowNumberTextAt(screen, " 999", x + 32, y, {r: 255, g: 255, b: 255, a: 255});
-        let actorImg = Images.byId(this.actor_.image);
+        let actorImg = this.actor_.image;
         let sx = 24;
         let sy = 64;
         let actorWidth = 24; // TODO: Need to define const in 'data'
@@ -75,7 +75,7 @@ class BattleScene {
 
         // TODO: Make a troop
         {
-            let enemy = $game.data.enemies[0];
+            let enemy = $gameData.enemies[0];
             let enemyImg = Images.byId(enemy.image);
             let dx = (320 - enemyImg.width) / 2;
             let dy = (160 - enemyImg.height) / 2;

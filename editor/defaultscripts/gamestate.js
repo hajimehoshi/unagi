@@ -3,7 +3,7 @@
 class GameState {
     constructor() {
         this.party_ = [];
-        for (let actorId of $game.data.system.initialParty) {
+        for (let actorId of $gameData.system.initialParty) {
             this.party_.push(actorId);
         }
         this.playerPosition_ = null;
@@ -35,9 +35,4 @@ class GameState {
     }
 }
 
-class Actor {
-    constructor(data) {
-        this.hp_ = data.maxHP;
-        this.mp_ = data.maxMP;
-    }
-}
+let $gameState = new GameState();

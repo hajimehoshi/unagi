@@ -12,34 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-class Game {
-    private data_: data.Game;
-
-    constructor(data: data.Game) {
-        this.data_ = data;
-    }
-
-    public get data(): data.Game {
-        return this.data_;
-    }
-
-    public actorById(id: string): data.Actor {
-        for (let actor of this.data_.actors) {
-            if (actor.id === id) {
-                return actor;
-            }
-        }
-        return null;
-    }
-}
-
-let $game: Game = null;
+let $gameData: data.Game = null;
 
 namespace Images {
     var imgs: {[id: string]: graphics.Image} = {};
 
     export function byId(id: string): graphics.Image {
-        let game = $game.data;
+        let game = $gameData;
 
         if (id in imgs) {
             return imgs[id];
@@ -65,7 +44,7 @@ namespace Images {
     var imgsByName: {[name: string]: graphics.Image} = {};
 
     export function byName(name: string): graphics.Image {
-        let game = $game.data;
+        let game = $gameData;
 
         if (name in imgsByName) {
             return imgsByName[name];
@@ -292,11 +271,11 @@ class Env {
 
     (<HTMLElement>canvas).focus();
     window.addEventListener('message', (e) => {
-        $game = new Game(<data.Game>e.data);
-        BitmapFont.initialize($game.data);
+        $gameData = <data.Game>e.data;
+        BitmapFont.initialize($gameData);
 
         let script = "";
-        for (let s of $game.data.scripts) {
+        for (let s of $gameData.scripts) {
             script += s.content;
         }
         // Call 'eval' indirectly so that 'this' variable will be a global window.

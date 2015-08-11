@@ -1,7 +1,5 @@
 'use strict';
 
-let $gameState = new GameState();
-
 class SceneStack {
     constructor() {
         this.stack_ = [];
@@ -28,7 +26,7 @@ let $sceneStack = new SceneStack();
 
 (function() {
     $sceneStack.push(new MapScene());
-    let initialPosition = $game.data.playerInitialPosition;
+    let initialPosition = $gameData.playerInitialPosition;
     $gameState.moveTo(initialPosition.mapId, initialPosition.x, initialPosition.y);
 })()
 
