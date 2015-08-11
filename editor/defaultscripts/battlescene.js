@@ -2,7 +2,7 @@
 
 class BattlePlayerWindow {
     constructor(index) {
-        this.actor_ = $gameState.party[index];
+        this.actor_ = $game.actorById($gameState.party[index]);
         // TODO: Centering?
         this.window_ = new Window(80 * index, 160, 80, 80);
         this.window_.opaque = 128;
