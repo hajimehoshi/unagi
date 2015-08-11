@@ -1,7 +1,6 @@
 'use strict';
 
-let tileSetImage = Images.byName($game, 'tileset');
-let characterSetImage = Images.byId($game, $game.actors[0].image);
+let tileSetImage = Images.byName($game.data, 'tileset');
 
 let $gameState = new GameState();
 
@@ -31,7 +30,7 @@ let $sceneStack = new SceneStack();
 
 (function() {
     $sceneStack.push(new MapScene());
-    let initialPosition = $game.playerInitialPosition;
+    let initialPosition = $game.data.playerInitialPosition;
     $gameState.moveTo(initialPosition.mapId, initialPosition.x, initialPosition.y);
 })()
 

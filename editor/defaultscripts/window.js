@@ -7,7 +7,7 @@ class Window {
         this.width_ = width;
         this.height_ = height;
         this.opaque_ = 255;
-        this.image_ = new graphics.Image(width, height);
+        this.background = new graphics.Image(width - 2, height - 2);
     }
 
     get x() { return this.x_; }
@@ -30,9 +30,9 @@ class Window {
         context.strokeStyle = `rgba(255, 255, 255, 1)`;
         context.strokeRect(this.x_ + 1.5, this.y_ + 1.5, this.width_ - 3, this.height_ - 3);
         context.restore();*/
-        this.image_.fill({r: 0, g: 64, b: 128, a: this.opaque_});
+        this.background.fill({r: 0, g: 64, b: 128, a: this.opaque_});
         let geoM = new graphics.GeometryMatrix();
-        geoM.translate(this.x_, this.y_);
-        screen.drawImage(this.image_, {geoM});
+        geoM.translate(this.x_ + 1, this.y_ + 1);
+        screen.drawImage(this.background, {geoM});
     }
 }

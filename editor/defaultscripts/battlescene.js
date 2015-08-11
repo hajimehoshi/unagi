@@ -24,7 +24,7 @@ class BattlePlayerWindow {
 
     draw(screen) {
         this.window_.draw(screen);
-        let actor = $game.actors[this.index_];
+        let actor = $game.data.actors[this.index_];
         this.drawShadowTextAt(screen, actor.name, this.window_.x + 8, this.window_.y + 32,
                               {r: 255, g: 255, b: 192, a: 255});
         let x = this.window_.x + 8;
@@ -34,7 +34,7 @@ class BattlePlayerWindow {
         y += 12;
         this.drawShadowNumberTextAt(screen, "MP", x, y, {r: 192, g: 192, b: 255, a: 255});
         this.drawShadowNumberTextAt(screen, " 999", x + 32, y, {r: 255, g: 255, b: 255, a: 255});
-        let actorImg = Images.byId($game, actor.image);
+        let actorImg = Images.byId($game.data, actor.image);
         let sx = 24;
         let sy = 64;
         let actorWidth = 24; // TODO: Need to define const in 'data'
@@ -71,13 +71,13 @@ class BattleScene {
 
     draw(screen) {
         // TODO: Do not use name to specify an image. We should use ID in any cases.
-        let bgImg = Images.byName($game, 'background_field');
+        let bgImg = Images.byName($game.data, 'background_field');
         screen.drawImage(bgImg);
 
         // TODO: Make a troop
         {
-            let enemy = $game.enemies[0];
-            let enemyImg = Images.byId($game, enemy.image);
+            let enemy = $game.data.enemies[0];
+            let enemyImg = Images.byId($game.data, enemy.image);
             let dx = (320 - enemyImg.width) / 2;
             let dy = (160 - enemyImg.height) / 2;
             let geoM = new graphics.GeometryMatrix();

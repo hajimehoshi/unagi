@@ -254,7 +254,19 @@ class Env {
     }
 }
 
-let $game: data.Game;
+class Game {
+    private data_: data.Game;
+
+    constructor(data: data.Game) {
+        this.data_ = data;
+    }
+
+    public get data(): data.Game {
+        return this.data_;
+    }
+}
+
+let $game: Game = null;
 
 (() => {
     const width = 320;
@@ -267,12 +279,11 @@ let $game: data.Game;
 
     (<HTMLElement>canvas).focus();
     window.addEventListener('message', (e) => {
-        let game = <data.Game>e.data;
-        $game = game;
-        BitmapFont.initialize($game);
+        $game = new Game(<data.Game>e.data);
+        BitmapFont.initialize($game.data);
 
         let script = "";
-        for (let s of game.scripts) {
+        for (let s of $game.data.scripts) {
             script += s.content;
         }
         // Call 'eval' indirectly so that 'this' variable will be a global window.

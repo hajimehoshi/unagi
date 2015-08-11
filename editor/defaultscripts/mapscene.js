@@ -2,6 +2,11 @@
 
 class MapScene {
     constructor() {
+        /*let actor = $gameState.party[0];
+        console.log(actor);
+        let image = Images.byId($game, actor.image);*/
+
+        let characterSetImage = Images.byId($game.data, $game.data.actors[0].image);
         this.playerSprite_ = new CharacterSprite(characterSetImage);
         this.movingCounter_ = 0;
         this.movingDirectionX_ = 0;
@@ -65,7 +70,8 @@ class MapScene {
         this.playerSprite_.x = (320 - this.playerSprite_.width) / 2;
         this.playerSprite_.y = data.gridSize * 8 - this.playerSprite_.height;
 
-        let map = $game.maps[0];
+        // TODO: Use initial position
+        let map = $game.data.maps[0];
         let offsetX = this.playerSprite_.x + this.playerSprite_.width / 2 - data.gridSize / 2;
         let offsetY = this.playerSprite_.y + this.playerSprite_.height - data.gridSize;
         offsetX -= $gameState.playerPosition.x * data.gridSize;

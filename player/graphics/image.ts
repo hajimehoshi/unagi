@@ -62,6 +62,7 @@ namespace graphics {
         constructor(width: number, height: number);
         constructor(imageData: ImageData);
         constructor(image: HTMLImageElement);
+        constructor(canvas: HTMLCanvasElement);
         constructor(framebuffer: webgl.Framebuffer);
         constructor(arg1: any, arg2?: number) {
             this.pixels_ = null;
@@ -90,6 +91,14 @@ namespace graphics {
                 context.globalCompositeOperation = 'copy';
                 context.drawImage(img, 0, 0);
                 let imageData = context.getImageData(0, 0, width, height);
+                this.texture_ = new webgl.Texture(Image.gl_, imageData);
+                this.framebuffer_ = new webgl.Framebuffer(Image.gl_, this.texture_);
+                return;
+            }
+            if ((arg1 instanceof HTMLCanvasElement) && typeof(arg2) === 'undefined') {
+                let canvas = <HTMLCanvasElement>arg1;
+                let context = canvas.getContext('2d');
+                let imageData = context.getImageData(0, 0, canvas.width, canvas.height);
                 this.texture_ = new webgl.Texture(Image.gl_, imageData);
                 this.framebuffer_ = new webgl.Framebuffer(Image.gl_, this.texture_);
                 return;
