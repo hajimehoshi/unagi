@@ -2,7 +2,7 @@
 
 class MapScene {
     constructor() {
-        let characterSetImage = $actors[$gameState.party[0]].image;
+        let characterSetImage = $gameState.getPartyMember(0).image;
         this.playerSprite_ = new CharacterSprite(characterSetImage);
         this.movingCounter_ = 0;
         this.movingDirectionX_ = 0;

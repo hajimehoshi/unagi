@@ -13,6 +13,7 @@
 // limitations under the License.
 
 let $gameData: data.Game = null;
+let $idToData: {[id: string]: any} = {};
 
 namespace Images {
     var imgs: {[id: string]: graphics.Image} = {};
@@ -23,21 +24,9 @@ namespace Images {
         if (id in imgs) {
             return imgs[id];
         }
-
-        if (id === data.NullImage.id) {
-            let image = data.NullImage;
-            let img = new Image();
-            img.src = image.data;
-            return imgs[id] = new graphics.Image(img);
-        }
-        for (let image of game.images) {
-            if (image.id === id) {
-                let img = new Image();
-                img.src = image.data;
-                return imgs[id] = new graphics.Image(img);
-            }
-        }
-        return null;
+        let img = new Image();
+        img.src = $idToData[id].data;
+        return imgs[id] = new graphics.Image(img);
     }
 
     // TODO: Deprecate this
@@ -272,6 +261,14 @@ class Env {
     (<HTMLElement>canvas).focus();
     window.addEventListener('message', (e) => {
         $gameData = <data.Game>e.data;
+        for (let actor of $gameData.actors) {
+            $idToData[actor.id] = actor;
+        }
+        for (let image of $gameData.images) {
+            $idToData[image.id] = image;
+        }
+        $idToData[data.NullImage.id] = data.NullImage;
+
         BitmapFont.initialize($gameData);
 
         let script = "";
