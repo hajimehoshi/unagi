@@ -22,6 +22,15 @@ class Game {
     public get data(): data.Game {
         return this.data_;
     }
+
+    public actorById(id: string): data.Actor {
+        for (let actor of this.data_.actors) {
+            if (actor.id === id) {
+                return actor;
+            }
+        }
+        return null;
+    }
 }
 
 let $game: Game = null;

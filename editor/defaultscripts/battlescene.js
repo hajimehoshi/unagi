@@ -2,9 +2,9 @@
 
 class BattlePlayerWindow {
     constructor(index) {
-        this.index_ = index;
+        this.actor_ = $gameState.party[index];
         // TODO: Centering?
-        this.window_ = new Window(80 * this.index_, 160, 80, 80);
+        this.window_ = new Window(80 * index, 160, 80, 80);
         this.window_.opaque = 128;
     }
 
@@ -24,8 +24,7 @@ class BattlePlayerWindow {
 
     draw(screen) {
         this.window_.draw(screen);
-        let actor = $game.data.actors[this.index_];
-        this.drawShadowTextAt(screen, actor.name, this.window_.x + 8, this.window_.y + 32,
+        this.drawShadowTextAt(screen, this.actor_.name, this.window_.x + 8, this.window_.y + 32,
                               {r: 255, g: 255, b: 192, a: 255});
         let x = this.window_.x + 8;
         let y = this.window_.y + 52;
@@ -34,7 +33,7 @@ class BattlePlayerWindow {
         y += 12;
         this.drawShadowNumberTextAt(screen, "MP", x, y, {r: 192, g: 192, b: 255, a: 255});
         this.drawShadowNumberTextAt(screen, " 999", x + 32, y, {r: 255, g: 255, b: 255, a: 255});
-        let actorImg = Images.byId(actor.image);
+        let actorImg = Images.byId(this.actor_.image);
         let sx = 24;
         let sy = 64;
         let actorWidth = 24; // TODO: Need to define const in 'data'
