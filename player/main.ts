@@ -12,10 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+class Game {
+    private data_: data.Game;
+
+    constructor(data: data.Game) {
+        this.data_ = data;
+    }
+
+    public get data(): data.Game {
+        return this.data_;
+    }
+}
+
+let $game: Game = null;
+
 namespace Images {
     var imgs: {[id: string]: graphics.Image} = {};
 
-    export function byId(game: data.Game, id: string): graphics.Image {
+    export function byId(id: string): graphics.Image {
+        let game = $game.data;
+
         if (id in imgs) {
             return imgs[id];
         }
@@ -39,7 +55,9 @@ namespace Images {
     // TODO: Deprecate this
     var imgsByName: {[name: string]: graphics.Image} = {};
 
-    export function byName(game: data.Game, name: string): graphics.Image {
+    export function byName(name: string): graphics.Image {
+        let game = $game.data;
+
         if (name in imgsByName) {
             return imgsByName[name];
         }
@@ -68,7 +86,7 @@ namespace BitmapFont {
             };
             // TODO: Wait until all images are loaded.
         });
-        arcadeImage = Images.byId(game, game.system.numberFontImage);
+        arcadeImage = Images.byId(game.system.numberFontImage);
     }
 
     export namespace Regular {
@@ -253,20 +271,6 @@ class Env {
         loop();
     }
 }
-
-class Game {
-    private data_: data.Game;
-
-    constructor(data: data.Game) {
-        this.data_ = data;
-    }
-
-    public get data(): data.Game {
-        return this.data_;
-    }
-}
-
-let $game: Game = null;
 
 (() => {
     const width = 320;

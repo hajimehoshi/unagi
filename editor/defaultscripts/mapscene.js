@@ -6,7 +6,7 @@ class MapScene {
         console.log(actor);
         let image = Images.byId($game, actor.image);*/
 
-        let characterSetImage = Images.byId($game.data, $game.data.actors[0].image);
+        let characterSetImage = Images.byId($game.data.actors[0].image);
         this.playerSprite_ = new CharacterSprite(characterSetImage);
         this.movingCounter_ = 0;
         this.movingDirectionX_ = 0;
@@ -109,6 +109,7 @@ class MapScene {
                 });
             }
         }
+        let tileSetImage = Images.byName('tileset');
         screen.drawImage(tileSetImage, {imageParts});
         this.playerSprite_.draw(screen);
 

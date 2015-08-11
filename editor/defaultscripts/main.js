@@ -1,7 +1,5 @@
 'use strict';
 
-let tileSetImage = Images.byName($game.data, 'tileset');
-
 let $gameState = new GameState();
 
 class SceneStack {
