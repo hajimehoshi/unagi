@@ -149,7 +149,7 @@ namespace graphics {
                 let g = color.g / 255;
                 let b = color.b / 255;
                 let a = color.a / 255;
-                gl.clearColor(r, g, b, a);
+                gl.clearColor(a * r, a * g, a * b, a);
                 gl.clear(gl.COLOR_BUFFER_BIT);
             }
 
