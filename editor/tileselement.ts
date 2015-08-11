@@ -149,6 +149,7 @@ namespace editor {
                 if (this.editingMode_ != EditingMode.Event) {
                     return;
                 }
+                Dispatcher.onCreatingEventIfNeeded();
                 eventDialog.showModal();
             });
             eventDialog.addEventListener('click', (e: MouseEvent) => {

@@ -216,5 +216,9 @@ namespace editor {
             });
             this.view_.render(this.game_);
         }
+
+        public createEventIfNeeded(): void {
+            //let events = this.currentMap.events;
+        }
     }
 }

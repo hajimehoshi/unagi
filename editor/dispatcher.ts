@@ -71,5 +71,9 @@ namespace editor {
         public static onAddingGameData(path: string): void {
             Dispatcher.store_.addGameData(path);
         }
+
+        public static onCreatingEventIfNeeded(): void {
+            Dispatcher.store_.createEventIfNeeded();
+        }
     }
 }
