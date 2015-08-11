@@ -14,66 +14,60 @@
 
 namespace editor {
     export class Dispatcher {
-        private static store_: Store;
-
-        public static set store(store: Store) {
-            Dispatcher.store_ = store;
-        }
-
         public static onInitialized(game: data.Game): void {
-            Dispatcher.store_.updateGame(game);
+            Store.instance.updateGame(game);
         }
 
         public static onSelectedTilesChanged(s: SelectedTiles): void {
-            Dispatcher.store_.updateSelectedTiles(s);
+            Store.instance.updateSelectedTiles(s);
         }
 
         public static onTilesCursorPositionChanged(x: number, y: number): void {
-            Dispatcher.store_.updateTilesCursorPosition(x, y);
+            Store.instance.updateTilesCursorPosition(x, y);
         }
 
         public static onDrawingTiles(): void {
-            Dispatcher.store_.drawTiles();
+            Store.instance.drawTiles();
         }
 
         public static onTilesWheel(dx: number, dy: number, scale: number, canvasWidth: number, canvasHeight: number): void {
-            Dispatcher.store_.moveTilesOffset(dx, dy, scale, canvasWidth, canvasHeight);
+            Store.instance.moveTilesOffset(dx, dy, scale, canvasWidth, canvasHeight);
         }
 
         public static onPlayGame(): void {
-            Dispatcher.store_.playGame();
+            Store.instance.playGame();
         }
 
         public static onStopGame(): void {
-            Dispatcher.store_.stopGame();
+            Store.instance.stopGame();
         }
 
         public static onEditingModeChanged(editingMode: EditingMode): void {
-            Dispatcher.store_.updateEditingMode(editingMode);
+            Store.instance.updateEditingMode(editingMode);
         }
 
         public static onDatabaseModeChanged(editingMode: DatabaseMode): void {
-            Dispatcher.store_.updateDatabaseMode(editingMode);
+            Store.instance.updateDatabaseMode(editingMode);
         }
 
         public static onCurrentMapChanged(id: string): void {
-            Dispatcher.store_.updateCurrentMap(id);
+            Store.instance.updateCurrentMap(id);
         }
 
         public static onCurrentActorChanged(id: string): void {
-            Dispatcher.store_.updateCurrentActor(id);
+            Store.instance.updateCurrentActor(id);
         }
 
         public static onUpdatingGameData(path: string, value: any): void {
-            Dispatcher.store_.updateGameData(path, value);
+            Store.instance.updateGameData(path, value);
         }
 
         public static onAddingGameData(path: string): void {
-            Dispatcher.store_.addGameData(path);
+            Store.instance.addGameData(path);
         }
 
         public static onCreatingEventIfNeeded(): void {
-            Dispatcher.store_.createEventIfNeeded();
+            Store.instance.createEventIfNeeded();
         }
     }
 }

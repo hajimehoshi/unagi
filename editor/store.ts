@@ -31,6 +31,15 @@ namespace editor {
     }
 
     export class Store {
+        private static instance_: Store;
+
+        public static get instance(): Store {
+            if (Store.instance_) {
+                return Store.instance_;
+            }
+            return Store.instance_ = new Store();
+        }
+
         private view_: View;
         private game_: data.Game;
         private idToMap_: {[id: string]: data.Map};
@@ -41,7 +50,13 @@ namespace editor {
         private tilesOffset_: {[id: string]: {x: number, y: number}};
         private editingMode_: EditingMode;
 
-        public constructor(view: View) {
+        constructor() {
+            if (Store.instance_) {
+                throw 'Store instance already exists';
+            }
+        }
+
+        public set view(view: View) {
             this.view_ = view;
             this.updateEditingMode(EditingMode.Map);
             this.updateDatabaseMode(DatabaseMode.Actors);
