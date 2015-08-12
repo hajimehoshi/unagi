@@ -31,12 +31,12 @@ namespace editor {
             
             window.addEventListener('message', (e: MessageEvent) => {
                 if (e.data === 'quit') {
-                    Dispatcher.onStopGame();
+                    Store.instance.stopGame();
                 }
             });
 
             (<HTMLElement><any>this.mapList).addEventListener('selectedItemChanged', (e: CustomEvent) => {
-                Dispatcher.onCurrentMapChanged(e.detail.id);
+                Store.instance.updateCurrentMap(e.detail.id);
             });
         }
 

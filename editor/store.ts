@@ -56,11 +56,12 @@ namespace editor {
             }
         }
 
-        public set view(view: View) {
+        public initialize(view: View, game: data.Game): void {
             this.view_ = view;
             this.updateEditingMode(EditingMode.Map);
             this.updateDatabaseMode(DatabaseMode.Actors);
             this.tilesOffset_ = {};
+            this.updateGame(game);
         }
 
         private get currentMap(): Map {
@@ -162,7 +163,7 @@ namespace editor {
             this.view_.updateDatabaseMode(databaseMode);
         }
 
-        public updateCurrentActor(id: string) {
+        public updateCurrentDataItem(): void {
             this.view_.render(this.game_);
         }
 

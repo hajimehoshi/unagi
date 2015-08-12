@@ -28,13 +28,13 @@ namespace editor {
                 if ((<HTMLElement>e.target).getAttribute('disabled')) {
                     return;
                 }
-                Dispatcher.onPlayGame();
+                Store.instance.playGame();
             });
             shadowRoot.querySelector('#stop').addEventListener('click', (e: MouseEvent) => {
                 if ((<HTMLElement>e.target).getAttribute('disabled')) {
                     return;
                 }
-                Dispatcher.onStopGame();
+                Store.instance.stopGame();
             });
 
             let cond = `input[type=radio][name=editingMode]`;
@@ -46,7 +46,7 @@ namespace editor {
                         event:    EditingMode.Event,
                         database: EditingMode.Database,
                     }[radioButton.value];
-                    Dispatcher.onEditingModeChanged(mode);
+                    Store.instance.updateEditingMode(mode);
                 })
             });
 

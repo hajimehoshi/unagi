@@ -67,7 +67,7 @@ namespace editor {
                 if (e.buttons === 1) {
                     this.isDrawing_ = true;
                     if (this.isCursorInMap) {
-                        Dispatcher.onDrawingTiles();
+                        Store.instance.drawTiles();
                     }
                     return;
                 }
@@ -80,7 +80,7 @@ namespace editor {
                     let tx = (((x / data.gridSize)|0) / this.scale_)|0;
                     let ty = (((y / data.gridSize)|0) / this.scale_)|0;
                     this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
-                    Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
+                    Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
                 }
             });
             self.addEventListener('mousemove', (e: MouseEvent) => {
@@ -91,14 +91,14 @@ namespace editor {
                     let x = e.offsetX + this.offsetX_;
                     let y = e.offsetY + this.offsetY_;
                     let tilePosition = this.map_.tilePosition(x, y, this.scale_);
-                    Dispatcher.onTilesCursorPositionChanged(tilePosition.x, tilePosition.y);
+                    Store.instance.updateTilesCursorPosition(tilePosition.x, tilePosition.y);
                 }
                 if (e.buttons === 1) {
                     if (!this.isDrawing_) {
                         return;
                     }
                     if (this.isCursorInMap) {
-                        Dispatcher.onDrawingTiles();
+                        Store.instance.drawTiles();
                     }
                     return;
                 }
@@ -115,9 +115,9 @@ namespace editor {
                     let ty = (((y / data.gridSize)|0) / this.scale_)|0;
                     let px = Math.min(tx, this.tilesSelectingState_.startX);
                     let py = Math.min(ty, this.tilesSelectingState_.startY)
-                    Dispatcher.onTilesCursorPositionChanged(px, py);
+                    Store.instance.updateTilesCursorPosition(px, py);
                     this.tilesSelectingState_.moveTo(tx, ty);
-                    Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
+                    Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
                 }
             });
             self.addEventListener('mouseup', (e: MouseEvent) => {
@@ -137,12 +137,12 @@ namespace editor {
                     let tx = (((x / data.gridSize)|0) / this.scale_)|0;
                     let ty = (((y / data.gridSize)|0) / this.scale_)|0;
                     this.tilesSelectingState_.moveTo(tx, ty);
-                    Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
+                    Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
                     this.tilesSelectingState_ = null;
                 }
             });
             self.addEventListener('mouseleave', (e: MouseEvent) => {
-                Dispatcher.onTilesCursorPositionChanged(void(0), void(0));
+                Store.instance.updateTilesCursorPosition(void(0), void(0));
             });
 
             self.addEventListener('dblclick', (e: MouseEvent) => {
@@ -150,6 +150,7 @@ namespace editor {
                     return;
                 }
                 Dispatcher.onCreatingEventIfNeeded();
+                Store.createEventIfNeeded();
                 eventDialog.showModal();
             });
             eventDialog.addEventListener('click', (e: MouseEvent) => {
@@ -170,9 +171,9 @@ namespace editor {
                 }
 
                 // TODO: Configure the wheel direction
-                Dispatcher.onTilesCursorPositionChanged(void(0), void(0));
+                Store.instance.updateTilesCursorPosition(void(0), void(0));
                 let canvas = this.canvas;
-                Dispatcher.onTilesWheel(e.deltaX, e.deltaY, this.scale_, canvas.width, canvas.height);
+                Store.instance.moveTilesOffset(e.deltaX, e.deltaY, this.scale_, canvas.width, canvas.height);
             });
         }
 

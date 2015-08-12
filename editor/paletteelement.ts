@@ -46,7 +46,7 @@ namespace editor {
                 let tx = (((x / data.gridSize)|0) / PaletteElement.scale)|0;
                 let ty = (((y / data.gridSize)|0) / PaletteElement.scale)|0;
                 this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
-                Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
+                Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInPalette());
             })
             self.addEventListener('mousemove', (e: MouseEvent) => {
                 if (!this.tilesSelectingState_) {
@@ -61,7 +61,7 @@ namespace editor {
                 let tx = (((x / data.gridSize)|0) / PaletteElement.scale)|0;
                 let ty = (((y / data.gridSize)|0) / PaletteElement.scale)|0;
                 this.tilesSelectingState_.moveTo(tx, ty);
-                Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
+                Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInPalette());
             })
             self.addEventListener('mouseup', (e: MouseEvent) => {
                 if (!this.tilesSelectingState_) {
@@ -72,7 +72,7 @@ namespace editor {
                 let tx = (((x / data.gridSize)|0) / PaletteElement.scale)|0;
                 let ty = (((y / data.gridSize)|0) / PaletteElement.scale)|0;
                 this.tilesSelectingState_.moveTo(tx, ty);
-                Dispatcher.onSelectedTilesChanged(this.tilesSelectingState_.toSelectedTilesInPalette());
+                Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInPalette());
                 this.tilesSelectingState_ = null;
             })
         }

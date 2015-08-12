@@ -29,10 +29,10 @@ namespace editor {
             (<HTMLElement><any>this.list).setAttribute('groupname', this.groupName);
             self.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 let id = <string>e.detail.id;
-                Dispatcher.onCurrentActorChanged(id);
+                Store.instance.updateCurrentDataItem();
             });
             self.addEventListener('contextMenuNew', (e: CustomEvent) => {
-                Dispatcher.onAddingGameData(this.groupName);
+                Store.instance.addGameData(this.groupName);
             });
 
             [].forEach.call(shadowRoot.querySelectorAll('input'), (e: HTMLInputElement) => {
@@ -43,7 +43,7 @@ namespace editor {
                     }
                     let index = this.list.selectedIndex;
                     let path = `${this.groupName}[${index}].${e.name}`;
-                    Dispatcher.onUpdatingGameData(path, value);
+                    Store.instance.updateGameData(path, value);
                 });
             });
 
@@ -53,7 +53,7 @@ namespace editor {
                     let name = e.getAttribute('name');
                     let imageId = ev.detail.id;
                     let path = `${this.groupName}[${index}].${name}`;
-                    Dispatcher.onUpdatingGameData(path, imageId);
+                    Store.instance.updateGameData(path, imageId);
                 });
             });
         }

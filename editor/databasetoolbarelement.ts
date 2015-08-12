@@ -30,7 +30,7 @@ namespace editor {
                 input.addEventListener('change', (e) => {
                     let value = input.value;
                     let mode = DatabaseMode[value.charAt(0).toUpperCase() + value.substr(1).toLowerCase()];
-                    Dispatcher.onDatabaseModeChanged(mode);
+                    Store.instance.updateDatabaseMode(mode);
                 });
             })
         }
