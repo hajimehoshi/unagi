@@ -26,8 +26,10 @@ namespace editor {
 
             let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas.current');
             canvas.addEventListener('click', (e: MouseEvent) => {
-                e.preventDefault();
                 let dialog = <any>shadowRoot.querySelector('dialog');
+                if (dialog.open) {
+                    return;
+                }
                 dialog.showModal();
             });
             let width = parseInt((<HTMLElement><any>this).getAttribute('width'), 10);
@@ -39,6 +41,7 @@ namespace editor {
 
             let dialog = <any>shadowRoot.querySelector('dialog');
             dialog.addEventListener('click', (e: MouseEvent) => {
+                e.stopPropagation();
                 let rect = dialog.getBoundingClientRect();
                 if (e.clientY <= rect.top + rect.height && rect.top <= e.clientY &&
                     e.clientX <= rect.left + rect.width && rect.left <= e.clientX) {

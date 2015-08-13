@@ -146,21 +146,24 @@ namespace editor {
             });
 
             self.addEventListener('dblclick', (e: MouseEvent) => {
-                if (this.editingMode_ != EditingMode.Event) {
+                if (this.editingMode_ !== EditingMode.Event) {
                     return;
                 }
                 Store.instance.createEventIfNeeded();
                 this.render();
+                if (eventDialog.open) {
+                    return;
+                }
                 eventDialog.showModal();
             });
             eventDialog.addEventListener('click', (e: MouseEvent) => {
-                let dialog = <any>e.target;
-                let rect = dialog.getBoundingClientRect();
+                e.stopPropagation();
+                let rect = eventDialog.getBoundingClientRect();
                 if (e.clientY <= rect.top + rect.height && rect.top <= e.clientY &&
                     e.clientX <= rect.left + rect.width && rect.left <= e.clientX) {
                     return;
                 }
-                dialog.close();
+                eventDialog.close();
             });
 
             self.addEventListener('wheel', (e: WheelEvent) => {
@@ -254,16 +257,8 @@ namespace editor {
 
             // Event dialog
             let eventDialog = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
-            // TODO: Don't remove if not needed
-            while (eventDialog.firstChild) {
-                eventDialog.removeChild(eventDialog.firstChild);
-            }
-
             if (this.map_) {
                 let event = this.map_.getEventAt(this.cursorPositionX_, this.cursorPositionY_);
-                if (event) {
-                    eventDialog.appendChild(document.createTextNode(event.id));
-                }
             }
         }
     }
