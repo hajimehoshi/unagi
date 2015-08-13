@@ -42,13 +42,13 @@ namespace editor {
             shadowRoot.appendChild(styleClone);
 
             let canvas = this.canvas;
-            canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-            canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
 
             window.addEventListener('resize', () => {
                 let canvas = this.canvas;
-                canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-                canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
                 this.render();
             })
 
@@ -236,22 +236,21 @@ namespace editor {
                 this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_, this.editingMode_ === EditingMode.Event);
             }
 
-            if (this.editingMode_ === EditingMode.Event ||
+            if ((this.editingMode_ === EditingMode.Event) ||
                 (this.selectedTiles_ && this.cursorPositionX_ !== void(0))) {
 
                 if (!this.isCursorInMap) {
                     return;
                 }
 
-                const ratio = window.devicePixelRatio;
-                let x = this.cursorPositionX_ * data.gridSize * this.scale_ * ratio - this.offsetX_ * ratio;
-                let y = this.cursorPositionY_ * data.gridSize * this.scale_ * ratio - this.offsetY_ * ratio;
+                let x = this.cursorPositionX_ * data.gridSize * this.scale_ - this.offsetX_;
+                let y = this.cursorPositionY_ * data.gridSize * this.scale_ - this.offsetY_;
                 if (this.editingMode_ !== EditingMode.Event) {
                     this.selectedTiles_.renderFrameAt(context, x, y);
                     return;
                 }
-                let width = data.gridSize * PaletteElement.scale * ratio;
-                let height = data.gridSize * PaletteElement.scale * ratio;
+                let width = data.gridSize * this.scale_;
+                let height = data.gridSize * this.scale_;
                 Canvas.drawFrame(context, x, y, width, height);
             }
 

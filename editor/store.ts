@@ -127,7 +127,6 @@ namespace editor {
         }
 
         public moveTilesOffset(x: number, y: number, scale: number, canvasWidth: number, canvasHeight: number): void {
-            const ratio = window.devicePixelRatio;
             const marginX = 128;
             const marginY = 128;
 
@@ -138,8 +137,8 @@ namespace editor {
             let map = this.currentMap;
             let minX = -marginX;
             let minY = -marginY;
-            let maxX = Math.max(map.xNum * data.gridSize * scale - canvasWidth / ratio + marginX, marginX / 2);
-            let maxY = Math.max(map.yNum * data.gridSize * scale - canvasHeight / ratio + marginY, marginY / 2);
+            let maxX = Math.max(map.xNum * data.gridSize * scale - canvasWidth + marginX, marginX / 2);
+            let maxY = Math.max(map.yNum * data.gridSize * scale - canvasHeight + marginY, marginY / 2);
             offset.x = Math.min(Math.max(offset.x, minX), maxX);
             offset.y = Math.min(Math.max(offset.y, minY), maxY);
 

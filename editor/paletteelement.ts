@@ -31,11 +31,11 @@ namespace editor {
             let canvas = <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
             let width = PaletteElement.tileXNum * data.gridSize;
             let height = PaletteElement.tileYNum * data.gridSize;
-            let actualScale = PaletteElement.scale * window.devicePixelRatio;;
-            canvas.width = width * actualScale;
-            canvas.height = height * actualScale;
-            canvas.style.width = (width * PaletteElement.scale) + 'px';
-            canvas.style.height = (height * PaletteElement.scale) + 'px';
+            let scale = PaletteElement.scale;
+            canvas.width = width * scale;
+            canvas.height = height * scale;
+            canvas.style.width = (width * scale) + 'px';
+            canvas.style.height = (height * scale) + 'px';
 
             self.addEventListener('contextmenu', (e: MouseEvent) => {
                 e.preventDefault();

@@ -28,12 +28,10 @@ namespace editor {
 
     export class Canvas {
         public static drawFrame(context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): void {
-            const ratio = window.devicePixelRatio;
-
             context.lineJoin = 'miter';
             context.beginPath();
 
-            let lineWidth = 4 * ratio;
+            let lineWidth = 4;
             context.beginPath();
             context.lineWidth = lineWidth;
             context.rect(x + lineWidth / 2,
@@ -43,13 +41,13 @@ namespace editor {
             context.strokeStyle = '#212121';
             context.stroke();
 
-            lineWidth = 2 * ratio;
+            lineWidth = 2;
             context.beginPath();
             context.lineWidth = lineWidth;
-            context.rect(x + 1 * ratio + lineWidth / 2,
-                         y + 1 * ratio + lineWidth / 2,
-                         width - 2 * ratio - lineWidth / 2 * 2,
-                         height - 2 * ratio - lineWidth / 2 * 2);
+            context.rect(x + 1 + lineWidth / 2,
+                         y + 1 + lineWidth / 2,
+                         width - 2 - lineWidth / 2 * 2,
+                         height - 2 - lineWidth / 2 * 2);
             context.strokeStyle = '#f5f5f5';
             context.stroke();
         }
@@ -72,11 +70,9 @@ namespace editor {
             if (!this.isInPalette_)
                 return;
 
-            const ratio = window.devicePixelRatio;
-
             let tile = this.tiles_[0];
-            let x = (tile % PaletteElement.tileXNum) * data.gridSize * PaletteElement.scale * ratio;
-            let y = ((tile / PaletteElement.tileXNum)|0) * data.gridSize * PaletteElement.scale * ratio;
+            let x = (tile % PaletteElement.tileXNum) * data.gridSize * PaletteElement.scale;
+            let y = ((tile / PaletteElement.tileXNum)|0) * data.gridSize * PaletteElement.scale;
 
             Canvas.drawFrame(context, x, y, this.width, this.height);
         }
@@ -105,13 +101,11 @@ namespace editor {
         }
 
         private get width(): number {
-            const ratio = window.devicePixelRatio;
-            return this.xNum_ * data.gridSize * PaletteElement.scale * ratio;
+            return this.xNum_ * data.gridSize * PaletteElement.scale;
         }
 
         private get height(): number {
-            const ratio = window.devicePixelRatio;
-            return this.yNum_ * data.gridSize * PaletteElement.scale * ratio;
+            return this.yNum_ * data.gridSize * PaletteElement.scale;
         }
     }
 

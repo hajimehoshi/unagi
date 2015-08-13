@@ -71,8 +71,6 @@ namespace editor {
         }
 
         public renderAt(context: CanvasRenderingContext2D, tileSetImage: HTMLImageElement, scale: number, offsetX: number, offsetY: number, grid: boolean): void {
-            const ratio = window.devicePixelRatio;
-            const actualScale = scale * ratio;
             for (let j = 0; j < this.yNum; j++) {
                 for (let i = 0; i < this.xNum; i++) {
                     let tile = this.tileAt(i, j);
@@ -80,10 +78,10 @@ namespace editor {
                     let srcY = ((tile / PaletteElement.tileXNum)|0) * data.gridSize;
                     let srcWidth = data.gridSize;
                     let srcHeight = data.gridSize;
-                    let dstX = i * data.gridSize * actualScale - offsetX * ratio;
-                    let dstY = j * data.gridSize * actualScale - offsetY * ratio;
-                    let dstWidth = data.gridSize * actualScale;
-                    let dstHeight = data.gridSize * actualScale;
+                    let dstX = i * data.gridSize * scale - offsetX;
+                    let dstY = j * data.gridSize * scale - offsetY;
+                    let dstWidth = data.gridSize * scale;
+                    let dstHeight = data.gridSize * scale;
                     context.drawImage(tileSetImage, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight);
                 }
             }
@@ -92,14 +90,14 @@ namespace editor {
             }
 
             context.save();
-            context.lineWidth = 2 * ratio;
+            context.lineWidth = 2;
             context.strokeStyle = 'rgba(0, 0, 0, 0.26)';
 
             context.beginPath();
-            let minX = -offsetX * ratio;
-            let maxX = this.xNum * data.gridSize * actualScale - offsetX * ratio;
-            let minY = -offsetY * ratio;
-            let maxY = this.yNum * data.gridSize * actualScale - offsetY * ratio;
+            let minX = -offsetX;
+            let maxX = this.xNum * data.gridSize * scale - offsetX;
+            let minY = -offsetY;
+            let maxY = this.yNum * data.gridSize * scale - offsetY;
             context.moveTo(minX, minY);
             context.lineTo(maxX, minY);
             context.lineTo(maxX, maxY);
@@ -110,12 +108,12 @@ namespace editor {
 
             context.beginPath();
             for (let j = 0; j < this.yNum + 1; j++) {
-                let y = j * data.gridSize * actualScale - offsetY * ratio;
+                let y = j * data.gridSize * scale - offsetY;
                 context.moveTo(minX, y);
                 context.lineTo(maxX, y);
             }
             for (let i = 0; i < this.xNum + 1; i++) {
-                let x = i * data.gridSize * actualScale - offsetX * ratio;
+                let x = i * data.gridSize * scale - offsetX;
                 context.moveTo(x, minY);
                 context.lineTo(x, maxY);
             }
