@@ -150,6 +150,7 @@ namespace editor {
                     return;
                 }
                 Store.instance.createEventIfNeeded();
+                this.render();
                 eventDialog.showModal();
             });
             eventDialog.addEventListener('click', (e: MouseEvent) => {
@@ -249,6 +250,20 @@ namespace editor {
                 let width = data.gridSize * PaletteElement.scale * ratio;
                 let height = data.gridSize * PaletteElement.scale * ratio;
                 Canvas.drawFrame(context, x, y, width, height);
+            }
+
+            // Event dialog
+            let eventDialog = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
+            // TODO: Don't remove if not needed
+            while (eventDialog.firstChild) {
+                eventDialog.removeChild(eventDialog.firstChild);
+            }
+
+            if (this.map_) {
+                let event = this.map_.getEventAt(this.cursorPositionX_, this.cursorPositionY_);
+                if (event) {
+                    eventDialog.appendChild(document.createTextNode(event.id));
+                }
             }
         }
     }

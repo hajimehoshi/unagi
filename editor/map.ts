@@ -123,5 +123,31 @@ namespace editor {
             context.stroke();
             context.restore();
         }
+
+        public createEventIfNeeded(x: number, y: number): void {
+            for (let event of this.data_.events) {
+                if (event.x === x && event.y === y) {
+                    return;
+                }
+            }
+            this.data_.events.push({
+                id:    data.UUID.generate(),
+                x:     x,
+                y:     y,
+                pages: [{
+                    image:    data.NullImage.id,
+                    commands: [],
+                }],
+            });
+        }
+
+        public getEventAt(x: number, y: number): data.Event {
+            for (let event of this.data_.events) {
+                if (event.x === x && event.y === y) {
+                    return event;
+                }
+            }
+            return null;
+        }
     }
 }

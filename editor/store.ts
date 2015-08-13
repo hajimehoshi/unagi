@@ -234,7 +234,9 @@ namespace editor {
         }
 
         public createEventIfNeeded(): void {
-            //let events = this.currentMap.events;
+            let x = this.tilesCursorX_;
+            let y = this.tilesCursorY_;
+            this.currentMap.createEventIfNeeded(x, y);
         }
     }
 }
