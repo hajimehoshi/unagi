@@ -66,7 +66,7 @@ namespace editor {
 
         // TODO: Rename updateCurrentMap?
         public updateMap(map: Map): void {
-            this.tiles.map = map;
+            this.tiles.updateMap(map);
         }
 
         // TODO: Why |currentMapId| is passed?

@@ -184,7 +184,7 @@ namespace editor {
             return <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
         }
 
-        public set map(map: Map) {
+        public updateMap(map: Map): void {
             this.map_ = map;
             this.render();
         }
@@ -233,7 +233,7 @@ namespace editor {
             context.clearRect(0, 0, canvas.width, canvas.height);
 
             if (this.tileSetImage_ && this.tileSetImage_.dataset['loaded'] === 'true' && this.map_) {
-                this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_, this.editingMode_ == EditingMode.Event);
+                this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_, this.editingMode_ === EditingMode.Event);
             }
 
             if (this.editingMode_ === EditingMode.Event ||
