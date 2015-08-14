@@ -103,15 +103,20 @@ namespace editor {
 
             let item = this.currentItem(game);
             for (let key in item) {
-                let input = <HTMLInputElement>shadowRoot.querySelector(`input[name="${key}"]`)
+                let input = <HTMLInputElement>shadowRoot.querySelector(`input[name="${key}"]`);
                 if (input) {
                     input.value = item[key];
                     continue;
                 }
-                let imageSelector = <ImageSelectorElement><any>shadowRoot.querySelector(`unagi-image-selector[name="${key}"]`)
+                let imageSelector = <ImageSelectorElement><any>shadowRoot.querySelector(`unagi-image-selector[name="${key}"]`);
                 if (imageSelector) {
                     imageSelector.render(game, item[key]);
                     continue
+                }
+                let img = <HTMLImageElement>shadowRoot.querySelector(`img[data-name="${key}"]`);
+                if (img) {
+                    img.src = item[key];
+                    continue;
                 }
             }
         }

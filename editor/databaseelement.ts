@@ -34,15 +34,6 @@ namespace editor {
             [].forEach.call(shadowRoot.querySelectorAll('unagi-database-content'), (e: DatabaseContentElement) => {
                 e.render(game);
             });
-
-            let images = <DatabaseContentElement><any>shadowRoot.querySelector('unagi-database-content[groupname="images"]');
-            let img = <HTMLImageElement>(<HTMLElementES6><any>images).shadowRoot.querySelector('img.data');
-            let currentImage = <data.Image>images.currentItem(game);
-            let data = currentImage ? currentImage.data : '';
-            if (img.src === data) {
-                return;
-            }
-            img.src = data;
         }
 
         public updateMode(mode: DatabaseMode): void {
