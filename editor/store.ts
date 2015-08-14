@@ -121,6 +121,7 @@ namespace editor {
         public updateSelectedTiles(s: SelectedTiles): void {
             this.selectedTiles_ = s;
             this.view_.updateSelectedTiles(s);
+            this.render();
         }
 
         public updateTilesCursorPosition(x: number, y: number): void {

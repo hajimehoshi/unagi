@@ -13,13 +13,16 @@
 // limitations under the License.
 
 namespace editor {
+    export declare type PaletteRenderInfo = {
+        tileSetImage: HTMLImageElement;
+    }
+
     export class PaletteElement {
         public static get tileXNum(): number { return 8; }
         public static get tileYNum(): number { return 32; }
         public static get scale(): number { return 2; }
 
         private selectedTiles_: SelectedTiles;
-        private tileSetImage_: HTMLImageElement;
         private tilesSelectingState_: TilesSelectingState;
 
         private createdCallback(): void {
@@ -85,20 +88,14 @@ namespace editor {
 
         public set selectedTiles(s: SelectedTiles) {
             this.selectedTiles_ = s;
-            this.render();
         }
 
-        public set tileSetImage(tileSetImage: HTMLImageElement) {
-            this.tileSetImage_ = tileSetImage;
-            this.render();
-        }
-
-        public render(): void {
+        public render(info: PaletteRenderInfo): void {
             let canvas = <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
             let context = canvas.getContext('2d');
             (<any>context).imageSmoothingEnabled = false;
-            if (this.tileSetImage_ && this.tileSetImage_.dataset['loaded'] === 'true') {
-                context.drawImage(this.tileSetImage_, 0, 0, canvas.width, canvas.height);
+            if (info.tileSetImage) {
+                context.drawImage(info.tileSetImage, 0, 0, canvas.width, canvas.height);
             }
             if (this.selectedTiles_) {
                 this.selectedTiles_.renderFrameInPalette(context);

@@ -202,7 +202,7 @@ namespace editor {
             (<any>context).imageSmoothingEnabled = false;
             context.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (info.tileSetImage && info.tileSetImage.dataset['loaded'] === 'true' && this.map_) {
+            if (info.tileSetImage && this.map_) {
                 this.map_.renderAt(context, info.tileSetImage, this.scale_, info.offsetX, info.offsetY, this.editingMode_ === EditingMode.Event);
             }
 
@@ -223,6 +223,7 @@ namespace editor {
             let eventDialog = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
             if (this.map_) {
                 let event = this.map_.getEventAt(info.cursorPositionX, info.cursorPositionY);
+                // TODO: Draw event image
             }
         }
     }

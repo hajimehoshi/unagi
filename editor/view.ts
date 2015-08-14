@@ -19,17 +19,8 @@ namespace editor {
 
         constructor() {
             this.tileSetImage_ = new Image();
-            this.tileSetImage_.src = './images/tileset.png';
-            this.tileSetImage_.addEventListener('load', () => {
-                this.tileSetImage_.dataset['loaded'] = 'true';
-            });
+            this.tileSetImage_.src = defaultImages.filter(x => x.name === 'tileset')[0].data;
 
-            this.palette.tileSetImage = this.tileSetImage_;
-
-            this.tileSetImage_.addEventListener('load', () => {
-                this.palette.render();
-            });
-            
             window.addEventListener('message', (e: MessageEvent) => {
                 if (e.data === 'quit') {
                     Store.instance.stopGame();
@@ -66,6 +57,9 @@ namespace editor {
             // TODO: Move this to store?
             tilesRenderInfo.tileSetImage = this.tileSetImage_;
             this.tiles.render(tilesRenderInfo);
+            this.palette.render({
+                tileSetImage: this.tileSetImage_,
+            });
         }
 
         // TODO: Rename updateCurrentMap?
