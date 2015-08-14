@@ -28,6 +28,8 @@ namespace editor {
 
     export class Canvas {
         public static drawFrame(context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): void {
+            context.save();
+
             context.lineJoin = 'miter';
             context.beginPath();
 
@@ -50,6 +52,8 @@ namespace editor {
                          height - 2 - lineWidth / 2 * 2);
             context.strokeStyle = '#f5f5f5';
             context.stroke();
+
+            context.restore();
         }
     }
 

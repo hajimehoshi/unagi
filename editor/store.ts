@@ -70,13 +70,20 @@ namespace editor {
             return new Map(this.idToMap_[id]);
         }
 
+        private render(): void {
+            this.view_.render(this.game_, {
+                cursorPositionX: this.tilesCursorX_,
+                cursorPositionY: this.tilesCursorY_,
+            });
+        }
+
         public updateGame(game: data.Game): void {
             this.game_ = game;
             this.idToMap_ = {}; // TODO: Use standard Map.
             for (let map of this.game_.maps) {
                 this.idToMap_[map.id] = map;
             }
-            this.view_.render(this.game_);
+            this.render();
             // TODO: What if no map exists?
             if (!this.currentMapId_) {
                 this.currentMapId_ = this.game_.maps[0].id;
@@ -109,7 +116,7 @@ namespace editor {
         public updateTilesCursorPosition(x: number, y: number): void {
             this.tilesCursorX_ = x;
             this.tilesCursorY_ = y;
-            this.view_.updateTilesCursorPosition(x, y);
+            this.render();
         }
 
         public drawTiles(): void {
@@ -119,7 +126,7 @@ namespace editor {
             if (!this.selectedTiles_) {
                 return;
             }
-            if (this.editingMode_ != EditingMode.Map) {
+            if (this.editingMode_ !== EditingMode.Map) {
                 return;
             }
             this.currentMap.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
@@ -163,7 +170,7 @@ namespace editor {
         }
 
         public updateCurrentDataItem(): void {
-            this.view_.render(this.game_);
+            this.render();
         }
 
         private getFromPath(path: string): any {
@@ -220,7 +227,7 @@ namespace editor {
                 }
             }
             if (updated) {
-                this.view_.render(this.game_);
+                this.render();
             }
         }
 
@@ -229,7 +236,7 @@ namespace editor {
                 id:   data.UUID.generate(),
                 name: '',
             });
-            this.view_.render(this.game_);
+            this.render();
         }
 
         public createEventIfNeeded(): void {

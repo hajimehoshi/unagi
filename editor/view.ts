@@ -26,7 +26,7 @@ namespace editor {
 
             tileSetImage.addEventListener('load', () => {
                 this.palette.render();
-                this.tiles.render();
+                //this.tiles.render();
             });
             
             window.addEventListener('message', (e: MessageEvent) => {
@@ -60,8 +60,9 @@ namespace editor {
             return <DatabaseElement><any>document.querySelector('unagi-database');
         }
 
-        public render(game: data.Game): void {
+        public render(game: data.Game, tilesRenderInfo: TilesRenderInfo): void {
             this.database.render(game);
+            this.tiles.render(tilesRenderInfo);
         }
 
         // TODO: Rename updateCurrentMap?
@@ -84,10 +85,6 @@ namespace editor {
         public updateSelectedTiles(s: SelectedTiles): void {
             this.palette.selectedTiles = s;
             this.tiles.selectedTiles = s;
-        }
-
-        public updateTilesCursorPosition(x: number, y: number): void {
-            this.tiles.updateCursorPosition(x, y);
         }
 
         public updateTilesOffset(x: number, y: number): void {
