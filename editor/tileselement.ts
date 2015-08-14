@@ -14,15 +14,17 @@
 
 namespace editor {
     export declare type TilesRenderInfo = {
+        offsetX:         number;
+        offsetY:         number;
         cursorPositionX: number;
         cursorPositionY: number;
+        selectedTiles:   SelectedTiles;
+        tileSetImage:    HTMLImageElement;
     }
 
     export class TilesElement {
         private map_: Map;
-        private selectedTiles_: SelectedTiles;
         private tilesSelectingState_: TilesSelectingState;
-        private tileSetImage_: HTMLImageElement;
         private editingMode_: EditingMode;
         private scale_: number;
         private isDrawing_: boolean;
@@ -52,7 +54,6 @@ namespace editor {
                 let canvas = this.canvas;
                 canvas.width = canvas.offsetWidth;
                 canvas.height = canvas.offsetHeight;
-                //this.render();
             })
 
             self.addEventListener('contextmenu', (e: MouseEvent) => {
@@ -113,7 +114,7 @@ namespace editor {
                     let tx = (((x / data.gridSize)|0) / this.scale_)|0;
                     let ty = (((y / data.gridSize)|0) / this.scale_)|0;
                     let px = Math.min(tx, this.tilesSelectingState_.startX);
-                    let py = Math.min(ty, this.tilesSelectingState_.startY)
+                    let py = Math.min(ty, this.tilesSelectingState_.startY);
                     Store.instance.updateTilesCursorPosition(px, py);
                     this.tilesSelectingState_.moveTo(tx, ty);
                     Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
@@ -149,7 +150,6 @@ namespace editor {
                     return;
                 }
                 Store.instance.createEventIfNeeded();
-                //this.render();
                 if (eventDialog.open) {
                     return;
                 }
@@ -187,14 +187,6 @@ namespace editor {
             this.map_ = map;
         }
 
-        public set selectedTiles(s: SelectedTiles) {
-            this.selectedTiles_ = s;
-        }
-
-        public set tileSetImage(tileSetImage: HTMLImageElement) {
-            this.tileSetImage_ = tileSetImage;
-        }
-
         public set editingMode(editingMode: EditingMode) {
             this.editingMode_ = editingMode;
         }
@@ -210,16 +202,16 @@ namespace editor {
             (<any>context).imageSmoothingEnabled = false;
             context.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (this.tileSetImage_ && this.tileSetImage_.dataset['loaded'] === 'true' && this.map_) {
-                this.map_.renderAt(context, this.tileSetImage_, this.scale_, this.offsetX_, this.offsetY_, this.editingMode_ === EditingMode.Event);
+            if (info.tileSetImage && info.tileSetImage.dataset['loaded'] === 'true' && this.map_) {
+                this.map_.renderAt(context, info.tileSetImage, this.scale_, info.offsetX, info.offsetY, this.editingMode_ === EditingMode.Event);
             }
 
             if ((this.editingMode_ === EditingMode.Event) ||
-                (this.selectedTiles_ && info.cursorPositionX !== void(0))) {
-                let x = info.cursorPositionX * data.gridSize * this.scale_ - this.offsetX_;
-                let y = info.cursorPositionY * data.gridSize * this.scale_ - this.offsetY_;
+                (info.selectedTiles && info.cursorPositionX !== void(0))) {
+                let x = info.cursorPositionX * data.gridSize * this.scale_ - info.offsetX;
+                let y = info.cursorPositionY * data.gridSize * this.scale_ - info.offsetY;
                 if (this.editingMode_ !== EditingMode.Event) {
-                    this.selectedTiles_.renderFrameAt(context, x, y);
+                    info.selectedTiles.renderFrameAt(context, x, y);
                     return;
                 }
                 let width = data.gridSize * this.scale_;

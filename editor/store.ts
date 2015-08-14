@@ -58,9 +58,9 @@ namespace editor {
 
         public initialize(view: View, game: data.Game): void {
             this.view_ = view;
+            this.tilesOffset_ = {};
             this.updateEditingMode(EditingMode.Map);
             this.updateDatabaseMode(DatabaseMode.Actors);
-            this.tilesOffset_ = {};
             this.updateGame(game);
         }
 
@@ -71,9 +71,16 @@ namespace editor {
         }
 
         private render(): void {
+            let offset = this.tilesOffset_[this.currentMapId_];
+            let offsetX = offset ? offset.x : void(0);
+            let offsetY = offset ? offset.y : void(0);
             this.view_.render(this.game_, {
+                offsetX:         offsetX,
+                offsetY:         offsetY,
                 cursorPositionX: this.tilesCursorX_,
                 cursorPositionY: this.tilesCursorY_,
+                selectedTiles:   this.selectedTiles_,
+                tileSetImage:    null,
             });
         }
 
@@ -83,7 +90,6 @@ namespace editor {
             for (let map of this.game_.maps) {
                 this.idToMap_[map.id] = map;
             }
-            this.render();
             // TODO: What if no map exists?
             if (!this.currentMapId_) {
                 this.currentMapId_ = this.game_.maps[0].id;
@@ -97,6 +103,8 @@ namespace editor {
             }
             let offset = this.tilesOffset_[this.currentMapId_];
             this.view_.updateTilesOffset(offset.x, offset.y);
+
+            this.render();
         }
 
         public updateCurrentMap(id: string): void {
@@ -106,6 +114,8 @@ namespace editor {
 
             let offset = this.tilesOffset_[this.currentMapId_];
             this.view_.updateTilesOffset(offset.x, offset.y);
+
+            this.render();
         }
 
         public updateSelectedTiles(s: SelectedTiles): void {
@@ -131,6 +141,7 @@ namespace editor {
             }
             this.currentMap.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
             this.view_.updateMap(this.currentMap);
+            this.render();
         }
 
         public moveTilesOffset(x: number, y: number, scale: number, canvasWidth: number, canvasHeight: number): void {
@@ -163,6 +174,7 @@ namespace editor {
         public updateEditingMode(editingMode: EditingMode): void {
             this.editingMode_ = editingMode;
             this.view_.updateEditingMode(editingMode);
+            this.render();
         }
 
         public updateDatabaseMode(databaseMode: DatabaseMode): void {

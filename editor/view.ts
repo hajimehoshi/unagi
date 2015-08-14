@@ -14,19 +14,20 @@
 
 namespace editor {
     export class View {
+        // TODO: Remove this
+        private tileSetImage_: HTMLImageElement;
+
         constructor() {
-            let tileSetImage = new Image();
-            tileSetImage.src = './images/tileset.png';
-            tileSetImage.addEventListener('load', () => {
-                tileSetImage.dataset['loaded'] = 'true';
+            this.tileSetImage_ = new Image();
+            this.tileSetImage_.src = './images/tileset.png';
+            this.tileSetImage_.addEventListener('load', () => {
+                this.tileSetImage_.dataset['loaded'] = 'true';
             });
 
-            this.palette.tileSetImage = tileSetImage;
-            this.tiles.tileSetImage = tileSetImage;
+            this.palette.tileSetImage = this.tileSetImage_;
 
-            tileSetImage.addEventListener('load', () => {
+            this.tileSetImage_.addEventListener('load', () => {
                 this.palette.render();
-                //this.tiles.render();
             });
             
             window.addEventListener('message', (e: MessageEvent) => {
@@ -62,6 +63,8 @@ namespace editor {
 
         public render(game: data.Game, tilesRenderInfo: TilesRenderInfo): void {
             this.database.render(game);
+            // TODO: Move this to store?
+            tilesRenderInfo.tileSetImage = this.tileSetImage_;
             this.tiles.render(tilesRenderInfo);
         }
 
@@ -84,7 +87,6 @@ namespace editor {
 
         public updateSelectedTiles(s: SelectedTiles): void {
             this.palette.selectedTiles = s;
-            this.tiles.selectedTiles = s;
         }
 
         public updateTilesOffset(x: number, y: number): void {

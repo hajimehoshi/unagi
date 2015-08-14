@@ -27,6 +27,9 @@ namespace editor {
         }
 
         public render(game: data.Game): void {
+            if (!game) {
+                return;
+            }
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             [].forEach.call(shadowRoot.querySelectorAll('unagi-database-content'), (e: DatabaseContentElement) => {
                 e.render(game);
