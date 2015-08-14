@@ -111,7 +111,12 @@ namespace editor {
                 let imageSelector = <ImageSelectorElement><any>shadowRoot.querySelector(`unagi-image-selector[name="${key}"]`);
                 if (imageSelector) {
                     imageSelector.render(game, item[key]);
-                    continue
+                    continue;
+                }
+                let select = <HTMLSelectElement>shadowRoot.querySelector(`select[name="${key}"]`);
+                if (select) {
+                    select.value = data.ImageType[item[key]];
+                    continue;
                 }
                 let img = <HTMLImageElement>shadowRoot.querySelector(`img[data-name="${key}"]`);
                 if (img) {

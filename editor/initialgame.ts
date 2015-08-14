@@ -162,7 +162,7 @@ namespace editor {
                 type = data.ImageType.Character;
             } else if (image.name.match(/^enemy/)) {
                 type = data.ImageType.Enemy;
-            } else  if (image.name.match(/^tileset/)) {
+            } else if (image.name.match(/^tileset/)) {
                 type = data.ImageType.TileSet;
             }
             initialGame.images.push({
