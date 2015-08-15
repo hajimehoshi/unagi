@@ -83,10 +83,6 @@ namespace editor {
             this.palette.selectedTiles = s;
         }
 
-        public updateTilesOffset(x: number, y: number): void {
-            this.tiles.updateOffset(x, y);
-        }
-
         public playGame(game: data.Game): void {
             this.toolbar.playGame();
 

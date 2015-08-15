@@ -101,9 +101,6 @@ namespace editor {
             for (let map of this.game_.maps) {
                 this.tilesOffset_[map.id] = {x: -16, y: -16};
             }
-            let offset = this.tilesOffset_[this.currentMapId_];
-            this.view_.updateTilesOffset(offset.x, offset.y);
-
             this.render();
         }
 
@@ -111,9 +108,6 @@ namespace editor {
             this.currentMapId_ = id;
             this.view_.updateMap(this.currentMap);
             this.view_.updateMapList(this.currentMapId_, this.game_.maps);
-
-            let offset = this.tilesOffset_[this.currentMapId_];
-            this.view_.updateTilesOffset(offset.x, offset.y);
 
             this.render();
         }
@@ -161,7 +155,7 @@ namespace editor {
             offset.x = Math.min(Math.max(offset.x, minX), maxX);
             offset.y = Math.min(Math.max(offset.y, minY), maxY);
 
-            this.view_.updateTilesOffset(offset.x, offset.y);
+            this.render();
         }
 
         public playGame(): void {
