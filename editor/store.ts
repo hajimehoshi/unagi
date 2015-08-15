@@ -256,6 +256,7 @@ namespace editor {
             let x = this.tilesCursorX_;
             let y = this.tilesCursorY_;
             this.currentMap.createEventIfNeeded(x, y);
+            this.render();
         }
     }
 }

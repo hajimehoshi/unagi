@@ -28,7 +28,6 @@ namespace editor {
 
             (<HTMLElement><any>this.list).setAttribute('groupname', this.groupName);
             self.addEventListener('selectedItemChanged', (e: CustomEvent) => {
-                let id = <string>e.detail.id;
                 Store.instance.updateCurrentDataItem();
             });
             self.addEventListener('contextMenuNew', (e: CustomEvent) => {
@@ -44,16 +43,6 @@ namespace editor {
                     let index = this.list.selectedIndex;
                     let path = `${this.groupName}[${index}].${e.name}`;
                     Store.instance.updateGameData(path, value);
-                });
-            });
-
-            [].forEach.call(shadowRoot.querySelectorAll('unagi-image-selector'), (e: HTMLElement) => {
-                e.addEventListener('change', (ev: CustomEvent) => {
-                    let index = this.list.selectedIndex;
-                    let name = e.getAttribute('name');
-                    let imageId = ev.detail.id;
-                    let path = `${this.groupName}[${index}].${name}`;
-                    Store.instance.updateGameData(path, imageId);
                 });
             });
         }
@@ -110,6 +99,8 @@ namespace editor {
                 }
                 let imageSelector = <ImageSelectorElement><any>shadowRoot.querySelector(`unagi-image-selector[name="${key}"]`);
                 if (imageSelector) {
+                    let index = this.list.selectedIndex;
+                    imageSelector.path = `${this.groupName}[${index}].${key}`;
                     imageSelector.render(game, item[key]);
                     continue;
                 }

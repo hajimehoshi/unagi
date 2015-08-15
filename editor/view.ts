@@ -56,7 +56,7 @@ namespace editor {
             this.database.render(game);
             // TODO: Move this to store?
             tilesRenderInfo.tileSetImage = this.tileSetImage_;
-            this.tiles.render(tilesRenderInfo);
+            this.tiles.render(game, tilesRenderInfo);
             this.palette.render({
                 tileSetImage: this.tileSetImage_,
             });

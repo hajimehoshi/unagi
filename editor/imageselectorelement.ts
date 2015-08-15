@@ -52,17 +52,20 @@ namespace editor {
 
             let dialogList = <HTMLElement>dialog.querySelector('unagi-listbox');
             dialogList.addEventListener('selectedItemChanged', (e: CustomEvent) => {
-                let ce = new CustomEvent('change', {
-                    detail: {
-                        id: e.detail.id,
-                    }
-                });
-                (<HTMLElement><any>this).dispatchEvent(ce);
+                Store.instance.updateGameData(this.path, e.detail.id);
             });
 
             let dialogCanvas = <HTMLCanvasElement>dialog.querySelector('dialog canvas');
             dialogCanvas.width = 383;
             dialogCanvas.height = 384;
+        }
+
+        public get path(): string {
+            return (<HTMLElement><any>this).getAttribute('path');
+        }
+
+        public set path(path: string) {
+            (<HTMLElement><any>this).setAttribute('path', path);
         }
 
         private drawAtCenter(canvas: HTMLCanvasElement, img: HTMLImageElement, offsetX: number, offsetY: number): void {

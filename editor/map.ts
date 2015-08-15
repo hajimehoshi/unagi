@@ -20,6 +20,10 @@ namespace editor {
             this.data_ = data;
         }
 
+        public index(maps: data.Map[]): number {
+            return maps.indexOf(this.data_);
+        }
+
         public get id(): string {
             return this.data_.id;
         }
@@ -34,6 +38,10 @@ namespace editor {
 
         public get yNum(): number {
             return this.data_.yNum;
+        }
+
+        public get events(): data.Event[] {
+            return this.data_.events;
         }
 
         public tileAt(x: number, y: number): number {

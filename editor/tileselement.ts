@@ -196,7 +196,7 @@ namespace editor {
             this.offsetY_ = y;
         }
 
-        public render(info: TilesRenderInfo): void {
+        public render(game: data.Game, info: TilesRenderInfo): void {
             let canvas = this.canvas;
             let context = canvas.getContext('2d');
             (<any>context).imageSmoothingEnabled = false;
@@ -220,10 +220,18 @@ namespace editor {
             }
 
             // Event dialog
-            let eventDialog = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
             if (this.map_) {
                 let event = this.map_.getEventAt(info.cursorPositionX, info.cursorPositionY);
                 // TODO: Draw event image
+                if (event) {
+                    let eventDialog = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
+                    let eventImageSelector = <ImageSelectorElement>eventDialog.querySelector('unagi-image-selector');
+                    let mapIndex = this.map_.index(game.maps);
+                    let eventIndex = this.map_.events.indexOf(event);
+                    let pageIndex = 0;
+                    eventImageSelector.path = `maps[${mapIndex}].events[${eventIndex}].pages[${pageIndex}].image`;
+                    eventImageSelector.render(game, event.pages[pageIndex].image);
+                }
             }
         }
     }

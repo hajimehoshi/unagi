@@ -94,7 +94,6 @@ namespace data {
         type: ImageType.Null,
     };
 
-
     export declare type Script = {
         name:    string,
         content: string,
