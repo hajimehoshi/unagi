@@ -229,7 +229,10 @@ namespace editor {
                     let mapIndex = this.map_.index(game.maps);
                     let eventIndex = this.map_.events.indexOf(event);
                     let pageIndex = 0;
-                    eventImageSelector.path = `maps[${mapIndex}].events[${eventIndex}].pages[${pageIndex}].image`;
+                    let basePath = `maps[${mapIndex}].events[${eventIndex}].pages[${pageIndex}]`;
+                    eventImageSelector.path = `${basePath}.image`;
+                    eventImageSelector.imageXPath = `${basePath}.imageX`;
+                    eventImageSelector.imageYPath = `${basePath}.imageY`;
                     let page = event.pages[pageIndex];
                     if (page.image !== data.NullImage.id) {
                         eventImageSelector.xNum = 3;

@@ -15,6 +15,8 @@
 namespace editor {
     export class ImageSelectorElement {
         private path_: string;
+        private imageXPath_: string;
+        private imageYPath_: string;
         private xNum_: number;
         private yNum_: number;
 
@@ -50,8 +52,8 @@ namespace editor {
             dialog.addEventListener('click', (e: MouseEvent) => {
                 e.stopPropagation();
                 let rect = dialog.getBoundingClientRect();
-                if (e.clientY <= rect.top + rect.height && rect.top <= e.clientY &&
-                    e.clientX <= rect.left + rect.width && rect.left <= e.clientX) {
+                if (e.clientY < rect.top + rect.height && rect.top <= e.clientY &&
+                    e.clientX < rect.left + rect.width && rect.left <= e.clientX) {
                     return;
                 }
                 dialog.close();
@@ -67,13 +69,12 @@ namespace editor {
             dialogCanvas.height = 384;
         }
 
-        public get path(): string {
-            return this.path_;
-        }
-
-        public set path(path: string) {
-            this.path_ = path;
-        }
+        public get path(): string { return this.path_; }
+        public set path(path: string) { this.path_ = path; }
+        public get imageXPath(): string { return this.imageXPath_; }
+        public set imageXPath(path: string) { this.imageXPath_ = path; }
+        public get imageYPath(): string { return this.imageYPath_; }
+        public set imageYPath(path: string) { this.imageYPath_ = path; }
 
         public get xNum(): number { return this.xNum_; }
         public set xNum(xNum: number) { this.xNum_ = xNum; }
@@ -101,11 +102,6 @@ namespace editor {
             img.src = image.data;
 
             let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas.current');
-            /*let srcOffsetX = (<HTMLElement><any>this).getAttribute('srcoffsetx');
-            let srcOffsetY = (<HTMLElement><any>this).getAttribute('srcoffsety');
-            let offsetX = (srcOffsetX !== null) ? parseInt(srcOffsetX, 10) : 0;
-            let offsetY = (srcOffsetY !== null) ? parseInt(srcOffsetY, 10) : 0;
-            this.drawAtCenter(canvas, img, offsetX, offsetY);*/
             let src = (<HTMLElement><any>this).getAttribute('src');
             if (src !== null) {
                 let x = src.split(',');
@@ -150,6 +146,26 @@ namespace editor {
                 let frameY = (((dialogCanvas.height - img.height)/2)|0) + imageY * frameHeight;
                 let dialogContext = dialogCanvas.getContext('2d');
                 Canvas.drawFrame(dialogContext, frameX, frameY, frameWidth, frameHeight);
+
+                dialogCanvas.onclick = (e: MouseEvent) => {
+                    e.preventDefault();
+                    let rect = dialogCanvas.getBoundingClientRect();
+                    let imgX = ((dialogCanvas.width - img.width)/2)|0;
+                    let imgY = ((dialogCanvas.height - img.height)/2)|0;
+                    let x = e.clientX - rect.left - imgX;
+                    let y = e.clientY - rect.top - imgY;
+                    if (x < 0 || img.width <= x || y < 0 || img.height <= y) {
+                        return;
+                    }
+                    let newImageX = (x / (img.width / this.xNum_))|0;
+                    let newImageY = (y / (img.height / this.yNum_))|0;
+                    Store.instance.updateGameData(this.imageXPath, newImageX);
+                    Store.instance.updateGameData(this.imageYPath, newImageY);
+                };
+            } else {
+                dialogCanvas.onclick = (e: MouseEvent) => {
+                    e.preventDefault();
+                }
             }
         }
 
