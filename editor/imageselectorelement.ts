@@ -96,12 +96,15 @@ namespace editor {
 
             let dialog = <any>shadowRoot.querySelector('dialog');
             let dialogList = <ListBoxElement><any>dialog.querySelector('unagi-listbox');
-            let items = game.images.map((image: data.Image): ListBoxItem => {
-                return {
-                    title: image.name,
-                    id:    image.id,
-                };
-            });
+            let typesAttr = (<HTMLElement><any>this).getAttribute('types');
+            if (typesAttr === null) {
+                typesAttr = '';
+            }
+            let types = typesAttr.split(' ').map(t => data.ImageType[t]);
+            let items = game.images.filter(i => types.indexOf(i.type) >= 0).map(i => ({
+                title: i.name,
+                id:    i.id,
+            }));
             items.unshift({
                 title: '(None)',
                 id:    data.NullImage.id,
