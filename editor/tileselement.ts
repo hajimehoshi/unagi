@@ -230,7 +230,15 @@ namespace editor {
                     let eventIndex = this.map_.events.indexOf(event);
                     let pageIndex = 0;
                     eventImageSelector.path = `maps[${mapIndex}].events[${eventIndex}].pages[${pageIndex}].image`;
-                    eventImageSelector.render(game, event.pages[pageIndex].image);
+                    let page = event.pages[pageIndex];
+                    if (page.image !== data.NullImage.id) {
+                        eventImageSelector.xNum = 3;
+                        eventImageSelector.yNum = 4;
+                    } else {
+                        eventImageSelector.xNum = 1;
+                        eventImageSelector.yNum = 1;
+                    }
+                    eventImageSelector.render(game, page.image, page.imageX, page.imageY);
                 }
             }
         }

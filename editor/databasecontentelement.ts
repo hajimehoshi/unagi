@@ -101,7 +101,7 @@ namespace editor {
                 if (imageSelector) {
                     let index = this.list.selectedIndex;
                     imageSelector.path = `${this.groupName}[${index}].${key}`;
-                    imageSelector.render(game, item[key]);
+                    imageSelector.render(game, item[key], 0, 0);
                     continue;
                 }
                 let select = <HTMLSelectElement>shadowRoot.querySelector(`select[name="${key}"]`);

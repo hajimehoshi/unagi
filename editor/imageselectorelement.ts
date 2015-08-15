@@ -14,7 +14,14 @@
 
 namespace editor {
     export class ImageSelectorElement {
+        private path_: string;
+        private xNum_: number;
+        private yNum_: number;
+
         private createdCallback(): void {
+            this.xNum_ = 1;
+            this.yNum_ = 1;
+
             let template = <HTMLTemplateElement>document.getElementById('unagi-image-selector-template');
             let clone = document.importNode(template.content, true);
             let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
@@ -61,29 +68,32 @@ namespace editor {
         }
 
         public get path(): string {
-            return (<HTMLElement><any>this).getAttribute('path');
+            return this.path_;
         }
 
         public set path(path: string) {
-            (<HTMLElement><any>this).setAttribute('path', path);
+            this.path_ = path;
         }
 
-        private drawAtCenter(canvas: HTMLCanvasElement, img: HTMLImageElement, offsetX: number, offsetY: number): void {
+        public get xNum(): number { return this.xNum_; }
+        public set xNum(xNum: number) { this.xNum_ = xNum; }
+        public get yNum(): number { return this.yNum_; }
+        public set yNum(yNum: number) { this.yNum_ = yNum; }
+
+        private drawAtCenter(canvas: HTMLCanvasElement, img: HTMLImageElement, sx: number, sy: number, width: number, height: number): void {
             let context = canvas.getContext('2d');
 
             context.save();
             (<any>context).imageSmoothingEnabled = false;
             context.clearRect(0, 0, canvas.width, canvas.height);
-            let sx = Math.max(0, (img.width - canvas.width)/2 + offsetX);
-            let sy = Math.max(0, (img.height - canvas.height)/2 + offsetY);
-            let dx = Math.max(0, (canvas.width - img.width)/2);
-            let dy = Math.max(0, (canvas.height - img.height)/2);
-            context.drawImage(img, sx, sy, img.width, img.height, dx, dy, img.width, img.height);
+            let dx = ((canvas.width - width)/2)|0;
+            let dy = ((canvas.height - height)/2)|0;
+            context.drawImage(img, sx, sy, width, height, dx, dy, width, height);
 
             context.restore();
         }
 
-        public render(game: data.Game, imageId: string): void {
+        public render(game: data.Game, imageId: string, imageX: number, imageY: number): void {
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
 
             let img = new Image();
@@ -91,11 +101,26 @@ namespace editor {
             img.src = image.data;
 
             let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas.current');
-            let srcOffsetX = (<HTMLElement><any>this).getAttribute('srcoffsetx');
+            /*let srcOffsetX = (<HTMLElement><any>this).getAttribute('srcoffsetx');
             let srcOffsetY = (<HTMLElement><any>this).getAttribute('srcoffsety');
             let offsetX = (srcOffsetX !== null) ? parseInt(srcOffsetX, 10) : 0;
             let offsetY = (srcOffsetY !== null) ? parseInt(srcOffsetY, 10) : 0;
-            this.drawAtCenter(canvas, img, offsetX, offsetY);
+            this.drawAtCenter(canvas, img, offsetX, offsetY);*/
+            let src = (<HTMLElement><any>this).getAttribute('src');
+            if (src !== null) {
+                let x = src.split(',');
+                let srcX = parseInt(x[0], 10);
+                let srcY = parseInt(x[1], 10);
+                let srcWidth = parseInt(x[2], 10);
+                let srcHeight = parseInt(x[3], 10);
+                this.drawAtCenter(canvas, img, srcX, srcY, srcWidth, srcHeight);
+            } else {
+                let width  = (img.width / this.xNum)|0;
+                let height = (img.height / this.yNum)|0;
+                let sx = imageX * width;
+                let sy = imageY * height;
+                this.drawAtCenter(canvas, img, sx, sy, width, height);
+            }
 
             let dialog = <any>shadowRoot.querySelector('dialog');
             let dialogList = <ListBoxElement><any>dialog.querySelector('unagi-listbox');
@@ -116,7 +141,16 @@ namespace editor {
             dialogList.selectedId = imageId;
 
             let dialogCanvas = <HTMLCanvasElement>dialog.querySelector('dialog canvas');
-            this.drawAtCenter(dialogCanvas, img, 0, 0);
+            this.drawAtCenter(dialogCanvas, img, 0, 0, img.width, img.height);
+
+            if (1 < this.xNum && 1 < this.yNum) {
+                let frameWidth  = (img.width / this.xNum_)|0;
+                let frameHeight = (img.height / this.yNum_)|0;
+                let frameX = (((dialogCanvas.width - img.width)/2)|0) + imageX * frameWidth;
+                let frameY = (((dialogCanvas.height - img.height)/2)|0) + imageY * frameHeight;
+                let dialogContext = dialogCanvas.getContext('2d');
+                Canvas.drawFrame(dialogContext, frameX, frameY, frameWidth, frameHeight);
+            }
         }
 
         private imageById(images: data.Image[], id: string): data.Image {

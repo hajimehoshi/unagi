@@ -142,6 +142,8 @@ namespace editor {
                 y:     y,
                 pages: [{
                     image:    data.NullImage.id,
+                    imageX:   1,
+                    imageY:   2,
                     commands: [],
                 }],
             });

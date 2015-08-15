@@ -31,6 +31,8 @@ namespace data {
 
     export declare type EventPage = {
         image:    string,
+        imageX:   number,
+        imageY:   number,
         // condition
         commands: EventCommand[],
     };
