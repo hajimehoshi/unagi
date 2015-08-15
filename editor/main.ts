@@ -34,24 +34,20 @@ namespace editor {
             context.beginPath();
 
             let lineWidth = 4;
-            context.beginPath();
             context.lineWidth = lineWidth;
-            context.rect(x + lineWidth / 2,
-                         y + lineWidth / 2,
-                         width - lineWidth / 2 * 2,
-                         height - lineWidth / 2 * 2);
             context.strokeStyle = '#212121';
-            context.stroke();
+            context.strokeRect(x + lineWidth / 2,
+                               y + lineWidth / 2,
+                               width - lineWidth / 2 * 2,
+                               height - lineWidth / 2 * 2);
 
             lineWidth = 2;
-            context.beginPath();
             context.lineWidth = lineWidth;
-            context.rect(x + 1 + lineWidth / 2,
-                         y + 1 + lineWidth / 2,
-                         width - 2 - lineWidth / 2 * 2,
-                         height - 2 - lineWidth / 2 * 2);
             context.strokeStyle = '#f5f5f5';
-            context.stroke();
+            context.strokeRect(x + 1 + lineWidth / 2,
+                               y + 1 + lineWidth / 2,
+                               width - 2 - lineWidth / 2 * 2,
+                               height - 2 - lineWidth / 2 * 2);
 
             context.restore();
         }
