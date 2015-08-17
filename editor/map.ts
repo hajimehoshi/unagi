@@ -130,6 +130,41 @@ namespace editor {
             context.restore();
         }
 
+        public renderEventsAt(context: CanvasRenderingContext2D, images: data.Image[], scale: number, offsetX: number, offsetY: number): void {
+            context.save();
+            context.lineWidth = 2;
+            context.strokeStyle = '#f5f5f5';
+            context.fillStyle = '#9e9e9e';
+            for (let event of this.data_.events) {
+                let x = event.x * data.gridSize * scale - offsetX;
+                let y = event.y * data.gridSize * scale - offsetY;
+                let width = data.gridSize * scale;
+                let height = data.gridSize * scale;;
+                context.strokeRect(x + 4, y + 4, width - 8, height - 8);
+                context.fillRect(x + 5, y + 5, width - 10, height - 10);
+                if (event.pages.length === 0) {
+                    continue;
+                }
+                var imageId = event.pages[0].image;
+                if (imageId === data.NullImage.id) {
+                    continue;
+                }
+                let image = images.filter(i => i.id === imageId)[0];
+                let img = new Image();
+                img.src = image.data;
+                let imgPartWidth = img.width / 3;
+                let imgPartHeight = img.height / 4;
+                let w = width - 10;
+                let h = height - 10;
+                let dx = x + 5;
+                let dy = y + 5;
+                let sx = (imgPartWidth - w) / 2 + event.pages[0].imageX * imgPartWidth;
+                let sy = (imgPartHeight - h) / 2 + event.pages[0].imageY * imgPartHeight;
+                context.drawImage(img, sx, sy, w, h, dx, dy, w, h);
+            }
+            context.restore();
+        }
+
         public createEventIfNeeded(x: number, y: number): void {
             for (let event of this.data_.events) {
                 if (event.x === x && event.y === y) {
