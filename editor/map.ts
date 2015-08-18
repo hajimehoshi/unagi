@@ -158,9 +158,10 @@ namespace editor {
                 let h = height - 10;
                 let dx = x + 5;
                 let dy = y + 5;
-                let sx = (imgPartWidth - w) / 2 + event.pages[0].imageX * imgPartWidth;
-                let sy = (imgPartHeight - h) / 2 + event.pages[0].imageY * imgPartHeight;
-                context.drawImage(img, sx, sy, w, h, dx, dy, w, h);
+                let eventScale = PaletteElement.scale;
+                let sx = (imgPartWidth - w / eventScale) / 2 + event.pages[0].imageX * imgPartWidth;
+                let sy = (imgPartHeight - h / eventScale) / 2 + event.pages[0].imageY * imgPartHeight;
+                context.drawImage(img, sx, sy, w / eventScale, h / scale, dx, dy, w, h);
             }
             context.restore();
         }

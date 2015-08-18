@@ -25,7 +25,7 @@ class SceneStack {
 let $sceneStack = new SceneStack();
 
 (function() {
-    $sceneStack.push(new MapScene());
+    $sceneStack.push(new MapScene($gameData.maps[0]));
     let initialPosition = $gameData.playerInitialPosition;
     $gameState.moveTo(initialPosition.mapId, initialPosition.x, initialPosition.y);
 })()
