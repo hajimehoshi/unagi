@@ -22,6 +22,7 @@ class SceneStack {
     }
 }
 
+let $gameState = new GameState();
 let $sceneStack = new SceneStack();
 
 (function() {

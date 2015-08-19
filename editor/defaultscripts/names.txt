@@ -1,6 +1,8 @@
 Input
-Actor
 Game State
+
+Actor
+Character
 
 Character Sprite
 

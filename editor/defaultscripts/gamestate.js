@@ -11,7 +11,11 @@ class GameState {
         for (let actorId of $gameData.system.initialParty) {
             this.party_.push(actorId);
         }
-        this.playerPosition_ = null;
+        this.playerCharacter_ = new Character();
+    }
+
+    get playerCharacter() {
+        return this.playerCharacter_;
     }
 
     getPartyMember(index) {
@@ -23,25 +27,7 @@ class GameState {
     }
 
     moveTo(mapId, x, y) {
-        this.playerPosition_ = {
-            mapId: mapId,
-            x:     x,
-            y:     y,
-        };
-    }
-
-    moveBy(dx, dy) {
-        this.playerPosition_.x += dx;
-        this.playerPosition_.y += dy;
-    }
-
-    get playerPosition() {
-        return {
-            mapId: this.playerPosition_.mapId,
-            x:     this.playerPosition_.x,
-            y:     this.playerPosition_.y,
-        }
+        // TODO: Use mapId
+        this.playerCharacter_.forceMove(x, y);
     }
 }
-
-let $gameState = new GameState();
