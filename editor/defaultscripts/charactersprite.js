@@ -1,35 +1,40 @@
 'use strict';
 
 class CharacterSprite {
-    constructor(image, character) {
-        this.image_ = image;
+    constructor(character) {
         this.character_ = character;
     }
 
-    get x() { return this.x_; }
-    set x(x) { this.x_ = x; }
-    get y() { return this.y_; }
-    set y(y) { this.y_ = y; }
-
-    get width() { return this.image_.width / 3; }
-    get height() { return this.image_.height / 4; }
+    get width() { return this.character_.image.width / 3; }
+    get height() { return this.character_.image.height / 4; }
 
     draw(screen) {
-        console.log();
-        let sx = 0 + this.character_.pose * this.width;
-        let sy = 0 + this.character_.direction * this.height;
+        let x = this.character_.x * data.gridSize - (this.width - data.gridSize) / 2;
+        let y = this.character_.y * data.gridSize - this.height + data.gridSize;
+        let nextX = x + this.character_.movingDirectionX * data.gridSize;
+        let nextY = y + this.character_.movingDirectionY * data.gridSize;
+        let rate = this.character_.movingRate;
+        if (x !== nextX) {
+            x = ((1 - rate) * x + rate * nextX)|0;
+        }
+        if (y !== nextY) {
+            y = ((1 - rate) * y + rate * nextY)|0;
+        }
+
+        let sx = this.character_.pose * this.width;
+        let sy = this.character_.direction * this.height;
         let imageParts = [
             {
                 srcX:      sx,
                 srcY:      sy,
                 srcWidth:  this.width,
                 srcHeight: this.height,
-                dstX:      this.x,
-                dstY:      this.y,
+                dstX:      x,
+                dstY:      y,
                 dstWidth:  this.width,
                 dstHeight: this.height,
             }
         ];
-        screen.drawImage(this.image_, {imageParts});
+        screen.drawImage(this.character_.image, {imageParts});
     }
 }

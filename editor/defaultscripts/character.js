@@ -10,25 +10,28 @@ const CHARACTER_POSE_MIDDLE = 1;
 const CHARACTER_POSE_RIGHT  = 2;
 
 class Character {
-    constructor(originalPose) {
+    constructor(image, originalPose) {
         if (originalPose === void(0)) {
             originalPose = CHARACTER_POSE_MIDDLE;
         }
 
+        this.image_ = image;
+        this.originalPose_ = originalPose;
         this.x_ = 0;
         this.y_ = 0;
         this.direction_ = CHARACTER_DIRECTION_DOWN;
-        this.originalPose_ = originalPose;
         this.pose_ = originalPose;
         this.movingCounter_ = 0;
         this.initMovingCounter_ = 0;
         this.nextPose_ = CHARACTER_POSE_LEFT;
+        this.speed_ = 1;
     }
 
-    getMaxMovingCounter(/*speed*/) {
-        return 15;
+    getMaxMovingCounter() {
+        return 15 / this.speed_;
     }
 
+    get image() { return this.image_; }
     get x() { return this.x_; }
     get y() { return this.y_; }
     get pose() { return this.pose_; }
@@ -36,6 +39,7 @@ class Character {
     set direction(direction) { this.direction_ = direction; }
 
     forceMove(x, y) {
+        this.stopMoving();
         this.x_ = x;
         this.y_ = y;
     }
@@ -84,6 +88,7 @@ class Character {
     }
 
     stopMoving() {
+        this.movingCounter_ = 0;
         this.pose_ = this.originalPose_;
         this.nextPose_ = CHARACTER_POSE_LEFT;
     }

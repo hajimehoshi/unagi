@@ -11,7 +11,7 @@ class GameState {
         for (let actorId of $gameData.system.initialParty) {
             this.party_.push(actorId);
         }
-        this.playerCharacter_ = new Character();
+        this.playerCharacter_ = new Character(this.getPartyMember(0).image);
     }
 
     get playerCharacter() {
