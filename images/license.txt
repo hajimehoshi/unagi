@@ -4,6 +4,16 @@ Field by raindroppe
 http://raindroppe.deviantart.com/art/Field-85458065
 
 
+* default/character*.png
+
+Easy RPG RTP
+https://github.com/EasyRPG/RTP
+
+```
+EasyRPG RTP materials are under a Creative Commons Attribution 4.0 International License. Read the AUTHORS file for attribution details. The COPYING file includes a plain text copy of the license, or visit http://creativecommons.org/licenses/by/4.0/
+```
+
+
 * default/enemy_ebiten.png
 
 http://www.sozai-page.com/02_sozai/b/b04/b04_002/b04_002.html
@@ -30,3 +40,20 @@ Website: http://9031.com/
 Email: info@9031.com
 ©1997-2011 9031
 ```
+
+
+* icons/*.svg
+
+iconmonstr
+http://iconmonstr.com/license/
+
+
+* mplus-bitmap-images
+
+Please read mplus-bitmap-images/README.md
+
+
+* The others
+
+CC BY 4.0
+http://creativecommons.org/licenses/by/4.0/
