@@ -130,8 +130,9 @@ namespace editor {
             context.restore();
         }
 
-        public renderEventsAt(context: CanvasRenderingContext2D, images: data.Image[], scale: number, offsetX: number, offsetY: number): void {
+        public renderEventsAt(context: CanvasRenderingContext2D, images: data.Image[], scale: number, offsetX: number, offsetY: number, translucent: boolean): void {
             context.save();
+            context.globalAlpha = translucent ? 0.5 : 1.0;
             context.lineWidth = 2;
             context.strokeStyle = '#f5f5f5';
             context.fillStyle = '#9e9e9e';
@@ -163,6 +164,7 @@ namespace editor {
                 let sy = (imgPartHeight - h / eventScale) / 2 + event.pages[0].imageY * imgPartHeight;
                 context.drawImage(img, sx, sy, w / eventScale, h / scale, dx, dy, w, h);
             }
+            context.globalAlpha = 1.0;
             context.restore();
         }
 

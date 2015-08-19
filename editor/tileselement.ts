@@ -77,9 +77,7 @@ namespace editor {
 
             if (info.tileSetImage && this.map_) {
                 this.map_.renderAt(context, info.tileSetImage, this.scale_, info.offsetX, info.offsetY, this.editingMode_ === EditingMode.Event);
-                if (this.editingMode_ === EditingMode.Event) {
-                    this.map_.renderEventsAt(context, game.images, this.scale_, info.offsetX, info.offsetY);
-                }
+                this.map_.renderEventsAt(context, game.images, this.scale_, info.offsetX, info.offsetY, this.editingMode_ !== EditingMode.Event);
             }
 
             if ((this.editingMode_ === EditingMode.Event) ||
