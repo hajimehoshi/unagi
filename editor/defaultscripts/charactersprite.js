@@ -8,19 +8,27 @@ class CharacterSprite {
     get width() { return this.character_.image.width / 3; }
     get height() { return this.character_.image.height / 4; }
 
-    draw(screen) {
+    get x() {
         let x = this.character_.x * data.gridSize - (this.width - data.gridSize) / 2;
-        let y = this.character_.y * data.gridSize - this.height + data.gridSize;
         let nextX = x + this.character_.movingDirectionX * data.gridSize;
-        let nextY = y + this.character_.movingDirectionY * data.gridSize;
-        let rate = this.character_.movingRate;
         if (x !== nextX) {
+            let rate = this.character_.movingRate;
             x = ((1 - rate) * x + rate * nextX)|0;
         }
+        return x;
+    }
+
+    get y() {
+        let y = this.character_.y * data.gridSize - this.height + data.gridSize;
+        let nextY = y + this.character_.movingDirectionY * data.gridSize;
         if (y !== nextY) {
+            let rate = this.character_.movingRate;
             y = ((1 - rate) * y + rate * nextY)|0;
         }
+        return y;
+    }
 
+    draw(screen) {
         let sx = this.character_.pose * this.width;
         let sy = this.character_.direction * this.height;
         let imageParts = [
@@ -29,8 +37,8 @@ class CharacterSprite {
                 srcY:      sy,
                 srcWidth:  this.width,
                 srcHeight: this.height,
-                dstX:      x,
-                dstY:      y,
+                dstX:      this.x,
+                dstY:      this.y,
                 dstWidth:  this.width,
                 dstHeight: this.height,
             }

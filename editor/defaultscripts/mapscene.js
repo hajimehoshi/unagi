@@ -52,7 +52,6 @@ class MapScene {
     }
 
     draw(screen) {
-        let player = $gameState.playerCharacter;
         /*let minI = Math.max($gameState.playerCharacter.x - 11, 0);
         let maxI = Math.min($gameState.playerCharacter.x + 11, this.map_.xNum);
         let minJ = Math.max($gameState.playerCharacter.y - 8, 0);
@@ -84,10 +83,15 @@ class MapScene {
 
         let tileSetImage = Images.byName('tileset');
         screen.drawImage(tileSetImage, {imageParts});
-        this.playerSprite_.draw(screen);
 
-        for (let eventSprite of this.eventSprites_) {
-            eventSprite.draw(screen);
-        }
+        let characterSprites = [this.playerSprite_].concat(this.eventSprites_);
+        characterSprites.sort(function (a, b) {
+            if (a.y !== b.y) {
+                return a.y - b.y;
+            }
+            return a.x - b.x;
+        }).forEach(function(c) {
+            c.draw(screen);
+        });
     }
 }
