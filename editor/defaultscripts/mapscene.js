@@ -52,14 +52,17 @@ class MapScene {
     }
 
     draw(screen) {
-        /*let minI = Math.max($gameState.playerCharacter.x - 11, 0);
-        let maxI = Math.min($gameState.playerCharacter.x + 11, this.map_.xNum);
-        let minJ = Math.max($gameState.playerCharacter.y - 8, 0);
-        let maxJ = Math.min($gameState.playerCharacter.y + 8, this.map_.yNum);*/
-        let minI = 0;
-        let maxI = this.map_.xNum;
-        let minJ = 0;
-        let maxJ = this.map_.yNum;
+        let cameraX = -this.playerSprite_.x + (320 - this.playerSprite_.width) / 2;
+        let cameraY = -this.playerSprite_.y + (240 - this.playerSprite_.height) / 2 - data.gridSize;
+        let geoM = new graphics.GeometryMatrix()
+        geoM.translate(cameraX, cameraY);
+
+        let cx = (-cameraX / data.gridSize)|0;
+        let cy = (-cameraY / data.gridSize)|0;
+        let minI = Math.max(cx - 1, 0);
+        let maxI = Math.min(cx + 20, this.map_.xNum);
+        let minJ = Math.max(cy - 1, 0);
+        let maxJ = Math.min(cy + 15, this.map_.yNum);
         let imageParts = [];
         for (let j = minJ; j <= maxJ; j++) {
             for (let i = minI; i <= maxI; i++) {
@@ -82,7 +85,7 @@ class MapScene {
         }
 
         let tileSetImage = Images.byName('tileset');
-        screen.drawImage(tileSetImage, {imageParts});
+        screen.drawImage(tileSetImage, {imageParts, geoM});
 
         let characterSprites = [this.playerSprite_].concat(this.eventSprites_);
         characterSprites.sort(function (a, b) {
@@ -91,7 +94,7 @@ class MapScene {
             }
             return a.x - b.x;
         }).forEach(function(c) {
-            c.draw(screen);
+            c.draw(screen, {geoM});
         });
     }
 }

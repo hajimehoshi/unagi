@@ -28,7 +28,10 @@ class CharacterSprite {
         return y;
     }
 
-    draw(screen) {
+    draw(screen, options) {
+        if (!options) {
+            options = {};
+        }
         let sx = this.character_.pose * this.width;
         let sy = this.character_.direction * this.height;
         let imageParts = [
@@ -43,6 +46,7 @@ class CharacterSprite {
                 dstHeight: this.height,
             }
         ];
-        screen.drawImage(this.character_.image, {imageParts});
+        options['imageParts'] = imageParts;
+        screen.drawImage(this.character_.image, options);
     }
 }
