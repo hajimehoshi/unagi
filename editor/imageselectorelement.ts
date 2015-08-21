@@ -19,10 +19,14 @@ namespace editor {
         private imageYPath_: string;
         private xNum_: number;
         private yNum_: number;
+        private imageWidth_: number;
+        private imageHeight_: number;
 
         private createdCallback(): void {
             this.xNum_ = 1;
             this.yNum_ = 1;
+            this.imageWidth_ = 0;
+            this.imageHeight_ = 0;
 
             let template = <HTMLTemplateElement>document.getElementById('unagi-image-selector-template');
             let clone = document.importNode(template.content, true);
@@ -67,6 +71,9 @@ namespace editor {
             let dialogCanvas = <HTMLCanvasElement>dialog.querySelector('dialog canvas');
             dialogCanvas.width = 383;
             dialogCanvas.height = 384;
+            dialogCanvas.addEventListener('click', (e: MouseEvent) => {
+                this.onClickDialogCanvas(e);
+            });
         }
 
         public get path(): string { return this.path_; }
@@ -100,6 +107,8 @@ namespace editor {
             let img = new Image();
             let image = this.imageById(game.images, imageId);
             img.src = image.data;
+            this.imageWidth_ = img.width;
+            this.imageHeight_ = img.height;
 
             let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas.current');
             let src = (<HTMLElement><any>this).getAttribute('src');
@@ -146,26 +155,6 @@ namespace editor {
                 let frameY = (((dialogCanvas.height - img.height)/2)|0) + imageY * frameHeight;
                 let dialogContext = dialogCanvas.getContext('2d');
                 Canvas.drawFrame(dialogContext, frameX, frameY, frameWidth, frameHeight);
-
-                dialogCanvas.onclick = (e: MouseEvent) => {
-                    e.preventDefault();
-                    let rect = dialogCanvas.getBoundingClientRect();
-                    let imgX = ((dialogCanvas.width - img.width)/2)|0;
-                    let imgY = ((dialogCanvas.height - img.height)/2)|0;
-                    let x = e.clientX - rect.left - imgX;
-                    let y = e.clientY - rect.top - imgY;
-                    if (x < 0 || img.width <= x || y < 0 || img.height <= y) {
-                        return;
-                    }
-                    let newImageX = (x / (img.width / this.xNum_))|0;
-                    let newImageY = (y / (img.height / this.yNum_))|0;
-                    Store.instance.updateGameData(this.imageXPath, newImageX);
-                    Store.instance.updateGameData(this.imageYPath, newImageY);
-                };
-            } else {
-                dialogCanvas.onclick = (e: MouseEvent) => {
-                    e.preventDefault();
-                }
             }
         }
 
@@ -179,6 +168,29 @@ namespace editor {
                 }
             }
             return null;
+        }
+
+        private onClickDialogCanvas(e: MouseEvent): void {
+            e.preventDefault();
+            if (this.xNum === 1 && this.yNum === 1) {
+                return;
+            }
+
+            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
+            let dialog = <any>shadowRoot.querySelector('dialog');
+            let dialogCanvas = <HTMLCanvasElement>dialog.querySelector('dialog canvas');
+            let rect = dialogCanvas.getBoundingClientRect();
+            let imgX = ((dialogCanvas.width - this.imageWidth_)/2)|0;
+            let imgY = ((dialogCanvas.height - this.imageHeight_)/2)|0;
+            let x = e.clientX - rect.left - imgX;
+            let y = e.clientY - rect.top - imgY;
+            if (x < 0 || this.imageWidth_ <= x || y < 0 || this.imageHeight_ <= y) {
+                return;
+            }
+            let newImageX = (x / (this.imageWidth_ / this.xNum_))|0;
+            let newImageY = (y / (this.imageHeight_ / this.yNum_))|0;
+            Store.instance.updateGameData(this.imageXPath_, newImageX);
+            Store.instance.updateGameData(this.imageYPath_, newImageY);
         }
     }
 }
