@@ -28,9 +28,13 @@ namespace editor {
         private editingMode_: EditingMode;
         private scale_: number;
         private isDrawing_: boolean;
+        private offsetX_: number;
+        private offsetY_: number;
 
         private createdCallback(): void {
             this.scale_ = 2;
+            this.offsetX_ = 0;
+            this.offsetY_ = 0;
 
             let template = <HTMLTemplateElement>document.getElementById('unagi-tiles-template');
             let clone = document.importNode(template.content, true);
@@ -51,9 +55,26 @@ namespace editor {
                 canvas.width = canvas.offsetWidth;
                 canvas.height = canvas.offsetHeight;
             })
-
             self.addEventListener('contextmenu', (e: MouseEvent) => {
                 e.preventDefault();
+            });
+            self.addEventListener('mousedown', (e: MouseEvent) => {
+                this.onMouseDown(e);
+            });
+            self.addEventListener('mousemove', (e: MouseEvent) => {
+                this.onMouseMove(e);
+            });
+            self.addEventListener('mouseup', (e: MouseEvent) => {
+                this.onMouseUp(e);
+            });
+            self.addEventListener('mouseleave', (e: MouseEvent) => {
+                this.onMouseLeave(e);
+            });
+            self.addEventListener('dblclick', (e: MouseEvent) => {
+                this.onDblClick(e);
+            });
+            self.addEventListener('wheel', (e: WheelEvent) => {
+                this.onWheel(e);
             });
         }
 
@@ -69,7 +90,14 @@ namespace editor {
             this.editingMode_ = editingMode;
         }
 
+        private get eventDialog(): any {
+            return <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
+        }
+
         public render(game: data.Game, info: TilesRenderInfo): void {
+            this.offsetX_ = info.offsetX;
+            this.offsetY_ = info.offsetY;
+
             let canvas = this.canvas;
             let context = canvas.getContext('2d');
             (<any>context).imageSmoothingEnabled = false;
@@ -135,127 +163,129 @@ namespace editor {
                 }
             }
 
-            let self = <HTMLElementES6><any>this;
-            let eventDialog = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
-            self.onmousedown = (e: MouseEvent) => {
-                if (eventDialog.open) {
-                    return;
-                }
-                if (!e.buttons) {
-                    return;
-                }
-                if (e.buttons === 1) {
-                    this.isDrawing_ = true;
-                    Store.instance.drawTiles();
-                    return;
-                }
-                if (this.editingMode_ !== EditingMode.Map) {
-                    return;
-                }
-                if (e.buttons === 2) {
-                    let x = e.offsetX + info.offsetX;
-                    let y = e.offsetY + info.offsetY;
-                    let tx = (((x / data.gridSize)|0) / this.scale_)|0;
-                    let ty = (((y / data.gridSize)|0) / this.scale_)|0;
-                    this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
-                    Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
-                }
-            };
-            self.onmousemove = (e: MouseEvent) => {
-                if (eventDialog.open) {
-                    return;
-                }
-                if (e.buttons !== 2) {
-                    let x = e.offsetX + info.offsetX;
-                    let y = e.offsetY + info.offsetY;
-                    let tilePosition = this.map_.tilePosition(x, y, this.scale_);
-                    Store.instance.updateTilesCursorPosition(tilePosition.x, tilePosition.y);
-                }
-                if (e.buttons === 1) {
-                    if (!this.isDrawing_) {
-                        return;
-                    }
-                    Store.instance.drawTiles();
-                    return;
-                }
-                if (this.editingMode_ != EditingMode.Map) {
-                    return;
-                }
-                if (e.buttons === 2) {
-                    if (!this.tilesSelectingState_) {
-                        return;
-                    }
-                    let x = e.offsetX + info.offsetX;
-                    let y = e.offsetY + info.offsetY;
-                    let tx = (((x / data.gridSize)|0) / this.scale_)|0;
-                    let ty = (((y / data.gridSize)|0) / this.scale_)|0;
-                    let px = Math.min(tx, this.tilesSelectingState_.startX);
-                    let py = Math.min(ty, this.tilesSelectingState_.startY);
-                    Store.instance.updateTilesCursorPosition(px, py);
-                    this.tilesSelectingState_.moveTo(tx, ty);
-                    Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
-                }
-            };
-            self.onmouseup = (e: MouseEvent) => {
-                if (eventDialog.open) {
-                    return;
-                }
-                this.isDrawing_ = false;
-                if (this.editingMode_ != EditingMode.Map) {
-                    return;
-                }
-                if (e.buttons === 2) {
-                    if (!this.tilesSelectingState_) {
-                        return;
-                    }
-                    let x = e.offsetX + info.offsetX;
-                    let y = e.offsetY + info.offsetY;
-                    let tx = (((x / data.gridSize)|0) / this.scale_)|0;
-                    let ty = (((y / data.gridSize)|0) / this.scale_)|0;
-                    this.tilesSelectingState_.moveTo(tx, ty);
-                    Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
-                    this.tilesSelectingState_ = null;
-                }
-            };
-            self.onmouseleave = (e: MouseEvent) => {
-                if (eventDialog.open) {
-                    return;
-                }
-                Store.instance.updateTilesCursorPosition(void(0), void(0));
-            };
-
-            self.ondblclick = (e: MouseEvent) => {
-                if (this.editingMode_ !== EditingMode.Event) {
-                    return;
-                }
-                Store.instance.createEventIfNeeded();
-                if (eventDialog.open) {
-                    return;
-                }
-                eventDialog.showModal();
-            };
-            eventDialog.onclick = (e: MouseEvent) => {
+            this.eventDialog.onclick = (e: MouseEvent) => {
                 e.stopPropagation();
-                let rect = eventDialog.getBoundingClientRect();
+                let rect = this.eventDialog.getBoundingClientRect();
                 if (e.clientY <= rect.top + rect.height && rect.top <= e.clientY &&
                     e.clientX <= rect.left + rect.width && rect.left <= e.clientX) {
                     return;
                 }
-                eventDialog.close();
+                this.eventDialog.close();
             };
+        }
 
-            self.onwheel = (e: WheelEvent) => {
-                e.preventDefault();
+        private onMouseDown(e: MouseEvent): void {
+            if (this.eventDialog.open) {
+                return;
+            }
+            if (!e.buttons) {
+                return;
+            }
+            if (e.buttons === 1) {
+                this.isDrawing_ = true;
+                Store.instance.drawTiles();
+                return;
+            }
+            if (this.editingMode_ !== EditingMode.Map) {
+                return;
+            }
+            if (e.buttons === 2) {
+                let x = e.offsetX + this.offsetX_;
+                let y = e.offsetY + this.offsetY_;
+                let tx = (((x / data.gridSize)|0) / this.scale_)|0;
+                let ty = (((y / data.gridSize)|0) / this.scale_)|0;
+                this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
+                Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
+            }
+        }
 
-                if (eventDialog.open) {
+        private onMouseMove(e: MouseEvent): void {
+            if (this.eventDialog.open) {
+                return;
+            }
+            if (e.buttons !== 2) {
+                let x = e.offsetX + this.offsetX_;
+                let y = e.offsetY + this.offsetY_;
+                let tilePosition = this.map_.tilePosition(x, y, this.scale_);
+                Store.instance.updateTilesCursorPosition(tilePosition.x, tilePosition.y);
+            }
+            if (e.buttons === 1) {
+                if (!this.isDrawing_) {
                     return;
                 }
+                Store.instance.drawTiles();
+                return;
+            }
+            if (this.editingMode_ != EditingMode.Map) {
+                return;
+            }
+            if (e.buttons === 2) {
+                if (!this.tilesSelectingState_) {
+                    return;
+                }
+                let x = e.offsetX + this.offsetX_;
+                let y = e.offsetY + this.offsetY_;
+                let tx = (((x / data.gridSize)|0) / this.scale_)|0;
+                let ty = (((y / data.gridSize)|0) / this.scale_)|0;
+                let px = Math.min(tx, this.tilesSelectingState_.startX);
+                let py = Math.min(ty, this.tilesSelectingState_.startY);
+                Store.instance.updateTilesCursorPosition(px, py);
+                this.tilesSelectingState_.moveTo(tx, ty);
+                Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
+            }
+        }
 
-                // TODO: Configure the wheel direction
-                Store.instance.updateTilesCursorPosition(void(0), void(0));
-                let canvas = this.canvas;
-                Store.instance.moveTilesOffset(e.deltaX, e.deltaY, this.scale_, canvas.width, canvas.height);
-            };
+        private onMouseUp(e: MouseEvent): void {
+            if (this.eventDialog.open) {
+                return;
+            }
+            this.isDrawing_ = false;
+            if (this.editingMode_ != EditingMode.Map) {
+                return;
+            }
+            if (e.buttons === 2) {
+                if (!this.tilesSelectingState_) {
+                    return;
+                }
+                let x = e.offsetX + this.offsetX_;
+                let y = e.offsetY + this.offsetY_;
+                let tx = (((x / data.gridSize)|0) / this.scale_)|0;
+                let ty = (((y / data.gridSize)|0) / this.scale_)|0;
+                this.tilesSelectingState_.moveTo(tx, ty);
+                Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
+                this.tilesSelectingState_ = null;
+            }
+        }
+
+        private onMouseLeave(e: MouseEvent): void {
+            if (this.eventDialog.open) {
+                return;
+            }
+            Store.instance.updateTilesCursorPosition(void(0), void(0));
+        }
+
+        private onDblClick(e: MouseEvent): void {
+            if (this.editingMode_ !== EditingMode.Event) {
+                return;
+            }
+            Store.instance.createEventIfNeeded();
+            if (this.eventDialog.open) {
+                return;
+            }
+            this.eventDialog.showModal();
+        }
+
+        private onWheel(e: WheelEvent): void {
+            e.preventDefault();
+
+            if (this.eventDialog.open) {
+                return;
+            }
+
+            // TODO: Configure the wheel direction
+            Store.instance.updateTilesCursorPosition(void(0), void(0));
+            let canvas = this.canvas;
+            Store.instance.moveTilesOffset(e.deltaX, e.deltaY, this.scale_, canvas.width, canvas.height);
         }
     }
 }
