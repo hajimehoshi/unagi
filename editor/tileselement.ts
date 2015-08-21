@@ -116,6 +116,22 @@ namespace editor {
                         eventImageSelector.yNum = 1;
                     }
                     eventImageSelector.render(game, page.image, page.imageX, page.imageY);
+
+                    let commandsTextArea = <HTMLTextAreaElement>eventDialog.querySelector('textarea.commands');
+                    commandsTextArea.value = JSON.stringify(page.commands, null, '  ');
+                    commandsTextArea.onchange = (e) => {
+                        try {
+                            let commands = JSON.parse(commandsTextArea.value);
+                            let path = `${basePath}.commands`;
+                            Store.instance.updateGameData(path, commands);
+                        } catch (e) {
+                            if (e instanceof SyntaxError) {
+                                console.error(e);
+                                return;
+                            }
+                            throw e;
+                        }
+                    };
                 }
             }
 

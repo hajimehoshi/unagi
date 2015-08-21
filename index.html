@@ -213,13 +213,17 @@
       height: 80%;
       width: 80%;
     }
+    textarea.commands {
+      line-height: 1.5;
+      height: 10em;
+      width: 50%;
+    }
   </style>
   <canvas></canvas>
   <dialog class="event">
-    <ul class="pages">
-    </ul>
     <ul>
       <li>Image: <unagi-image-selector name="image" width="48" height="48" types="Character"></unagi-image-selector></li>
+      <li>Event Commands: <textarea class="commands" name="commands">[]</textarea></li>
     </ul>
   </dialog>
 </template>
