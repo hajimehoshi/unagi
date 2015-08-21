@@ -218,6 +218,9 @@ namespace editor {
                 }
             };
             self.onmouseleave = (e: MouseEvent) => {
+                if (eventDialog.open) {
+                    return;
+                }
                 Store.instance.updateTilesCursorPosition(void(0), void(0));
             };
 
