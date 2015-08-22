@@ -54,6 +54,13 @@ namespace editor {
         }
 
         public render(game: data.Game, tilesRenderInfo: TilesRenderInfo): void {
+            let editingMode = tilesRenderInfo.editingMode;
+            this.toolbar.editingMode = editingMode;
+            if (editingMode === EditingMode.Database) {
+                (<HTMLElement><any>this.database).style.display = 'block';
+            } else {
+                (<HTMLElement><any>this.database).style.display = 'none';
+            }
             this.database.render(game);
 
             let maps = game ? game.maps : [];
@@ -99,16 +106,6 @@ namespace editor {
             let iframe = <HTMLIFrameElement>document.querySelector('iframe.player');
             iframe.src = 'about:blank';
             iframe.style.display = 'none';
-        }
-
-        public updateEditingMode(editingMode: EditingMode): void {
-            this.toolbar.editingMode = editingMode;
-            if (editingMode === EditingMode.Database) {
-                (<HTMLElement><any>this.database).style.display = 'block';
-            } else {
-                (<HTMLElement><any>this.database).style.display = 'none';
-            }
-            this.tiles.editingMode = editingMode;
         }
 
         public updateDatabaseMode(databaseMode: DatabaseMode): void {

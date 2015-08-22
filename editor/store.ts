@@ -78,6 +78,7 @@ namespace editor {
             let offsetX = offset ? offset.x : void(0);
             let offsetY = offset ? offset.y : void(0);
             this.view_.render(this.game_, {
+                editingMode:     this.editingMode_,
                 mapId:           this.currentMapId_,
                 map:             this.currentMap,
                 offsetX:         offsetX,
@@ -165,7 +166,6 @@ namespace editor {
 
         public updateEditingMode(editingMode: EditingMode): void {
             this.editingMode_ = editingMode;
-            this.view_.updateEditingMode(editingMode);
             this.render();
         }
 

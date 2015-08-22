@@ -14,6 +14,7 @@
 
 namespace editor {
     export declare type TilesRenderInfo = {
+        editingMode:     EditingMode;
         mapId:           string;
         map:             Map; // TODO: Calc from mapId
         offsetX:         number;
@@ -88,11 +89,8 @@ namespace editor {
             return <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
         }
 
-        public set editingMode(editingMode: EditingMode) {
-            this.editingMode_ = editingMode;
-        }
-
         public render(game: data.Game, info: TilesRenderInfo): void {
+            this.editingMode_ = info.editingMode;
             this.map_ = info.map;
             this.offsetX_ = info.offsetX;
             this.offsetY_ = info.offsetY;
