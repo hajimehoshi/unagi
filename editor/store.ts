@@ -66,6 +66,9 @@ namespace editor {
 
         private get currentMap(): Map {
             let id = this.currentMapId_;
+            if (!id) {
+                return null;
+            }
             // TODO: Map is not a good name because this conflicts with a standard Map.
             return new Map(this.idToMap_[id]);
         }
@@ -75,6 +78,7 @@ namespace editor {
             let offsetX = offset ? offset.x : void(0);
             let offsetY = offset ? offset.y : void(0);
             this.view_.render(this.game_, {
+                map:             this.currentMap,
                 offsetX:         offsetX,
                 offsetY:         offsetY,
                 cursorPositionX: this.tilesCursorX_,
@@ -95,7 +99,6 @@ namespace editor {
                 this.currentMapId_ = this.game_.maps[0].id;
             }
             // TODO: Unify to render?
-            this.view_.updateMap(this.currentMap);
             this.view_.updateMapList(this.currentMapId_, this.game_.maps);
 
             for (let map of this.game_.maps) {
@@ -106,7 +109,6 @@ namespace editor {
 
         public updateCurrentMap(id: string): void {
             this.currentMapId_ = id;
-            this.view_.updateMap(this.currentMap);
             this.view_.updateMapList(this.currentMapId_, this.game_.maps);
 
             this.render();
@@ -135,7 +137,6 @@ namespace editor {
                 return;
             }
             this.currentMap.replaceTiles(this.selectedTiles_, this.tilesCursorX_, this.tilesCursorY_);
-            this.view_.updateMap(this.currentMap);
             this.render();
         }
 

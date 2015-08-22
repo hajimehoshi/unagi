@@ -62,11 +62,6 @@ namespace editor {
             });
         }
 
-        // TODO: Rename updateCurrentMap?
-        public updateMap(map: Map): void {
-            this.tiles.updateMap(map);
-        }
-
         // TODO: Why |currentMapId| is passed?
         public updateMapList(currentMapId: string, maps: data.Map[]): void {
             let items = maps.map((map: data.Map): ListBoxItem => {
