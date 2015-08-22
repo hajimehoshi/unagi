@@ -27,7 +27,8 @@ namespace editor {
                 }
             });
 
-            (<HTMLElement><any>this.mapList).addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            let mapListElement = <HTMLElement><any>this.mapList;
+            mapListElement.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentMap(e.detail.id);
             });
         }
@@ -54,16 +55,8 @@ namespace editor {
 
         public render(game: data.Game, tilesRenderInfo: TilesRenderInfo): void {
             this.database.render(game);
-            // TODO: Move this to store?
-            tilesRenderInfo.tileSetImage = this.tileSetImage_;
-            this.tiles.render(game, tilesRenderInfo);
-            this.palette.render({
-                tileSetImage: this.tileSetImage_,
-            });
-        }
 
-        // TODO: Why |currentMapId| is passed?
-        public updateMapList(currentMapId: string, maps: data.Map[]): void {
+            let maps = game ? game.maps : [];
             let items = maps.map((map: data.Map): ListBoxItem => {
                 return {
                     title: map.name,
@@ -71,7 +64,16 @@ namespace editor {
                 };
             });
             this.mapList.replaceItems(items);
-            this.mapList.select(currentMapId);
+            if (tilesRenderInfo.mapId) {
+                this.mapList.select(tilesRenderInfo.mapId);
+            }
+
+            // TODO: Move this to store?
+            tilesRenderInfo.tileSetImage = this.tileSetImage_;
+            this.tiles.render(game, tilesRenderInfo);
+            this.palette.render({
+                tileSetImage: this.tileSetImage_,
+            });
         }
 
         public updateSelectedTiles(s: SelectedTiles): void {

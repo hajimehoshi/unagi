@@ -14,7 +14,8 @@
 
 namespace editor {
     export declare type TilesRenderInfo = {
-        map:             Map;
+        mapId:           string;
+        map:             Map; // TODO: Calc from mapId
         offsetX:         number;
         offsetY:         number;
         cursorPositionX: number;

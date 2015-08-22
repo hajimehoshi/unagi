@@ -78,6 +78,7 @@ namespace editor {
             let offsetX = offset ? offset.x : void(0);
             let offsetY = offset ? offset.y : void(0);
             this.view_.render(this.game_, {
+                mapId:           this.currentMapId_,
                 map:             this.currentMap,
                 offsetX:         offsetX,
                 offsetY:         offsetY,
@@ -98,9 +99,6 @@ namespace editor {
             if (!this.currentMapId_) {
                 this.currentMapId_ = this.game_.maps[0].id;
             }
-            // TODO: Unify to render?
-            this.view_.updateMapList(this.currentMapId_, this.game_.maps);
-
             for (let map of this.game_.maps) {
                 this.tilesOffset_[map.id] = {x: -16, y: -16};
             }
@@ -109,8 +107,6 @@ namespace editor {
 
         public updateCurrentMap(id: string): void {
             this.currentMapId_ = id;
-            this.view_.updateMapList(this.currentMapId_, this.game_.maps);
-
             this.render();
         }
 
