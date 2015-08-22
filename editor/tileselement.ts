@@ -13,18 +13,6 @@
 // limitations under the License.
 
 namespace editor {
-    export declare type TilesRenderInfo = {
-        editingMode:     EditingMode;
-        mapId:           string;
-        map:             Map; // TODO: Calc from mapId
-        offsetX:         number;
-        offsetY:         number;
-        cursorPositionX: number;
-        cursorPositionY: number;
-        selectedTiles:   SelectedTiles;
-        tileSetImage:    HTMLImageElement;
-    }
-
     export class TilesElement {
         private map_: Map;
         private tilesSelectingState_: TilesSelectingState;
@@ -89,7 +77,7 @@ namespace editor {
             return <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
         }
 
-        public render(game: data.Game, info: TilesRenderInfo): void {
+        public render(game: data.Game, info: RenderInfo): void {
             this.editingMode_ = info.editingMode;
             this.map_ = info.map;
             this.offsetX_ = info.offsetX;

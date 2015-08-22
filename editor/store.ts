@@ -30,6 +30,18 @@ namespace editor {
         Images,
     }
 
+    export declare type RenderInfo = {
+        editingMode:     EditingMode;
+        mapId:           string;
+        map:             Map; // TODO: Calc from mapId
+        offsetX:         number;
+        offsetY:         number;
+        cursorPositionX: number;
+        cursorPositionY: number;
+        selectedTiles:   SelectedTiles;
+        tileSetImage:    HTMLImageElement;
+    }
+
     export class Store {
         private static instance_: Store;
 

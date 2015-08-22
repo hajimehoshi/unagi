@@ -53,8 +53,8 @@ namespace editor {
             return <DatabaseElement><any>document.querySelector('unagi-database');
         }
 
-        public render(game: data.Game, tilesRenderInfo: TilesRenderInfo): void {
-            let editingMode = tilesRenderInfo.editingMode;
+        public render(game: data.Game, info: RenderInfo): void {
+            let editingMode = info.editingMode;
             this.toolbar.editingMode = editingMode;
             if (editingMode === EditingMode.Database) {
                 (<HTMLElement><any>this.database).style.display = 'block';
@@ -71,13 +71,13 @@ namespace editor {
                 };
             });
             this.mapList.replaceItems(items);
-            if (tilesRenderInfo.mapId) {
-                this.mapList.select(tilesRenderInfo.mapId);
+            if (info.mapId) {
+                this.mapList.select(info.mapId);
             }
 
             // TODO: Move this to store?
-            tilesRenderInfo.tileSetImage = this.tileSetImage_;
-            this.tiles.render(game, tilesRenderInfo);
+            info.tileSetImage = this.tileSetImage_;
+            this.tiles.render(game, info);
             this.palette.render({
                 tileSetImage: this.tileSetImage_,
             });
