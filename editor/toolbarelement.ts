@@ -55,7 +55,8 @@ namespace editor {
             });
         }
 
-        public set editingMode(editingMode: EditingMode) {
+        public render(info: RenderInfo) {
+            let editingMode = info.editingMode;
             let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let value = {
                 [EditingMode.Map]:      'map',

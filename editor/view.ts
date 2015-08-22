@@ -55,12 +55,13 @@ namespace editor {
 
         public render(game: data.Game, info: RenderInfo): void {
             let editingMode = info.editingMode;
-            this.toolbar.editingMode = editingMode;
             if (editingMode === EditingMode.Database) {
                 (<HTMLElement><any>this.database).style.display = 'block';
             } else {
                 (<HTMLElement><any>this.database).style.display = 'none';
             }
+
+            this.toolbar.render(info);
             this.database.render(game);
 
             let maps = game ? game.maps : [];
