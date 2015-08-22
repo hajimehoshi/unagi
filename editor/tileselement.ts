@@ -30,6 +30,7 @@ namespace editor {
         private isDrawing_: boolean;
         private offsetX_: number;
         private offsetY_: number;
+        private eventDialog_: EventDialog;
 
         private createdCallback(): void {
             this.scale_ = 2;
@@ -45,6 +46,9 @@ namespace editor {
             let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-dialog-style-template');
             let styleClone = document.importNode(styleTemplate.content, true);
             shadowRoot.appendChild(styleClone);
+
+            let eventDialogElement = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
+            this.eventDialog_ = new EventDialog(eventDialogElement);
 
             let canvas = this.canvas;
             canvas.width = canvas.offsetWidth;
@@ -90,10 +94,6 @@ namespace editor {
             this.editingMode_ = editingMode;
         }
 
-        private get eventDialog(): any {
-            return <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
-        }
-
         public render(game: data.Game, info: TilesRenderInfo): void {
             this.offsetX_ = info.offsetX;
             this.offsetY_ = info.offsetY;
@@ -126,56 +126,13 @@ namespace editor {
                 let event = this.map_.getEventAt(info.cursorPositionX, info.cursorPositionY);
                 // TODO: Draw event image
                 if (event) {
-                    let eventDialog = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
-                    let eventImageSelector = <ImageSelectorElement>eventDialog.querySelector('unagi-image-selector');
-                    let mapIndex = this.map_.index(game.maps);
-                    let eventIndex = this.map_.events.indexOf(event);
-                    let pageIndex = 0;
-                    let basePath = `maps[${mapIndex}].events[${eventIndex}].pages[${pageIndex}]`;
-                    eventImageSelector.path = `${basePath}.image`;
-                    eventImageSelector.imageXPath = `${basePath}.imageX`;
-                    eventImageSelector.imageYPath = `${basePath}.imageY`;
-                    let page = event.pages[pageIndex];
-                    if (page.image !== data.NullImage.id) {
-                        eventImageSelector.xNum = 3;
-                        eventImageSelector.yNum = 4;
-                    } else {
-                        eventImageSelector.xNum = 1;
-                        eventImageSelector.yNum = 1;
-                    }
-                    eventImageSelector.render(game, page.image, page.imageX, page.imageY);
-
-                    let commandsTextArea = <HTMLTextAreaElement>eventDialog.querySelector('textarea.commands');
-                    commandsTextArea.value = JSON.stringify(page.commands, null, '  ');
-                    commandsTextArea.onchange = (e) => {
-                        try {
-                            let commands = JSON.parse(commandsTextArea.value);
-                            let path = `${basePath}.commands`;
-                            Store.instance.updateGameData(path, commands);
-                        } catch (e) {
-                            if (e instanceof SyntaxError) {
-                                console.error(e);
-                                return;
-                            }
-                            throw e;
-                        }
-                    };
+                    this.eventDialog_.render(game, this.map_, event);
                 }
             }
-
-            this.eventDialog.onclick = (e: MouseEvent) => {
-                e.stopPropagation();
-                let rect = this.eventDialog.getBoundingClientRect();
-                if (e.clientY <= rect.top + rect.height && rect.top <= e.clientY &&
-                    e.clientX <= rect.left + rect.width && rect.left <= e.clientX) {
-                    return;
-                }
-                this.eventDialog.close();
-            };
         }
 
         private onMouseDown(e: MouseEvent): void {
-            if (this.eventDialog.open) {
+            if (this.eventDialog_.open) {
                 return;
             }
             if (!e.buttons) {
@@ -200,7 +157,7 @@ namespace editor {
         }
 
         private onMouseMove(e: MouseEvent): void {
-            if (this.eventDialog.open) {
+            if (this.eventDialog_.open) {
                 return;
             }
             if (e.buttons !== 2) {
@@ -236,7 +193,7 @@ namespace editor {
         }
 
         private onMouseUp(e: MouseEvent): void {
-            if (this.eventDialog.open) {
+            if (this.eventDialog_.open) {
                 return;
             }
             this.isDrawing_ = false;
@@ -258,7 +215,7 @@ namespace editor {
         }
 
         private onMouseLeave(e: MouseEvent): void {
-            if (this.eventDialog.open) {
+            if (this.eventDialog_.open) {
                 return;
             }
             Store.instance.updateTilesCursorPosition(void(0), void(0));
@@ -269,16 +226,16 @@ namespace editor {
                 return;
             }
             Store.instance.createEventIfNeeded();
-            if (this.eventDialog.open) {
+            if (this.eventDialog_.open) {
                 return;
             }
-            this.eventDialog.showModal();
+            this.eventDialog_.showModal();
         }
 
         private onWheel(e: WheelEvent): void {
             e.preventDefault();
 
-            if (this.eventDialog.open) {
+            if (this.eventDialog_.open) {
                 return;
             }
 

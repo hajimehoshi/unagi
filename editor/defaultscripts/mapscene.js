@@ -53,7 +53,7 @@ class MapScene {
 
     draw(screen) {
         let cameraX = -this.playerSprite_.x + (320 - this.playerSprite_.width) / 2;
-        let cameraY = -this.playerSprite_.y + (240 - this.playerSprite_.height) / 2 - data.gridSize;
+        let cameraY = -this.playerSprite_.y + 240 / 2 - this.playerSprite_.height;
         let geoM = new graphics.GeometryMatrix()
         geoM.translate(cameraX, cameraY);
 
