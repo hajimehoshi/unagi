@@ -14,10 +14,14 @@
 
 namespace editor {
     export class View {
+        private toolbar_: Toolbar;
+
         // TODO: Remove this
         private tileSetImage_: HTMLImageElement;
 
         constructor() {
+            this.toolbar_ = new Toolbar(<HTMLElement>document.querySelector('#toolbar'));
+
             this.tileSetImage_ = new Image();
             this.tileSetImage_.src = defaultImages.filter(x => x.name === 'tileset')[0].data;
 
@@ -31,10 +35,6 @@ namespace editor {
             mapListElement.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentMap(e.detail.id);
             });
-        }
-
-        private get toolbar(): ToolbarElement {
-            return <ToolbarElement><any>document.querySelector('unagi-toolbar');
         }
 
         private get palette(): PaletteElement {
@@ -61,7 +61,7 @@ namespace editor {
                 (<HTMLElement><any>this.database).style.display = 'none';
             }
 
-            this.toolbar.render(info);
+            this.toolbar_.render(info);
             this.database.render(game);
 
             let maps = game ? game.maps : [];
@@ -89,7 +89,7 @@ namespace editor {
         }
 
         public playGame(game: data.Game): void {
-            this.toolbar.playGame();
+            this.toolbar_.playGame();
 
             let iframe = <HTMLIFrameElement>document.querySelector('iframe.player');
             iframe.src = './player.html';
@@ -102,7 +102,7 @@ namespace editor {
         }
 
         public stopGame(): void {
-            this.toolbar.stopGame();
+            this.toolbar_.stopGame();
 
             let iframe = <HTMLIFrameElement>document.querySelector('iframe.player');
             iframe.src = 'about:blank';

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <template id="unagi-toolbar-style-template">
   <style>
-    menu {
+    menu.toolbar {
       color: rgba(0, 0, 0, 0.56);
       display: block;
       font-size: 0;
@@ -12,7 +12,7 @@
       padding: 0;
       position: relative;
     }
-    menu button {
+    menu.toolbar button {
       background-color: transparent;
       border-style: none;
       height: 32px;
@@ -20,20 +20,20 @@
       margin: 0;
       padding: 0;
     }
-    menu button img {
+    menu.toolbar button img {
       opacity: 0.54;
       margin: 6px;
     }
-    menu input[disabled] + span {
+    menu.toolbar input[disabled] + span {
       color: rgba(0, 0, 0, 0.26);
     }
-    menu button[disabled] img {
+    menu.toolbar button[disabled] img {
       opacity: 0.26;
     }
-    menu label {
+    menu.toolbar label {
       display: inline-block;
     }
-    menu label span {
+    menu.toolbar label span {
       display: inline-block;
       font-size: 16px;
       height: 32px;
@@ -41,35 +41,35 @@
       padding: 0 6px;
       vertical-align: bottom;
     }
-    menu input[type=radio] {
+    menu.toolbar input[type=radio] {
       position: absolute;
       visibility: hidden;
     }
-    menu input[type=radio] + span:hover,
-    menu button:hover {
+    menu.toolbar input[type=radio] + span:hover,
+    menu.toolbar button:hover {
       background-color: #fff176;
     }
-    menu input[type=radio] + span:active,
-    menu button:active {
+    menu.toolbar input[type=radio] + span:active,
+    menu.toolbar button:active {
       background-color: #fdd835;
     }
-    menu input[type=radio]:checked + span {
+    menu.toolbar input[type=radio]:checked + span {
       background-color: #fbc02d;
       font-weight: bold;
     }
-    menu input[disabled] + span,
-    menu button[disabled] {
+    menu.toolbar input[disabled] + span,
+    menu.toolbar button[disabled] {
       background-color: transparent !important;
     }
-    menu input[type=radio] + span,
-    menu button {
+    menu.toolbar input[type=radio] + span,
+    menu.toolbar button {
       cursor: pointer;
     }
-    menu input[type=radio][disabled] + span,
-    menu button[disabled] {
+    menu.toolbar input[type=radio][disabled] + span,
+    menu.toolbar button[disabled] {
       cursor: default !important;
     }
-    menu hr {
+    menu.toolbar hr {
       display: inline-block;
       border-style: none;
       width: 16px;
@@ -87,28 +87,6 @@
       background-color: rgba(0, 0, 0, 0.56);
     }
   </style>
-</template>
-<template id="unagi-toolbar-template">
-  <style>
-    :host {
-      background-color: #fffde7;
-      font-size: 0;
-      line-height: 0;
-      text-align: center;
-    }
-  </style>
-  <menu>
-    <button><img src="./images/icons/iconmonstr-undo-icon.svg" width="20" height="20"></button>
-    <hr>
-    <label><input type="radio" name="editingMode" value="map"><span>Map</span></label>
-    <label><input type="radio" name="editingMode" value="event"><span>Event</span></label>
-    <label><input type="radio" name="editingMode" value="database"><span>Database</span></label>
-    <hr>
-    <button><img src="./images/icons/iconmonstr-script-4-icon.svg" width="20" height="20"></button>
-    <hr>
-    <button id="stop"><img src="./images/icons/stop-icon.svg" width="20" height="20"></button>
-    <button id="play"><img src="./images/icons/play-icon.svg" width="20" height="20"></button>
-  </menu>
 </template>
 <template id="unagi-palette-template">
   <style>
@@ -297,7 +275,7 @@
       width: 100%;
     }
   </style>
-  <menu>
+  <menu class="toolbar">
     <label><input type="radio" name="databaseMode" value="actors"><span>Actors</span></label>
     <label><input type="radio" name="databaseMode" value="skills"><span>Skills</span></label>
     <label><input type="radio" name="databaseMode" value="states"><span>States</span></label>
@@ -406,9 +384,12 @@
     position: relative;
     width: 100%;
   }
-  unagi-toolbar {
-    display: block;
+  #toolbar {
+    background-color: #fffde7;
     height: 32px;
+    font-size: 0;
+    line-height: 0;
+    text-align: center;
     width: 100%;
   }
   .content {
@@ -460,6 +441,20 @@
 </style>
 <main>
   <unagi-toolbar></unagi-toolbar>
+  <div id="toolbar">
+    <menu class="toolbar">
+      <button><img src="./images/icons/iconmonstr-undo-icon.svg" width="20" height="20"></button>
+      <hr>
+      <label><input type="radio" name="editingMode" value="map"><span>Map</span></label>
+      <label><input type="radio" name="editingMode" value="event"><span>Event</span></label>
+      <label><input type="radio" name="editingMode" value="database"><span>Database</span></label>
+      <hr>
+      <button><img src="./images/icons/iconmonstr-script-4-icon.svg" width="20" height="20"></button>
+      <hr>
+      <button id="stopButton"><img src="./images/icons/stop-icon.svg" width="20" height="20"></button>
+      <button id="playButton"><img src="./images/icons/play-icon.svg" width="20" height="20"></button>
+    </menu>
+  </div>
   <div class="content">
     <unagi-palette></unagi-palette>
     <unagi-listbox class="maps"></unagi-listbox>

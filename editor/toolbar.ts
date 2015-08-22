@@ -13,32 +13,34 @@
 // limitations under the License.
 
 namespace editor {
-    export class ToolbarElement {
-        private createdCallback(): void {
-            let template = <HTMLTemplateElement>document.getElementById('unagi-toolbar-template');
-            let clone = document.importNode(template.content, true);
-            let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
-            shadowRoot.appendChild(clone);
+    export class Toolbar {
+        private element_: HTMLElement;
 
+        constructor(element: HTMLElement) {
+            this.element_ = element;
+
+            // TODO: Remove this
             let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-toolbar-style-template');
             let styleClone = document.importNode(styleTemplate.content, true);
-            shadowRoot.appendChild(styleClone);
+            document.querySelector('head').appendChild(styleClone);
 
-            shadowRoot.querySelector('#play').addEventListener('click', (e: MouseEvent) => {
+            this.element_.querySelector('#playButton').addEventListener('click', (e: MouseEvent) => {
                 if ((<HTMLElement>e.target).getAttribute('disabled')) {
                     return;
                 }
                 Store.instance.playGame();
             });
-            shadowRoot.querySelector('#stop').addEventListener('click', (e: MouseEvent) => {
+            let stopButton = <HTMLButtonElement>this.element_.querySelector('#stopButton');
+            stopButton.addEventListener('click', (e: MouseEvent) => {
                 if ((<HTMLElement>e.target).getAttribute('disabled')) {
                     return;
                 }
                 Store.instance.stopGame();
             });
+            stopButton.disabled = true;
 
             let cond = `input[type=radio][name=editingMode]`;
-            let radioButtons = shadowRoot.querySelectorAll(cond);
+            let radioButtons = this.element_.querySelectorAll(cond);
             [].forEach.call(radioButtons, (radioButton: HTMLInputElement) => {
                 radioButton.addEventListener('change', () => {
                     let mode = {
@@ -57,52 +59,44 @@ namespace editor {
 
         public render(info: RenderInfo) {
             let editingMode = info.editingMode;
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let value = {
                 [EditingMode.Map]:      'map',
                 [EditingMode.Event]:    'event',
                 [EditingMode.Database]: 'database',
             }[editingMode];
             let cond = `input[type=radio][name=editingMode][value=${ value }]`;
-            let radioButton = <HTMLInputElement>shadowRoot.querySelector(cond);
+            let radioButton = <HTMLInputElement>this.element_.querySelector(cond);
             radioButton.checked = true;
         }
 
         public playGame() {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let buttons = <HTMLElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('button'));
+            let buttons = <HTMLElement[]>Array.prototype.slice.call(this.element_.querySelectorAll('button'));
             for (let button of buttons) {
-                if (button.id !== 'stop') {
+                if (button.id !== 'stopButton') {
                     button.setAttribute('disabled', 'disabled');
                 } else {
                     button.removeAttribute('disabled');
                 }
             }
-            let inputs = <HTMLInputElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('label input'));
+            let inputs = <HTMLInputElement[]>Array.prototype.slice.call(this.element_.querySelectorAll('label input'));
             for (let input of inputs) {
                 input.disabled = true;
             }
         }
 
         public stopGame() {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let buttons = <HTMLElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('button'));
+            let buttons = <HTMLElement[]>Array.prototype.slice.call(this.element_.querySelectorAll('button'));
             for (let button of buttons) {
-                if (button.id === 'stop') {
+                if (button.id === 'stopButton') {
                     button.setAttribute('disabled', 'disabled');
                 } else {
                     button.removeAttribute('disabled');
                 }
             }
-            let inputs = <HTMLInputElement[]>Array.prototype.slice.call(shadowRoot.querySelectorAll('label input'));
+            let inputs = <HTMLInputElement[]>Array.prototype.slice.call(this.element_.querySelectorAll('label input'));
             for (let input of inputs) {
                 input.disabled = false;
             }
         }
     }
 }
-
-(() => {
-    (<any>editor.ToolbarElement.prototype).__proto__ = HTMLElement.prototype;
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-toolbar', editor.ToolbarElement);
-})();
