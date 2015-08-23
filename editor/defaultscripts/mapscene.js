@@ -6,6 +6,7 @@ class MapScene {
         this.playerSprite_ = new CharacterSprite($gameState.playerCharacter);
 
         this.eventCharacters_ = map.events.map(function(e) {
+            // TODO: Choice correct page
             let page = e.pages[0];
             let image = Images.byId(page.image);
             let character = new Character(image, page.imageX);
@@ -16,6 +17,19 @@ class MapScene {
         this.eventSprites_ = this.eventCharacters_.map(function(c) {
             return new CharacterSprite(c);
         });
+    }
+
+    passable_(x, y) {
+        for (let event of this.map_.events) {
+            if (event.x !== x || event.y !== y) {
+                continue;
+            }
+            // TODO: Choice correct page
+            if (!event.pages[0].passable) {
+                return false;
+            }
+        }
+        return true;
     }
 
     update() {
@@ -31,21 +45,39 @@ class MapScene {
         }
 
         if (!$gameState.playerCharacter.isMoving) {
+            let x = $gameState.playerCharacter.x;
+            let y = $gameState.playerCharacter.y;
             if ($input.isPressed(KEY_LEFT)) {
-                $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_LEFT);
-                return;
+                x--;
+                if (this.passable_(x, y)) {
+                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_LEFT);
+                    return;
+                }
+                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_LEFT);
             }
             if ($input.isPressed(KEY_UP)) {
-                $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_UP);
-                return;
+                y--;
+                if (this.passable_(x, y)) {
+                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_UP);
+                    return;
+                }
+                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_UP);
             }
             if ($input.isPressed(KEY_RIGHT)) {
-                $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_RIGHT);
-                return;
+                x++;
+                if (this.passable_(x, y)) {
+                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_RIGHT);
+                    return;
+                }
+                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_RIGHT);
             }
             if ($input.isPressed(KEY_DOWN)) {
-                $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_DOWN);
-                return;
+                y++;
+                if (this.passable_(x, y)) {
+                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_DOWN);
+                    return;
+                }
+                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_DOWN);
             }
             $gameState.playerCharacter.stopMoving();
         }

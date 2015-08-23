@@ -69,6 +69,7 @@ namespace editor {
             let passableCheckbox = <HTMLInputElement>this.element_.querySelector("input[name='passable']");
             passableCheckbox.checked = page.passable;
 
+            // TODO: TextArea is a temporaly thing. Replace this with a listbox.
             let commandsTextArea = <HTMLTextAreaElement>this.element_.querySelector('textarea.commands');
             commandsTextArea.value = JSON.stringify(page.commands, null, '  ');
             commandsTextArea.onchange = (e) => {

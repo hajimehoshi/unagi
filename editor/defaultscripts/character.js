@@ -93,6 +93,10 @@ class Character {
         this.nextPose_ = CHARACTER_POSE_LEFT;
     }
 
+    turn(direction) {
+        this.direction_ = direction;
+    }
+
     update() {
         if (this.movingCounter_ === 0) {
             return;
