@@ -13,7 +13,8 @@
 // limitations under the License.
 
 namespace editor {
-    export class TilesElement {
+    export class Tiles {
+        private element_: HTMLElement;
         private map_: Map;
         private tilesSelectingState_: TilesSelectingState;
         private editingMode_: EditingMode;
@@ -23,22 +24,18 @@ namespace editor {
         private offsetY_: number;
         private eventDialog_: EventDialog;
 
-        private createdCallback(): void {
+        constructor(element: HTMLElement) {
+            this.element_ = element;
             this.scale_ = 2;
             this.offsetX_ = 0;
             this.offsetY_ = 0;
 
-            let template = <HTMLTemplateElement>document.getElementById('unagi-tiles-template');
-            let clone = document.importNode(template.content, true);
-            let self = <HTMLElementES6><any>this;
-            let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
-            shadowRoot.appendChild(clone);
-
+            // TODO: Remove this
             let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-dialog-style-template');
             let styleClone = document.importNode(styleTemplate.content, true);
-            shadowRoot.appendChild(styleClone);
+            document.querySelector('head').appendChild(styleClone);
 
-            let eventDialogElement = <any>(<HTMLElementES6><any>this).shadowRoot.querySelector('dialog.event');
+            let eventDialogElement = <any>this.element_.querySelector('dialog.event');
             this.eventDialog_ = new EventDialog(eventDialogElement);
 
             let canvas = this.canvas;
@@ -50,31 +47,31 @@ namespace editor {
                 canvas.width = canvas.offsetWidth;
                 canvas.height = canvas.offsetHeight;
             })
-            self.addEventListener('contextmenu', (e: MouseEvent) => {
+            this.element_.addEventListener('contextmenu', (e: MouseEvent) => {
                 e.preventDefault();
             });
-            self.addEventListener('mousedown', (e: MouseEvent) => {
+            this.element_.addEventListener('mousedown', (e: MouseEvent) => {
                 this.onMouseDown(e);
             });
-            self.addEventListener('mousemove', (e: MouseEvent) => {
+            this.element_.addEventListener('mousemove', (e: MouseEvent) => {
                 this.onMouseMove(e);
             });
-            self.addEventListener('mouseup', (e: MouseEvent) => {
+            this.element_.addEventListener('mouseup', (e: MouseEvent) => {
                 this.onMouseUp(e);
             });
-            self.addEventListener('mouseleave', (e: MouseEvent) => {
+            this.element_.addEventListener('mouseleave', (e: MouseEvent) => {
                 this.onMouseLeave(e);
             });
-            self.addEventListener('dblclick', (e: MouseEvent) => {
+            this.element_.addEventListener('dblclick', (e: MouseEvent) => {
                 this.onDblClick(e);
             });
-            self.addEventListener('wheel', (e: WheelEvent) => {
+            this.element_.addEventListener('wheel', (e: WheelEvent) => {
                 this.onWheel(e);
             });
         }
 
         private get canvas(): HTMLCanvasElement {
-            return <HTMLCanvasElement>(<HTMLElementES6><any>this).shadowRoot.querySelector('canvas');
+            return <HTMLCanvasElement>this.element_.querySelector('canvas');
         }
 
         public render(game: data.Game, info: RenderInfo): void {
@@ -231,8 +228,3 @@ namespace editor {
         }
     }
 }
-
-(() => {
-    (<any>editor.TilesElement.prototype).__proto__ = HTMLElement.prototype;
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-tiles', editor.TilesElement);
-})();

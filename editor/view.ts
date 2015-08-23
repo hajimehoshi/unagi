@@ -16,6 +16,7 @@ namespace editor {
     export class View {
         private toolbar_: Toolbar;
         private palette_: Palette;
+        private tiles_: Tiles;
 
         // TODO: Remove this
         private tileSetImage_: HTMLImageElement;
@@ -23,6 +24,7 @@ namespace editor {
         constructor() {
             this.toolbar_ = new Toolbar(<HTMLElement>document.querySelector('#toolbar'));
             this.palette_ = new Palette(<HTMLElement>document.querySelector('#palette'));
+            this.tiles_ = new Tiles(<HTMLElement>document.querySelector('#tiles'));
 
             this.tileSetImage_ = new Image();
             this.tileSetImage_.src = defaultImages.filter(x => x.name === 'tileset')[0].data;
@@ -41,10 +43,6 @@ namespace editor {
 
         private get mapList(): ListBoxElement {
             return <ListBoxElement><any>document.querySelector('unagi-listbox.maps');
-        }
-
-        private get tiles(): TilesElement {
-            return <TilesElement><any>document.querySelector('unagi-tiles');
         }
 
         private get database(): DatabaseElement {
@@ -76,7 +74,7 @@ namespace editor {
 
             // TODO: Move this to store?
             info.tileSetImage = this.tileSetImage_;
-            this.tiles.render(game, info);
+            this.tiles_.render(game, info);
             this.palette_.render(info);
         }
 
