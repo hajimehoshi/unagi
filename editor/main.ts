@@ -71,8 +71,8 @@ namespace editor {
                 return;
 
             let tile = this.tiles_[0];
-            let x = (tile % PaletteElement.tileXNum) * data.gridSize * PaletteElement.scale;
-            let y = ((tile / PaletteElement.tileXNum)|0) * data.gridSize * PaletteElement.scale;
+            let x = (tile % Palette.tileXNum) * data.gridSize * Palette.scale;
+            let y = ((tile / Palette.tileXNum)|0) * data.gridSize * Palette.scale;
 
             Canvas.drawFrame(context, x, y, this.width, this.height);
         }
@@ -101,11 +101,11 @@ namespace editor {
         }
 
         private get width(): number {
-            return this.xNum_ * data.gridSize * PaletteElement.scale;
+            return this.xNum_ * data.gridSize * Palette.scale;
         }
 
         private get height(): number {
-            return this.yNum_ * data.gridSize * PaletteElement.scale;
+            return this.yNum_ * data.gridSize * Palette.scale;
         }
     }
 
@@ -167,7 +167,7 @@ namespace editor {
             let tiles: Array<number> = [];
             for (let j = yMin; j <= yMax; j++) {
                 for (let i = xMin; i <= xMax; i++) {
-                    tiles.push(i + j * PaletteElement.tileXNum)
+                    tiles.push(i + j * Palette.tileXNum)
                 }
             }
             return new SelectedTiles(tiles, this.width, this.height, true);

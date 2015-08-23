@@ -15,12 +15,14 @@
 namespace editor {
     export class View {
         private toolbar_: Toolbar;
+        private palette_: Palette;
 
         // TODO: Remove this
         private tileSetImage_: HTMLImageElement;
 
         constructor() {
             this.toolbar_ = new Toolbar(<HTMLElement>document.querySelector('#toolbar'));
+            this.palette_ = new Palette(<HTMLElement>document.querySelector('#palette'));
 
             this.tileSetImage_ = new Image();
             this.tileSetImage_.src = defaultImages.filter(x => x.name === 'tileset')[0].data;
@@ -35,10 +37,6 @@ namespace editor {
             mapListElement.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentMap(e.detail.id);
             });
-        }
-
-        private get palette(): PaletteElement {
-            return <PaletteElement><any>document.querySelector('unagi-palette');
         }
 
         private get mapList(): ListBoxElement {
@@ -79,13 +77,11 @@ namespace editor {
             // TODO: Move this to store?
             info.tileSetImage = this.tileSetImage_;
             this.tiles.render(game, info);
-            this.palette.render({
-                tileSetImage: this.tileSetImage_,
-            });
+            this.palette_.render(info);
         }
 
         public updateSelectedTiles(s: SelectedTiles): void {
-            this.palette.selectedTiles = s;
+            this.palette_.selectedTiles = s;
         }
 
         public playGame(game: data.Game): void {

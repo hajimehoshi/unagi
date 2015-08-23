@@ -82,8 +82,8 @@ namespace editor {
             for (let j = 0; j < this.yNum; j++) {
                 for (let i = 0; i < this.xNum; i++) {
                     let tile = this.tileAt(i, j);
-                    let srcX = tile % PaletteElement.tileXNum * data.gridSize;
-                    let srcY = ((tile / PaletteElement.tileXNum)|0) * data.gridSize;
+                    let srcX = tile % Palette.tileXNum * data.gridSize;
+                    let srcY = ((tile / Palette.tileXNum)|0) * data.gridSize;
                     let srcWidth = data.gridSize;
                     let srcHeight = data.gridSize;
                     let dstX = i * data.gridSize * scale - offsetX;
@@ -159,7 +159,7 @@ namespace editor {
                 let h = height - 10;
                 let dx = x + 5;
                 let dy = y + 5;
-                let eventScale = PaletteElement.scale;
+                let eventScale = Palette.scale;
                 let sx = (imgPartWidth - w / eventScale) / 2 + event.pages[0].imageX * imgPartWidth;
                 let sy = (imgPartHeight - h / eventScale) / 2 + event.pages[0].imageY * imgPartHeight;
                 context.drawImage(img, sx, sy, w / eventScale, h / scale, dx, dy, w, h);

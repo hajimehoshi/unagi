@@ -88,17 +88,6 @@
     }
   </style>
 </template>
-<template id="unagi-palette-template">
-  <style>
-    canvas {
-      image-rendering: pixelated;
-      margin: 0;
-      padding: 0;
-      position: absolute;
-    }
-  </style>
-  <canvas></canvas>
-</template>
 <template id="unagi-listbox-template">
   <style>
     :host {
@@ -399,12 +388,18 @@
     width: 100%;
     z-index: 0;
   }
-  unagi-palette {
+  #palette {
     display: block;
     height: calc(100% - 256px - 1px);
     overflow: auto;
     position: absolute;
     width: 256px;
+  }
+  #palette canvas {
+    image-rendering: pixelated;
+    margin: 0;
+    padding: 0;
+    position: absolute;
   }
   unagi-listbox {
     bottom: 0;
@@ -456,7 +451,7 @@
     </menu>
   </div>
   <div class="content">
-    <unagi-palette></unagi-palette>
+    <div id="palette"><canvas></canvas></div>
     <unagi-listbox class="maps"></unagi-listbox>
     <unagi-tiles></unagi-tiles>
     <unagi-database></unagi-database>
