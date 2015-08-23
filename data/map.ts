@@ -38,11 +38,7 @@ namespace data {
     };
 
     export declare type EventCommand = {
-        type: EventCommandType,
+        type: string,
         args: {[key: string]: any},
-    };
-
-    export enum EventCommandType {
-        ShowMessage,
     };
 }

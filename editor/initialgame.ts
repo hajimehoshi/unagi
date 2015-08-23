@@ -51,7 +51,28 @@ namespace editor {
                 xNum:   100,
                 yNum:   100,
                 tiles:  new Int16Array(100 * 100),
-                events: [],
+                events: [
+                    {
+                        id:     data.UUID.generate(),
+                        x:      1,
+                        y:      1,
+                        pages:  [
+                            {
+                                image:    null,
+                                imageX:   1,
+                                imageY:   2,
+                                commands: [
+                                    {
+                                        type: 'showMessage',
+                                        args: {
+                                            'content': 'Hello!',
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    }
+                ],
             },
             {
                 id:     data.UUID.generate(),
@@ -172,6 +193,7 @@ namespace editor {
                 type: type,
             });
         }
+        initialGame.maps[0].events[0].pages[0].image = idFromName(initialGame.images, 'character2');
         initialGame.actors[0].image = idFromName(initialGame.images, 'character0');
         initialGame.actors[1].image = idFromName(initialGame.images, 'character3');
         initialGame.actors[2].image = idFromName(initialGame.images, 'character4');
