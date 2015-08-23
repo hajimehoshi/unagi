@@ -13,18 +13,13 @@
 // limitations under the License.
 
 namespace editor {
-    export class DatabaseToolbarElement {
-        private createdCallback(): void {
-            let template = <HTMLTemplateElement>document.getElementById('unagi-database-toolbar-template');
-            let clone = document.importNode(template.content, true);
-            let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
-            shadowRoot.appendChild(clone);
+    export class DatabaseToolbar {
+        private element_: HTMLElement;
 
-            let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-toolbar-style-template');
-            let styleClone = document.importNode(styleTemplate.content, true);
-            shadowRoot.appendChild(styleClone);
+        constructor(element: HTMLElement) {
+            this.element_ = element;
 
-            let inputs = shadowRoot.querySelectorAll('input[type="radio"]');
+            let inputs = this.element_.querySelectorAll('input[type="radio"]');
             [].forEach.call(inputs, (node: Node) => {
                 let input = <HTMLInputElement>node;
                 input.addEventListener('change', (e) => {
@@ -36,18 +31,12 @@ namespace editor {
         }
 
         public updateMode(mode: DatabaseMode): void {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
             let value = DatabaseMode[mode].toLowerCase();
             let cond = `input[type=radio][name=databaseMode][value=${ value }]`;
-            let radioButton = <HTMLInputElement>shadowRoot.querySelector(cond);
+            let radioButton = <HTMLInputElement>this.element_.querySelector(cond);
             if (radioButton) {
                 radioButton.checked = true;
             }
         }
     }
 }
-
-(() => {
-    (<any>editor.DatabaseToolbarElement.prototype).__proto__ = HTMLElement.prototype;
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-database-toolbar', editor.DatabaseToolbarElement);
-})();

@@ -1,80 +1,5 @@
 <!DOCTYPE html>
 <template id="unagi-toolbar-style-template">
-  <style>
-    menu.toolbar {
-      color: rgba(0, 0, 0, 0.56);
-      display: block;
-      font-size: 0;
-      height: 32px;
-      line-height: 0;
-      margin: 0;
-      overflow: none;
-      padding: 0;
-      position: relative;
-    }
-    menu.toolbar button {
-      background-color: transparent;
-      border-style: none;
-      height: 32px;
-      outline: none;
-      margin: 0;
-      padding: 0;
-    }
-    menu.toolbar button img {
-      opacity: 0.54;
-      margin: 6px;
-    }
-    menu.toolbar input[disabled] + span {
-      color: rgba(0, 0, 0, 0.26);
-    }
-    menu.toolbar button[disabled] img {
-      opacity: 0.26;
-    }
-    menu.toolbar label {
-      display: inline-block;
-    }
-    menu.toolbar label span {
-      display: inline-block;
-      font-size: 16px;
-      height: 32px;
-      line-height: 32px;
-      padding: 0 6px;
-      vertical-align: bottom;
-    }
-    menu.toolbar input[type=radio] {
-      position: absolute;
-      visibility: hidden;
-    }
-    menu.toolbar input[type=radio] + span:hover,
-    menu.toolbar button:hover {
-      background-color: #fff176;
-    }
-    menu.toolbar input[type=radio] + span:active,
-    menu.toolbar button:active {
-      background-color: #fdd835;
-    }
-    menu.toolbar input[type=radio]:checked + span {
-      background-color: #fbc02d;
-      font-weight: bold;
-    }
-    menu.toolbar input[disabled] + span,
-    menu.toolbar button[disabled] {
-      background-color: transparent !important;
-    }
-    menu.toolbar input[type=radio] + span,
-    menu.toolbar button {
-      cursor: pointer;
-    }
-    menu.toolbar input[type=radio][disabled] + span,
-    menu.toolbar button[disabled] {
-      cursor: default !important;
-    }
-    menu.toolbar hr {
-      display: inline-block;
-      border-style: none;
-      width: 16px;
-    }
-  </style>
 </template>
 <template id="unagi-dialog-style-template">
   <style>
@@ -161,27 +86,6 @@
   </ul>
   <menu class="context">
     <li id="contextNew">New</li>
-  </menu>
-</template>
-<template id="unagi-database-toolbar-template">
-  <style>
-    :host {
-      text-align: center;
-    }
-    menu {
-      background-color: #FFF3E0;
-      width: 100%;
-    }
-  </style>
-  <menu class="toolbar">
-    <label><input type="radio" name="databaseMode" value="actors"><span>Actors</span></label>
-    <label><input type="radio" name="databaseMode" value="skills"><span>Skills</span></label>
-    <label><input type="radio" name="databaseMode" value="states"><span>States</span></label>
-    <label><input type="radio" name="databaseMode" value="items"><span>Items</span></label>
-    <label><input type="radio" name="databaseMode" value="enemies"><span>Enemies</span></label>
-    <label><input type="radio" name="databaseMode" value="troops"><span>Troops</span></label>
-    <label><input type="radio" name="databaseMode" value="system"><span>System</span></label>
-    <label><input type="radio" name="databaseMode" value="images"><span>Images</span></label>
   </menu>
 </template>
 <template id="unagi-database-content-template">
@@ -365,6 +269,13 @@
     position: absolute;
     width: 100%;
   }
+  #databaseToolbar {
+    text-align: center;
+  }
+  #databaseToolbar menu {
+    background-color: #FFF3E0;
+    width: 100%;
+  }
   iframe.player {
     border-style: none;
     border-width: 0;
@@ -375,6 +286,81 @@
     position: absolute;
     width: 100%;
     z-index: 1;
+  }
+</style>
+<style>
+  menu.toolbar {
+    color: rgba(0, 0, 0, 0.56);
+    display: block;
+    font-size: 0;
+    height: 32px;
+    line-height: 0;
+    margin: 0;
+    overflow: none;
+    padding: 0;
+    position: relative;
+  }
+  menu.toolbar button {
+    background-color: transparent;
+    border-style: none;
+    height: 32px;
+    outline: none;
+    margin: 0;
+    padding: 0;
+  }
+  menu.toolbar button img {
+    opacity: 0.54;
+    margin: 6px;
+  }
+  menu.toolbar input[disabled] + span {
+    color: rgba(0, 0, 0, 0.26);
+  }
+  menu.toolbar button[disabled] img {
+    opacity: 0.26;
+  }
+  menu.toolbar label {
+    display: inline-block;
+  }
+  menu.toolbar label span {
+    display: inline-block;
+    font-size: 16px;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 6px;
+    vertical-align: bottom;
+  }
+  menu.toolbar input[type=radio] {
+    position: absolute;
+    visibility: hidden;
+  }
+  menu.toolbar input[type=radio] + span:hover,
+  menu.toolbar button:hover {
+    background-color: #fff176;
+  }
+  menu.toolbar input[type=radio] + span:active,
+  menu.toolbar button:active {
+    background-color: #fdd835;
+  }
+  menu.toolbar input[type=radio]:checked + span {
+    background-color: #fbc02d;
+    font-weight: bold;
+  }
+  menu.toolbar input[disabled] + span,
+  menu.toolbar button[disabled] {
+    background-color: transparent !important;
+  }
+  menu.toolbar input[type=radio] + span,
+  menu.toolbar button {
+    cursor: pointer;
+  }
+  menu.toolbar input[type=radio][disabled] + span,
+  menu.toolbar button[disabled] {
+    cursor: default !important;
+  }
+  menu.toolbar hr {
+    display: inline-block;
+    border-style: none;
+    width: 16px;
   }
 </style>
 <main>
@@ -405,7 +391,18 @@
       </dialog>
     </div>
     <div id="database">
-      <unagi-database-toolbar></unagi-database-toolbar>
+      <div id="databaseToolbar">
+        <menu class="toolbar">
+          <label><input type="radio" name="databaseMode" value="actors"><span>Actors</span></label>
+          <label><input type="radio" name="databaseMode" value="skills"><span>Skills</span></label>
+          <label><input type="radio" name="databaseMode" value="states"><span>States</span></label>
+          <label><input type="radio" name="databaseMode" value="items"><span>Items</span></label>
+          <label><input type="radio" name="databaseMode" value="enemies"><span>Enemies</span></label>
+          <label><input type="radio" name="databaseMode" value="troops"><span>Troops</span></label>
+          <label><input type="radio" name="databaseMode" value="system"><span>System</span></label>
+          <label><input type="radio" name="databaseMode" value="images"><span>Images</span></label>
+        </menu>
+      </div>
       <div class="content">
         <unagi-database-content groupname="actors">
           <ul>
@@ -444,7 +441,6 @@
         </unagi-database-content>
       </div>
     </div>
-    <unagi-database></unagi-database>
     <iframe class="player" sandbox="allow-scripts allow-same-origin"></iframe>
   </div>
 </main>

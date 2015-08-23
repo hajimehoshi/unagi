@@ -15,13 +15,11 @@
 namespace editor {
     export class Database {
         private element_: HTMLElement;
+        private toolbar_: DatabaseToolbar;
 
         constructor(element: HTMLElement) {
             this.element_ = element;
-        }
-
-        private get toolbar(): DatabaseToolbarElement {
-            return <DatabaseToolbarElement><any>this.element_.querySelector('unagi-database-toolbar');
+            this.toolbar_ = new DatabaseToolbar(<HTMLElement>document.querySelector('#databaseToolbar'));
         }
 
         public toggle(show: boolean) {
@@ -43,7 +41,7 @@ namespace editor {
 
         public updateMode(mode: DatabaseMode): void {
             let modeStr = DatabaseMode[mode].toLowerCase();
-            this.toolbar.updateMode(mode);
+            this.toolbar_.updateMode(mode);
             [].forEach.call(this.element_.querySelectorAll('div.content > *'), (node: Node) => {
                 let e = <HTMLElement>node;
                 if (e.nodeName.toLowerCase() === "unagi-database-content" && e.getAttribute('groupname') === modeStr) {

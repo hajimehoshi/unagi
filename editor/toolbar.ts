@@ -19,11 +19,6 @@ namespace editor {
         constructor(element: HTMLElement) {
             this.element_ = element;
 
-            // TODO: Remove this
-            let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-toolbar-style-template');
-            let styleClone = document.importNode(styleTemplate.content, true);
-            document.querySelector('head').appendChild(styleClone);
-
             this.element_.querySelector('#playButton').addEventListener('click', (e: MouseEvent) => {
                 if ((<HTMLElement>e.target).getAttribute('disabled')) {
                     return;
