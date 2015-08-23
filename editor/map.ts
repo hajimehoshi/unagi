@@ -182,6 +182,7 @@ namespace editor {
                     image:    data.NullImage.id,
                     imageX:   1,
                     imageY:   2,
+                    passable: true,
                     commands: [],
                 }],
             });

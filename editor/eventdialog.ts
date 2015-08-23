@@ -17,6 +17,8 @@ namespace editor {
         // TODO: Use HTMLDialogElement in the future
         private element_: any;
 
+        private pagePath_: string;
+
         constructor(element: any) {
             this.element_ = element;
 
@@ -28,6 +30,12 @@ namespace editor {
                     return;
                 }
                 this.element_.close();
+            });
+
+            let passableCheckbox = <HTMLInputElement>this.element_.querySelector("input[name='passable']");
+            passableCheckbox.addEventListener('change', () => {
+                let path = `${this.pagePath_}.passable`
+                Store.instance.updateGameData(path, passableCheckbox.checked);
             });
         }
 
@@ -44,10 +52,10 @@ namespace editor {
             let mapIndex = map.index(game.maps);
             let eventIndex = map.events.indexOf(event);
             let pageIndex = 0;
-            let basePath = `maps[${mapIndex}].events[${eventIndex}].pages[${pageIndex}]`;
-            eventImageSelector.path = `${basePath}.image`;
-            eventImageSelector.imageXPath = `${basePath}.imageX`;
-            eventImageSelector.imageYPath = `${basePath}.imageY`;
+            this.pagePath_ = `maps[${mapIndex}].events[${eventIndex}].pages[${pageIndex}]`;
+            eventImageSelector.path = `${this.pagePath_}.image`;
+            eventImageSelector.imageXPath = `${this.pagePath_}.imageX`;
+            eventImageSelector.imageYPath = `${this.pagePath_}.imageY`;
             let page = event.pages[pageIndex];
             if (page.image !== data.NullImage.id) {
                 eventImageSelector.xNum = 3;
@@ -58,12 +66,15 @@ namespace editor {
             }
             eventImageSelector.render(game, page.image, page.imageX, page.imageY);
 
+            let passableCheckbox = <HTMLInputElement>this.element_.querySelector("input[name='passable']");
+            passableCheckbox.checked = page.passable;
+
             let commandsTextArea = <HTMLTextAreaElement>this.element_.querySelector('textarea.commands');
             commandsTextArea.value = JSON.stringify(page.commands, null, '  ');
             commandsTextArea.onchange = (e) => {
                 try {
                     let commands = JSON.parse(commandsTextArea.value);
-                    let path = `${basePath}.commands`;
+                    let path = `${this.pagePath_}.commands`;
                     Store.instance.updateGameData(path, commands);
                 } catch (e) {
                     if (e instanceof SyntaxError) {

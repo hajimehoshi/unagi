@@ -61,6 +61,7 @@ namespace editor {
                                 image:    null,
                                 imageX:   1,
                                 imageY:   2,
+                                passable: false,
                                 commands: [
                                     {
                                         type: 'showMessage',

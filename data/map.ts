@@ -33,6 +33,7 @@ namespace data {
         image:    string,
         imageX:   number,
         imageY:   number,
+        passable: boolean,
         // condition
         commands: EventCommand[],
     };
