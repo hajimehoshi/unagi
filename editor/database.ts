@@ -13,25 +13,30 @@
 // limitations under the License.
 
 namespace editor {
-    export class DatabaseElement {
-        private createdCallback(): void {
-            let template = <HTMLTemplateElement>document.getElementById('unagi-database-template');
-            let clone = document.importNode(template.content, true);
-            let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
-            shadowRoot.appendChild(clone);
+    export class Database {
+        private element_: HTMLElement;
+
+        constructor(element: HTMLElement) {
+            this.element_ = element;
         }
 
         private get toolbar(): DatabaseToolbarElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return (<DatabaseToolbarElement><any>shadowRoot.querySelector('unagi-database-toolbar'));
+            return <DatabaseToolbarElement><any>this.element_.querySelector('unagi-database-toolbar');
+        }
+
+        public toggle(show: boolean) {
+            if (show) {
+                this.element_.style.display = 'block';
+            } else {
+                this.element_.style.display = 'none';
+            }
         }
 
         public render(game: data.Game): void {
             if (!game) {
                 return;
             }
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            [].forEach.call(shadowRoot.querySelectorAll('unagi-database-content'), (e: DatabaseContentElement) => {
+            [].forEach.call(this.element_.querySelectorAll('unagi-database-content'), (e: DatabaseContentElement) => {
                 e.render(game);
             });
         }
@@ -39,8 +44,7 @@ namespace editor {
         public updateMode(mode: DatabaseMode): void {
             let modeStr = DatabaseMode[mode].toLowerCase();
             this.toolbar.updateMode(mode);
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            [].forEach.call(shadowRoot.querySelectorAll('div.content > *'), (node: Node) => {
+            [].forEach.call(this.element_.querySelectorAll('div.content > *'), (node: Node) => {
                 let e = <HTMLElement>node;
                 if (e.nodeName.toLowerCase() === "unagi-database-content" && e.getAttribute('groupname') === modeStr) {
                     e.style.display = 'block';
@@ -51,8 +55,3 @@ namespace editor {
         }
     }
 }
-
-(() => {
-    (<any>editor.DatabaseElement.prototype).__proto__ = HTMLElement.prototype;
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-database', editor.DatabaseElement);
-})();

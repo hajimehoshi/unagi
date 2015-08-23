@@ -17,6 +17,7 @@ namespace editor {
         private toolbar_: Toolbar;
         private palette_: Palette;
         private tiles_: Tiles;
+        private database_: Database;
 
         // TODO: Remove this
         private tileSetImage_: HTMLImageElement;
@@ -25,6 +26,7 @@ namespace editor {
             this.toolbar_ = new Toolbar(<HTMLElement>document.querySelector('#toolbar'));
             this.palette_ = new Palette(<HTMLElement>document.querySelector('#palette'));
             this.tiles_ = new Tiles(<HTMLElement>document.querySelector('#tiles'));
+            this.database_ = new Database(<HTMLElement>document.querySelector('#database'));
 
             this.tileSetImage_ = new Image();
             this.tileSetImage_.src = defaultImages.filter(x => x.name === 'tileset')[0].data;
@@ -45,20 +47,11 @@ namespace editor {
             return <ListBoxElement><any>document.querySelector('unagi-listbox.maps');
         }
 
-        private get database(): DatabaseElement {
-            return <DatabaseElement><any>document.querySelector('unagi-database');
-        }
-
         public render(game: data.Game, info: RenderInfo): void {
             let editingMode = info.editingMode;
-            if (editingMode === EditingMode.Database) {
-                (<HTMLElement><any>this.database).style.display = 'block';
-            } else {
-                (<HTMLElement><any>this.database).style.display = 'none';
-            }
-
+            this.database_.toggle(editingMode === EditingMode.Database);
             this.toolbar_.render(info);
-            this.database.render(game);
+            this.database_.render(game);
 
             let maps = game ? game.maps : [];
             let items = maps.map((map: data.Map): ListBoxItem => {
@@ -104,7 +97,7 @@ namespace editor {
         }
 
         public updateDatabaseMode(databaseMode: DatabaseMode): void {
-            this.database.updateMode(databaseMode);
+            this.database_.updateMode(databaseMode);
         }
     }
 }
