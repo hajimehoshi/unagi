@@ -4,11 +4,14 @@ class MapScene {
     constructor(map) {
         this.map_ = map;
         this.event_ = null;
+        this.events_ = this.map_.events.map(function(e) {
+            return new Event(e);
+        });
         this.playerSprite_ = new CharacterSprite($gameState.playerCharacter);
 
-        this.eventCharacters_ = map.events.map(function(e) {
-            // TODO: Choice correct page
-            let page = e.pages[0];
+        this.eventCharacters_ = this.events_.map(function(e) {
+            // TODO: currentPage can always change.
+            let page = e.currentPage;
             let image = Images.byId(page.image);
             let character = new Character(image, page.imageX);
             character.forceMove(e.x, e.y);
@@ -21,12 +24,11 @@ class MapScene {
     }
 
     passable_(x, y) {
-        for (let event of this.map_.events) {
+        for (let event of this.events_) {
             if (event.x !== x || event.y !== y) {
                 continue;
             }
-            // TODO: Choice correct page
-            if (!event.pages[0].passable) {
+            if (!event.currentPage.passable) {
                 return false;
             }
         }
@@ -34,7 +36,7 @@ class MapScene {
     }
 
     eventAt_(x, y) {
-        return this.map_.events.filter(function(e) {
+        return this.events_.filter(function(e) {
             return e.x === x && e.y === y;
         })[0];
     }
@@ -99,32 +101,32 @@ class MapScene {
         if ($input.isTrigger(KEY_ENTER)) {
             let event = this.eventAt_(x, y);
             if (event) {
-                this.event_ = new Event(event);
+                this.event_ = event;
                 return;
             }
             switch ($gameState.playerCharacter.direction) {
             case CHARACTER_DIRECTION_LEFT:
                 event = this.eventAt_(x - 1, y);
                 if (event) {
-                    this.event_ = new Event(event);
+                    this.event_ = event;
                 }
                 break;
             case CHARACTER_DIRECTION_UP:
                 event = this.eventAt_(x, y - 1);
                 if (event) {
-                    this.event_ = new Event(event);
+                    this.event_ = event;
                 }
                 break;
             case CHARACTER_DIRECTION_RIGHT:
                 event = this.eventAt_(x + 1, y);
                 if (event) {
-                    this.event_ = new Event(event);
+                    this.event_ = event;
                 }
                 break;
             case CHARACTER_DIRECTION_DOWN:
                 event = this.eventAt_(x, y + 1);
                 if (event) {
-                    this.event_ = new Event(event);
+                    this.event_ = event;
                 }
                 break;
             }
