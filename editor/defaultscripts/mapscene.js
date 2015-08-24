@@ -4,19 +4,10 @@ class MapScene {
     constructor(map) {
         this.map_ = map;
         this.event_ = null;
-        this.events_ = this.map_.events.map(function(e) {
-            return new Event(e);
-        });
         this.playerSprite_ = new CharacterSprite($gameState.playerCharacter);
 
-        this.eventCharacters_ = this.events_.map(function(e) {
-            // TODO: currentPage can always change.
-            let page = e.currentPage;
-            let image = Images.byId(page.image);
-            let character = new Character(image, page.imageX);
-            character.forceMove(e.x, e.y);
-            character.direction = page.imageY;
-            return character;
+        this.eventCharacters_ = this.map_.events.map(function(e) {
+            return new EventCharacter(e);
         });
         this.eventSprites_ = this.eventCharacters_.map(function(c) {
             return new CharacterSprite(c);
@@ -24,11 +15,11 @@ class MapScene {
     }
 
     passable_(x, y) {
-        for (let event of this.events_) {
-            if (event.x !== x || event.y !== y) {
+        for (let e of this.eventCharacters_) {
+            if (e.x !== x || e.y !== y) {
                 continue;
             }
-            if (!event.currentPage.passable) {
+            if (!e.currentPage.passable) {
                 return false;
             }
         }
@@ -36,7 +27,7 @@ class MapScene {
     }
 
     eventAt_(x, y) {
-        return this.events_.filter(function(e) {
+        return this.eventCharacters_.filter(function(e) {
             return e.x === x && e.y === y;
         })[0];
     }
