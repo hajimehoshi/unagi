@@ -3,6 +3,7 @@ Game State
 
 Actor
 Character
+Event
 
 Character Sprite
 

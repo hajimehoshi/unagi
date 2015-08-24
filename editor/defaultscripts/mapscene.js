@@ -3,6 +3,7 @@
 class MapScene {
     constructor(map) {
         this.map_ = map;
+        this.event_ = null;
         this.playerSprite_ = new CharacterSprite($gameState.playerCharacter);
 
         this.eventCharacters_ = map.events.map(function(e) {
@@ -32,10 +33,23 @@ class MapScene {
         return true;
     }
 
+    eventAt_(x, y) {
+        return this.map_.events.filter(function(e) {
+            return e.x === x && e.y === y;
+        })[0];
+    }
+
     update() {
         $gameState.playerCharacter.update();
         for (let eventCharacter of this.eventCharacters_) {
             eventCharacter.update();
+        }
+        if (this.event_) {
+            this.event_.update();
+            if (!this.event_.isProcessing) {
+                this.event_ = null;
+            }
+            return;
         }
 
         // test
@@ -44,42 +58,76 @@ class MapScene {
             return;
         }
 
-        if (!$gameState.playerCharacter.isMoving) {
-            let x = $gameState.playerCharacter.x;
-            let y = $gameState.playerCharacter.y;
-            if ($input.isPressed(KEY_LEFT)) {
-                x--;
-                if (this.passable_(x, y)) {
-                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_LEFT);
-                    return;
-                }
-                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_LEFT);
+        if (this.event_ && this.event_.isProcessing) {
+            return;
+        }
+        if ($gameState.playerCharacter.isMoving) {
+            return;
+        }
+
+        let x = $gameState.playerCharacter.x;
+        let y = $gameState.playerCharacter.y;
+        if ($input.isPressed(KEY_LEFT)) {
+            if (this.passable_(x - 1, y)) {
+                $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_LEFT);
+                return;
             }
-            if ($input.isPressed(KEY_UP)) {
-                y--;
-                if (this.passable_(x, y)) {
-                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_UP);
-                    return;
-                }
-                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_UP);
+            $gameState.playerCharacter.turn(CHARACTER_DIRECTION_LEFT);
+        }
+        if ($input.isPressed(KEY_UP)) {
+            if (this.passable_(x, y - 1)) {
+                $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_UP);
+                return;
             }
-            if ($input.isPressed(KEY_RIGHT)) {
-                x++;
-                if (this.passable_(x, y)) {
-                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_RIGHT);
-                    return;
-                }
-                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_RIGHT);
+            $gameState.playerCharacter.turn(CHARACTER_DIRECTION_UP);
+        }
+        if ($input.isPressed(KEY_RIGHT)) {
+            if (this.passable_(x + 1, y)) {
+                $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_RIGHT);
+                return;
             }
-            if ($input.isPressed(KEY_DOWN)) {
-                y++;
-                if (this.passable_(x, y)) {
-                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_DOWN);
-                    return;
-                }
-                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_DOWN);
+            $gameState.playerCharacter.turn(CHARACTER_DIRECTION_RIGHT);
+        }
+        if ($input.isPressed(KEY_DOWN)) {
+            if (this.passable_(x, y + 1)) {
+                $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_DOWN);
+                return;
             }
-            $gameState.playerCharacter.stopMoving();
+            $gameState.playerCharacter.turn(CHARACTER_DIRECTION_DOWN);
+        }
+        $gameState.playerCharacter.stopMoving();
+        if ($input.isTrigger(KEY_ENTER)) {
+            let event = this.eventAt_(x, y);
+            if (event) {
+                this.event_ = new Event(event);
+                return;
+            }
+            switch ($gameState.playerCharacter.direction) {
+            case CHARACTER_DIRECTION_LEFT:
+                event = this.eventAt_(x - 1, y);
+                if (event) {
+                    this.event_ = new Event(event);
+                }
+                break;
+            case CHARACTER_DIRECTION_UP:
+                event = this.eventAt_(x, y - 1);
+                if (event) {
+                    this.event_ = new Event(event);
+                }
+                break;
+            case CHARACTER_DIRECTION_RIGHT:
+                event = this.eventAt_(x + 1, y);
+                if (event) {
+                    this.event_ = new Event(event);
+                }
+                break;
+            case CHARACTER_DIRECTION_DOWN:
+                event = this.eventAt_(x, y + 1);
+                if (event) {
+                    this.event_ = new Event(event);
+                }
+                break;
+            }
         }
     }
 
