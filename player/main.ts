@@ -272,11 +272,8 @@ window.addEventListener('load', () => {
 
         BitmapFont.initialize($gameData);
 
-        let script = "";
-        for (let s of $gameData.scripts) {
-            script += s.content;
-        }
+        let jsScript = TypeScript.compile($gameData.scripts);
         // Call 'eval' indirectly so that 'this' variable will be a global window.
-        (0, eval)(script);
+        (0, eval)(jsScript);
     });
 });

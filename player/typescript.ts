@@ -188,11 +188,13 @@ class Buffer {
 }
 
 class TypeScript {
-    public static compile(files: {[filename: string]: string}): string {
+    public static compile(files: {name: string, content: string}[]): string {
         let args = ['--out', '__out.js', '--target', 'ES5'];
         mocks.FS.initializeFileSystem();
-        for (let filename in files) {
-            mocks.FS.fileSystem[filename] = files[filename];
+        for (let file of files) {
+            // TODO: file.name is not an actual file name. Is this confusing?
+            let filename = file.name + '.ts';
+            mocks.FS.fileSystem[filename] = file.content;
             args.push(filename);
         }
         ts.executeCommandLine(args);
