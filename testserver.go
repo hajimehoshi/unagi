@@ -23,6 +23,6 @@ import (
 func main() {
 	port := 8787
 	fmt.Printf("http://localhost:%d/\n", port)
-	http.Handle("/", http.FileServer(http.Dir(".")))
+	http.Handle("/", http.FileServer(http.Dir("public")))
 	http.ListenAndServe(":" + strconv.Itoa(port), nil)
 }

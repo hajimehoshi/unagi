@@ -42,12 +42,6 @@ Email: info@9031.com
 ```
 
 
-* icons/*.svg
-
-iconmonstr
-http://iconmonstr.com/license/
-
-
 * mplus-bitmap-images
 
 Please read mplus-bitmap-images/README.md
