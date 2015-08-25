@@ -230,6 +230,7 @@ namespace BitmapFont {
     }
 }
 
+// TODO: Better name?
 class Env {
     public static run(f: (CanvasRenderingContext2D) => void): void {
         let canvas = <HTMLCanvasElement>window.document.querySelector('canvas');
@@ -249,7 +250,7 @@ class Env {
     }
 }
 
-(() => {
+window.addEventListener('load', () => {
     const width = 320;
     const height = 240;
 
@@ -278,4 +279,4 @@ class Env {
         // Call 'eval' indirectly so that 'this' variable will be a global window.
         (0, eval)(script);
     });
-})();
+});
