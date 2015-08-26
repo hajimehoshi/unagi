@@ -1,8 +1,20 @@
 namespace game {
-    export class CharacterSprite {
-        private character_: Character;
+    // TODO: Renmae this not to use 'I' prefix
+    export interface ICharacter {
+        image: graphics.Image;
+        x: number;
+        y: number;
+        direction: number;
+        pose: number;
+        movingDirectionX: number;
+        movingDirectionY: number;
+        movingRate: number;
+    }
 
-        constructor(character: Character) {
+    export class CharacterSprite {
+        private character_: ICharacter;
+
+        constructor(character: ICharacter) {
             this.character_ = character;
         }
 

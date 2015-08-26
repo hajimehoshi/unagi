@@ -22,6 +22,7 @@ namespace game {
         public get direction(): number { return this.character_.direction; }
         public get movingDirectionX(): number { return this.character_.movingDirectionX; }
         public get movingDirectionY(): number { return this.character_.movingDirectionY; }
+        public get movingRate(): number { return this.character_.movingRate; }
 
         public start() {
             this.isProcessing_ = true;
