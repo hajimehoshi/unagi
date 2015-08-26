@@ -1,23 +1,30 @@
 'use strict';
 
+interface Scene {
+    update();
+    draw(screen: graphics.Image);
+}
+
 class SceneStack {
+    private stack_: Scene[];
+
     constructor() {
         this.stack_ = [];
     }
 
-    get current() {
+    public get current(): Scene {
         return this.stack_[this.stack_.length - 1];
     }
 
-    push(scene) {
+    public push(scene) {
         this.stack_.push(scene);
     }
 
-    pop() {
+    public pop() {
         return this.stack_.pop();
     }
 
-    clear() {
+    public clear() {
         this.stack_.length = 0;
     }
 }
@@ -25,7 +32,7 @@ class SceneStack {
 let $gameState = new GameState();
 let $sceneStack = new SceneStack();
 
-(function() {
+(() => {
     $sceneStack.push(new MapScene($gameData.maps[0]));
     let initialPosition = $gameData.playerInitialPosition;
     $gameState.moveTo(initialPosition.mapId, initialPosition.x, initialPosition.y);

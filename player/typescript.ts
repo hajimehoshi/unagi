@@ -31,7 +31,7 @@ namespace mocks {
             };
         }
 
-        public writeSync(fd: number, buffer: Buffer, offset: number, toWrite: number) {
+        public writeSync(fd: number, buffer: Buffer, offset: number, toWrite: number): number {
             if (offset !== 0) {
                 throw 'offset must be 0';
             }
@@ -192,10 +192,8 @@ class TypeScript {
         let args = ['--out', '__out.js', '--target', 'ES5'];
         mocks.FS.initializeFileSystem();
         for (let file of files) {
-            // TODO: file.name is not an actual file name. Is this confusing?
-            let filename = file.name + '.ts';
-            mocks.FS.fileSystem[filename] = file.content;
-            args.push(filename);
+            mocks.FS.fileSystem[file.name] = file.content;
+            args.push(file.name);
         }
         ts.executeCommandLine(args);
         return mocks.FS.fileSystem['__out.js'];

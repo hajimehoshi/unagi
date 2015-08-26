@@ -1,20 +1,26 @@
 'use strict';
 
 class MapScene {
-    constructor(map) {
+    private map_: data.Map;
+    private event_: EventCharacter;
+    private playerSprite_: CharacterSprite;
+    private eventCharacters_: EventCharacter[];
+    private eventSprites_: CharacterSprite[];
+
+    constructor(map: data.Map) {
         this.map_ = map;
         this.event_ = null;
         this.playerSprite_ = new CharacterSprite($gameState.playerCharacter);
 
-        this.eventCharacters_ = this.map_.events.map(function(e) {
+        this.eventCharacters_ = this.map_.events.map((e) => {
             return new EventCharacter(e);
         });
-        this.eventSprites_ = this.eventCharacters_.map(function(c) {
+        this.eventSprites_ = this.eventCharacters_.map((c) => {
             return new CharacterSprite(c);
         });
     }
 
-    passable_(x, y) {
+    private passable(x: number, y: number): boolean {
         for (let e of this.eventCharacters_) {
             if (e.x !== x || e.y !== y) {
                 continue;
@@ -26,13 +32,13 @@ class MapScene {
         return true;
     }
 
-    eventAt_(x, y) {
+    private eventAt(x: number, y: number): EventCharacter {
         return this.eventCharacters_.filter(function(e) {
             return e.x === x && e.y === y;
         })[0];
     }
 
-    update() {
+    public update() {
         $gameState.playerCharacter.update();
         for (let eventCharacter of this.eventCharacters_) {
             eventCharacter.update();
@@ -61,28 +67,28 @@ class MapScene {
         let x = $gameState.playerCharacter.x;
         let y = $gameState.playerCharacter.y;
         if ($input.isPressed(KEY_LEFT)) {
-            if (this.passable_(x - 1, y)) {
+            if (this.passable(x - 1, y)) {
                 $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_LEFT);
                 return;
             }
             $gameState.playerCharacter.turn(CHARACTER_DIRECTION_LEFT);
         }
         if ($input.isPressed(KEY_UP)) {
-            if (this.passable_(x, y - 1)) {
+            if (this.passable(x, y - 1)) {
                 $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_UP);
                 return;
             }
             $gameState.playerCharacter.turn(CHARACTER_DIRECTION_UP);
         }
         if ($input.isPressed(KEY_RIGHT)) {
-            if (this.passable_(x + 1, y)) {
+            if (this.passable(x + 1, y)) {
                 $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_RIGHT);
                 return;
             }
             $gameState.playerCharacter.turn(CHARACTER_DIRECTION_RIGHT);
         }
         if ($input.isPressed(KEY_DOWN)) {
-            if (this.passable_(x, y + 1)) {
+            if (this.passable(x, y + 1)) {
                 $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_DOWN);
                 return;
             }
@@ -90,32 +96,32 @@ class MapScene {
         }
         $gameState.playerCharacter.stopMoving();
         if ($input.isTrigger(KEY_ENTER)) {
-            let event = this.eventAt_(x, y);
+            let event = this.eventAt(x, y);
             if (event) {
                 this.event_ = event;
                 return;
             }
             switch ($gameState.playerCharacter.direction) {
             case CHARACTER_DIRECTION_LEFT:
-                event = this.eventAt_(x - 1, y);
+                event = this.eventAt(x - 1, y);
                 if (event) {
                     this.event_ = event;
                 }
                 break;
             case CHARACTER_DIRECTION_UP:
-                event = this.eventAt_(x, y - 1);
+                event = this.eventAt(x, y - 1);
                 if (event) {
                     this.event_ = event;
                 }
                 break;
             case CHARACTER_DIRECTION_RIGHT:
-                event = this.eventAt_(x + 1, y);
+                event = this.eventAt(x + 1, y);
                 if (event) {
                     this.event_ = event;
                 }
                 break;
             case CHARACTER_DIRECTION_DOWN:
-                event = this.eventAt_(x, y + 1);
+                event = this.eventAt(x, y + 1);
                 if (event) {
                     this.event_ = event;
                 }
@@ -124,7 +130,7 @@ class MapScene {
         }
     }
 
-    draw(screen) {
+    public draw(screen: graphics.Image) {
         let cameraX = -this.playerSprite_.x + (320 - this.playerSprite_.width) / 2;
         let cameraY = -this.playerSprite_.y + 240 / 2 - this.playerSprite_.height;
         let geoM = new graphics.GeometryMatrix()
@@ -161,12 +167,12 @@ class MapScene {
         screen.drawImage(tileSetImage, {imageParts, geoM});
 
         let characterSprites = [this.playerSprite_].concat(this.eventSprites_);
-        characterSprites.sort(function (a, b) {
+        characterSprites.sort((a, b) => {
             if (a.y !== b.y) {
                 return a.y - b.y;
             }
             return a.x - b.x;
-        }).forEach(function(c) {
+        }).forEach((c) => {
             c.draw(screen, {geoM});
         });
     }

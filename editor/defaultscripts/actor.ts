@@ -1,6 +1,14 @@
 'use strict';
 
 class Actor {
+    private id_: string;
+    private name_: string;
+    private image_: string;
+    private hp_: number;
+    private mp_: number;
+    private maxHPOffset_: number;
+    private maxMPOffset_: number;
+
     constructor(id) {
         this.id_ = id;
         let data = $idToData[id];
@@ -12,14 +20,14 @@ class Actor {
         this.maxMPOffset_ = 0;
     }
 
-    get name() { return this.name_; }
-    get image() { return Images.byId(this.image_); }
-    get hp() { return this.hp_; }
-    get mp() { return this.mp_; }
-    get maxHP() {
+    public get name(): string { return this.name_; }
+    public get image(): data.Image { return Images.byId(this.image_); }
+    public get hp(): number { return this.hp_; }
+    public get mp(): number { return this.mp_; }
+    public get maxHP(): number {
         return $idToData[this.id_].maxHP + this.maxHPOffset_;
     }
-    get maxMP() {
+    public get maxMP(): number {
         return $idToData[this.id_].maxMP + this.maxMPOffset_;
     }
 }

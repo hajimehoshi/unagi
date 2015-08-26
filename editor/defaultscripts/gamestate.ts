@@ -1,6 +1,10 @@
 'use strict';
 
 class GameState {
+    private actors_: Actor[];
+    private party_: string[];
+    private playerCharacter_: Character;
+
     constructor() {
         this.actors_ = [];
         for (let actor of $gameData.actors) {
@@ -14,19 +18,19 @@ class GameState {
         this.playerCharacter_ = new Character(this.getPartyMember(0).image);
     }
 
-    get playerCharacter() {
+    public get playerCharacter(): Character {
         return this.playerCharacter_;
     }
 
-    getPartyMember(index) {
+    public getPartyMember(index): Actor {
         return this.actors_[this.party_[index]];
     }
 
-    get partySize() {
+    public get partySize(): number {
         return this.party_.length;
     }
 
-    moveTo(mapId, x, y) {
+    public moveTo(mapId: string, x: number, y: number) {
         // TODO: Use mapId
         this.playerCharacter_.forceMove(x, y);
     }

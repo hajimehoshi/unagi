@@ -1,7 +1,10 @@
 'use strict';
 
 class EventCharacter {
-    constructor(data) {
+    private data_: data.Event;
+    private character_: Character;
+
+    constructor(data: data.Event) {
         this.data_ = data;
         let page = this.currentPage;
         let image = Images.byId(page.image);
@@ -11,34 +14,34 @@ class EventCharacter {
         this.character_ = character;
     }
 
-    get image() { return this.character_.image; }
-    get x() { return this.character_.x; }
-    get y() { return this.character_.y; }
-    get pose() { return this.character_.pose_; }
-    get direction() { return this.character_.direction_; }
-    get movingDirectionX() { return this.character_.movingDirectionX; }
-    get movingDirectionY() { return this.character_.movingDirectionY; }
+    public get image(): graphics.Image { return this.character_.image; }
+    public get x(): number { return this.character_.x; }
+    public get y(): number { return this.character_.y; }
+    public get pose(): number { return this.character_.pose_; }
+    public get direction(): number { return this.character_.direction_; }
+    public get movingDirectionX(): number { return this.character_.movingDirectionX; }
+    public get movingDirectionY(): number { return this.character_.movingDirectionY; }
 
-    start() {
+    public start() {
         this.isProcessing_ = true;
         console.log('start!');
     }
 
-    get isProcessing() {
+    public get isProcessing(): boolean {
         return this.isProcessing_;
     }
 
-    get currentPage() {
+    public get currentPage(): data.EventPage {
         // TODO: Choice correct page
         return this.data_.pages[0];
     }
 
-    update() {
+    public update() {
         this.character_.update();
         this.isProcessing_ = false;
     }
 
-    draw(screen, options) {
+    public draw(screen: graphics.Image, options: Object) {
         this.character_.draw(screen, options);
     }
 }

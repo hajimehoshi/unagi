@@ -1,6 +1,9 @@
 'use strict';
 
 class BattlePlayerWindow {
+    private actor_: Actor;
+    private window_: Window;
+
     constructor(index) {
         this.actor_ = $gameState.getPartyMember(index);
         // TODO: Centering?
@@ -8,21 +11,21 @@ class BattlePlayerWindow {
         this.window_.opaque = 128;
     }
 
-    update() {
+    public update() {
         this.window_.update();
     }
     
-    drawShadowTextAt(screen, text, x, y, color) {
+    public drawShadowTextAt(screen: graphics.Image, text: string, x: number, y: number, color: Color) {
         BitmapFont.Regular.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
         BitmapFont.Regular.drawAt(screen, text, x, y, color);
     }
 
-    drawShadowNumberTextAt(screen, text, x, y, color) {
+    public drawShadowNumberTextAt(screen: graphics.Image, text: string, x: number, y: number, color: Color) {
         BitmapFont.Number.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
         BitmapFont.Number.drawAt(screen, text, x, y, color);
     }
 
-    draw(screen) {
+    public draw(screen: graphics.Image) {
         this.window_.draw(screen);
         this.drawShadowTextAt(screen, this.actor_.name, this.window_.x + 8, this.window_.y + 32,
                               {r: 255, g: 255, b: 192, a: 255});
@@ -55,6 +58,8 @@ class BattlePlayerWindow {
 }
 
 class BattleScene {
+    private playerWindow_: BattlePlayerWindow;
+
     constructor() {
         this.playerWindows_ = [];
         for (let i = 0; i < $gameState.partySize; i++) {
@@ -62,13 +67,13 @@ class BattleScene {
         }
     }
 
-    update() {
+    public update() {
         for (let window of this.playerWindows_) {
             window.update();
         }
     }
 
-    draw(screen) {
+    public draw(screen: graphics.Image) {
         // TODO: Do not use name to specify an image. We should use ID in any cases.
         let bgImg = Images.byName('background_field');
         screen.drawImage(bgImg);

@@ -272,7 +272,13 @@ window.addEventListener('load', () => {
 
         BitmapFont.initialize($gameData);
 
-        let jsScript = TypeScript.compile($gameData.scripts);
+        let scriptFiles = $gameData.scripts.map(s => {
+            return {
+                name:    `game/${s.name}.ts`,
+                content: s.content,
+            };
+        });
+        let jsScript = TypeScript.compile(scriptFiles);
         // Call 'eval' indirectly so that 'this' variable will be a global window.
         (0, eval)(jsScript);
     });
