@@ -4,8 +4,8 @@ namespace game {
         image: graphics.Image;
         x: number;
         y: number;
-        direction: number;
-        pose: number;
+        direction: CharacterDirection;
+        pose: CharacterPose;
         movingDirectionX: number;
         movingDirectionY: number;
         movingRate: number;

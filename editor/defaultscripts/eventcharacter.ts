@@ -18,7 +18,7 @@ namespace game {
         public get image(): graphics.Image { return this.character_.image; }
         public get x(): number { return this.character_.x; }
         public get y(): number { return this.character_.y; }
-        public get pose(): number { return this.character_.pose; }
+        public get pose(): CharacterPose { return this.character_.pose; }
         public get direction(): CharacterDirection { return this.character_.direction; }
         public get movingDirectionX(): number { return this.character_.movingDirectionX; }
         public get movingDirectionY(): number { return this.character_.movingDirectionY; }
