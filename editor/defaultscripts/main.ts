@@ -28,8 +28,8 @@ namespace game {
         }
     }
 
-    export let $gameState = new GameState();
-    export let $sceneStack = new SceneStack();
+    export var $gameState = new GameState();
+    export var $sceneStack = new SceneStack();
 
     (() => {
         $sceneStack.push(new MapScene($gameData.maps[0]));

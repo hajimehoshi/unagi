@@ -2,6 +2,7 @@ namespace game {
     export class EventCharacter {
         private data_: data.Event;
         private character_: Character;
+        private isProcessing_: boolean;
 
         constructor(data: data.Event) {
             this.data_ = data;
@@ -11,13 +12,14 @@ namespace game {
             character.forceMove(this.data_.x, this.data_.y);
             character.direction = page.imageY;
             this.character_ = character;
+            this.isProcessing_ = false;
         }
 
         public get image(): graphics.Image { return this.character_.image; }
         public get x(): number { return this.character_.x; }
         public get y(): number { return this.character_.y; }
-        public get pose(): number { return this.character_.pose_; }
-        public get direction(): number { return this.character_.direction_; }
+        public get pose(): number { return this.character_.pose; }
+        public get direction(): number { return this.character_.direction; }
         public get movingDirectionX(): number { return this.character_.movingDirectionX; }
         public get movingDirectionY(): number { return this.character_.movingDirectionY; }
 
@@ -38,10 +40,6 @@ namespace game {
         public update() {
             this.character_.update();
             this.isProcessing_ = false;
-        }
-
-        public draw(screen: graphics.Image, options: Object) {
-            this.character_.draw(screen, options);
         }
     }
 }

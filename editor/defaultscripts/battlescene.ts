@@ -57,7 +57,7 @@ namespace game {
     }
 
     export class BattleScene {
-        private playerWindow_: BattlePlayerWindow;
+        private playerWindows_: BattlePlayerWindow[];
 
         constructor() {
             this.playerWindows_ = [];

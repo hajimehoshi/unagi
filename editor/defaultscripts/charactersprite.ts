@@ -29,7 +29,7 @@ namespace game {
             return y;
         }
 
-        public draw(screen: graphics.Image, options: Object) {
+        public draw(screen: graphics.Image, options: {[key: string]: any}) {
             if (!options) {
                 options = {};
             }

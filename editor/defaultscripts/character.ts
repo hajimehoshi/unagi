@@ -12,7 +12,7 @@ namespace game {
 
     export class Character {
         private image_: graphics.Image;
-        private originalPose: number;
+        private originalPose_: number;
         private x_: number;
         private y_: number;
         private direction_: number;
@@ -22,7 +22,7 @@ namespace game {
         private nextPose_: number;
         private speed_: number;
 
-        constructor(image, originalPose) {
+        constructor(image: graphics.Image, originalPose?: number) {
             if (originalPose === void(0)) {
                 originalPose = CHARACTER_POSE_MIDDLE;
             }

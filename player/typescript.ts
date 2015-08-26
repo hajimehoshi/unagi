@@ -107,7 +107,7 @@ namespace mocks {
         public get argv(): string[] {
             // These arguments are passed to tsc at the first time.
             // Pass empty TS file not to output anything.
-            return [undefined, undefined, 'dummy.ts'];
+            return [void(0), void(0), 'dummy.ts'];
         }
 
         public cwd(): string {

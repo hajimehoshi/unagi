@@ -290,8 +290,8 @@ window.addEventListener('load', () => {
         scriptFiles.push({
             name: 'player.d.ts',
             content: `
-            declare let $gameData: data.Game;
-            declare let $idToData: {[id: string]: any};
+            declare var $gameData: data.Game;
+            declare var $idToData: {[id: string]: any};
             declare namespace Images {
                 export function byId(id: string): graphics.Image;
                 export function byName(name: string): graphics.Image;
