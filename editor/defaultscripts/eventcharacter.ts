@@ -20,8 +20,7 @@ namespace game {
         public get y(): number { return this.character_.y; }
         public get pose(): CharacterPose { return this.character_.pose; }
         public get direction(): CharacterDirection { return this.character_.direction; }
-        public get movingDirectionX(): number { return this.character_.movingDirectionX; }
-        public get movingDirectionY(): number { return this.character_.movingDirectionY; }
+        public get isMoving(): boolean { return this.character_.isMoving; }
         public get movingRate(): number { return this.character_.movingRate; }
 
         public start() {

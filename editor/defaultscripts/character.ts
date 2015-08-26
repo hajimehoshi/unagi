@@ -62,32 +62,6 @@ namespace game {
             return 0 < this.movingCounter_;
         }
 
-        public get movingDirectionX(): number {
-            if (!this.isMoving) {
-                return 0;
-            }
-            if (this.direction_ === CharacterDirection.LEFT) {
-                return -1;
-            }
-            if (this.direction_ === CharacterDirection.RIGHT) {
-                return 1;
-            }
-            return 0;
-        }
-
-        public get movingDirectionY(): number {
-            if (!this.isMoving) {
-                return 0;
-            }
-            if (this.direction_ === CharacterDirection.UP) {
-                return -1;
-            }
-            if (this.direction_ === CharacterDirection.DOWN) {
-                return 1;
-            }
-            return 0;
-        }
-
         public get movingRate(): number {
             if (this.movingCounter_ === 0) {
                 return 0;
