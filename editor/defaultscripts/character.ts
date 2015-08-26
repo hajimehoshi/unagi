@@ -1,9 +1,11 @@
 namespace game {
     // TODO: Use enum
-    export const CHARACTER_DIRECTION_UP    = 0;
-    export const CHARACTER_DIRECTION_RIGHT = 1;
-    export const CHARACTER_DIRECTION_DOWN  = 2;
-    export const CHARACTER_DIRECTION_LEFT  = 3;
+    export enum CharacterDirection {
+        UP    = 0,
+        RIGHT = 1,
+        DOWN  = 2,
+        LEFT  = 3,
+    }
 
     // TODO: Use enum
     export const CHARACTER_POSE_LEFT   = 0;
@@ -15,7 +17,7 @@ namespace game {
         private originalPose_: number;
         private x_: number;
         private y_: number;
-        private direction_: number;
+        private direction_: CharacterDirection;
         private pose_: number;
         private movingCounter_: number;
         private initMovingCounter_: number;
@@ -31,7 +33,7 @@ namespace game {
             this.originalPose_ = originalPose;
             this.x_ = 0;
             this.y_ = 0;
-            this.direction_ = CHARACTER_DIRECTION_DOWN;
+            this.direction_ = CharacterDirection.DOWN;
             this.pose_ = originalPose;
             this.movingCounter_ = 0;
             this.initMovingCounter_ = 0;
@@ -47,8 +49,8 @@ namespace game {
         public get x(): number { return this.x_; }
         public get y(): number { return this.y_; }
         public get pose(): number { return this.pose_; }
-        public get direction(): number { return this.direction_; }
-        public set direction(direction: number) { this.direction_ = direction; }
+        public get direction(): CharacterDirection { return this.direction_; }
+        public set direction(direction: CharacterDirection) { this.direction_ = direction; }
 
         public forceMove(x: number, y: number) {
             this.stopMoving();
@@ -64,10 +66,10 @@ namespace game {
             if (!this.isMoving) {
                 return 0;
             }
-            if (this.direction_ === CHARACTER_DIRECTION_LEFT) {
+            if (this.direction_ === CharacterDirection.LEFT) {
                 return -1;
             }
-            if (this.direction_ === CHARACTER_DIRECTION_RIGHT) {
+            if (this.direction_ === CharacterDirection.RIGHT) {
                 return 1;
             }
             return 0;
@@ -77,10 +79,10 @@ namespace game {
             if (!this.isMoving) {
                 return 0;
             }
-            if (this.direction_ === CHARACTER_DIRECTION_UP) {
+            if (this.direction_ === CharacterDirection.UP) {
                 return -1;
             }
-            if (this.direction_ === CHARACTER_DIRECTION_DOWN) {
+            if (this.direction_ === CharacterDirection.DOWN) {
                 return 1;
             }
             return 0;
@@ -93,7 +95,7 @@ namespace game {
             return 1 - this.movingCounter_ / this.initMovingCounter_;
         }
 
-        public startMoving(direction: number) {
+        public startMoving(direction: CharacterDirection) {
             this.direction_ = direction;
             this.movingCounter_ = this.getMaxMovingCounter();
             this.initMovingCounter_ = this.getMaxMovingCounter();
@@ -105,7 +107,7 @@ namespace game {
             this.nextPose_ = CHARACTER_POSE_LEFT;
         }
 
-        public turn(direction: number) {
+        public turn(direction: CharacterDirection) {
             this.direction_ = direction;
         }
 
@@ -122,16 +124,16 @@ namespace game {
             if (this.movingCounter_ === 0) {
                 this.pose_ = this.originalPose_;
                 switch (this.direction_) {
-                case CHARACTER_DIRECTION_UP:
+                case CharacterDirection.UP:
                     this.y_--;
                     break;
-                case CHARACTER_DIRECTION_RIGHT:
+                case CharacterDirection.RIGHT:
                     this.x_++;
                     break;
-                case CHARACTER_DIRECTION_DOWN:
+                case CharacterDirection.DOWN:
                     this.y_++;
                     break;
-                case CHARACTER_DIRECTION_LEFT:
+                case CharacterDirection.LEFT:
                     this.x_--;
                     break;
                 }

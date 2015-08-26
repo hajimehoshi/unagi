@@ -67,31 +67,31 @@ namespace game {
             let y = $gameState.playerCharacter.y;
             if ($input.isPressed(KEY_LEFT)) {
                 if (this.passable(x - 1, y)) {
-                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_LEFT);
+                    $gameState.playerCharacter.startMoving(CharacterDirection.LEFT);
                     return;
                 }
-                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_LEFT);
+                $gameState.playerCharacter.turn(CharacterDirection.LEFT);
             }
             if ($input.isPressed(KEY_UP)) {
                 if (this.passable(x, y - 1)) {
-                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_UP);
+                    $gameState.playerCharacter.startMoving(CharacterDirection.UP);
                     return;
                 }
-                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_UP);
+                $gameState.playerCharacter.turn(CharacterDirection.UP);
             }
             if ($input.isPressed(KEY_RIGHT)) {
                 if (this.passable(x + 1, y)) {
-                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_RIGHT);
+                    $gameState.playerCharacter.startMoving(CharacterDirection.RIGHT);
                     return;
                 }
-                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_RIGHT);
+                $gameState.playerCharacter.turn(CharacterDirection.RIGHT);
             }
             if ($input.isPressed(KEY_DOWN)) {
                 if (this.passable(x, y + 1)) {
-                    $gameState.playerCharacter.startMoving(CHARACTER_DIRECTION_DOWN);
+                    $gameState.playerCharacter.startMoving(CharacterDirection.DOWN);
                     return;
                 }
-                $gameState.playerCharacter.turn(CHARACTER_DIRECTION_DOWN);
+                $gameState.playerCharacter.turn(CharacterDirection.DOWN);
             }
             $gameState.playerCharacter.stopMoving();
             if ($input.isTrigger(KEY_ENTER)) {
@@ -101,25 +101,25 @@ namespace game {
                     return;
                 }
                 switch ($gameState.playerCharacter.direction) {
-                case CHARACTER_DIRECTION_LEFT:
+                case CharacterDirection.LEFT:
                     event = this.eventAt(x - 1, y);
                     if (event) {
                         this.event_ = event;
                     }
                     break;
-                case CHARACTER_DIRECTION_UP:
+                case CharacterDirection.UP:
                     event = this.eventAt(x, y - 1);
                     if (event) {
                         this.event_ = event;
                     }
                     break;
-                case CHARACTER_DIRECTION_RIGHT:
+                case CharacterDirection.RIGHT:
                     event = this.eventAt(x + 1, y);
                     if (event) {
                         this.event_ = event;
                     }
                     break;
-                case CHARACTER_DIRECTION_DOWN:
+                case CharacterDirection.DOWN:
                     event = this.eventAt(x, y + 1);
                     if (event) {
                         this.event_ = event;
