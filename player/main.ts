@@ -259,7 +259,7 @@ window.addEventListener('load', () => {
     canvas.height = height;
     graphics.Image.initialize(canvas);
 
-    (<HTMLElement>canvas).focus();
+    canvas.focus();
     window.addEventListener('message', (e) => {
         $gameData = <data.Game>e.data;
         for (let actor of $gameData.actors) {
@@ -272,13 +272,28 @@ window.addEventListener('load', () => {
 
         BitmapFont.initialize($gameData);
 
-        let scriptFiles = $gameData.scripts.map(s => {
+        let scriptFiles = [];
+        scriptFiles.push({
+            name:    'graphics.d.ts',
+            content: typescript.declarations['graphics.d.ts'],
+        });
+        // TODO: Rename 'declarations'
+        let keys = Object.keys(typescript.declarations);
+        scriptFiles = scriptFiles.concat(keys.filter(k => {
+            return !!k.match(/^data\//);
+        }).map(k => {
+            return {
+                name:    k,
+                content: <string>typescript.declarations[k],
+            };
+        }));
+        scriptFiles = scriptFiles.concat($gameData.scripts.map(s => {
             return {
                 name:    `game/${s.name}.ts`,
                 content: s.content,
             };
-        });
-        let jsScript = TypeScript.compile(scriptFiles);
+        }));
+        let jsScript = typescript.compile(scriptFiles);
         // Call 'eval' indirectly so that 'this' variable will be a global window.
         (0, eval)(jsScript);
     });

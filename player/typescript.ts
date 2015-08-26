@@ -27,7 +27,7 @@ namespace mocks {
 
         public static initializeFileSystem(): void {
             FS.fileSystem_ = {
-                'lib.d.ts': mocks.LIB_D_TS,
+                'lib.d.ts': typescript.declarations['lib.d.ts'],
             };
         }
 
@@ -187,8 +187,8 @@ class Buffer {
     }
 }
 
-class TypeScript {
-    public static compile(files: {name: string, content: string}[]): string {
+namespace typescript {
+    export function compile(files: {name: string, content: string}[]): string {
         let args = ['--out', '__out.js', '--target', 'ES5'];
         mocks.FS.initializeFileSystem();
         for (let file of files) {
