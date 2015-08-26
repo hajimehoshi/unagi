@@ -93,7 +93,7 @@ namespace BitmapFont {
             return {width, height}
         }
 
-        export function drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color): void {
+        export function drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color) {
             let cx = 0;
             let cy = 0;
             let size = textSize(str);
@@ -232,7 +232,7 @@ namespace BitmapFont {
 
 // TODO: Better name?
 class Env {
-    public static run(f: (CanvasRenderingContext2D) => void): void {
+    public static run(f: (CanvasRenderingContext2D) => void) {
         let canvas = <HTMLCanvasElement>window.document.querySelector('canvas');
         let offscreen = new graphics.Image(canvas.width, canvas.height);
         let defaultRenderTarget = graphics.Image.defaultRenderTarget;
@@ -287,6 +287,28 @@ window.addEventListener('load', () => {
                 content: <string>typescript.declarations[k],
             };
         }));
+        scriptFiles.push({
+            name: 'player.d.ts',
+            content: `
+            declare let $gameData: data.Game;
+            declare let $idToData: {[id: string]: any};
+            declare namespace Images {
+                export function byId(id: string): graphics.Image;
+                export function byName(name: string): graphics.Image;
+            }
+            declare namespace BitmapFont {
+                export namespace Regular {
+                    export function drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);
+                }
+                export namespace Number {
+                    export function drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);
+                }
+            }
+            declare class Env {
+                static run(f: (CanvasRenderingContext2D) => void);
+            }
+            `,
+        })
         scriptFiles = scriptFiles.concat($gameData.scripts.map(s => {
             return {
                 name:    `game/${s.name}.ts`,
