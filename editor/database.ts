@@ -16,10 +16,14 @@ namespace editor {
     export class Database {
         private element_: HTMLElement;
         private toolbar_: DatabaseToolbar;
+        private contents_: DatabaseContent[];
 
         constructor(element: HTMLElement) {
             this.element_ = element;
             this.toolbar_ = new DatabaseToolbar(<HTMLElement>document.querySelector('#databaseToolbar'));
+            this.contents_ = [].map.call(document.querySelectorAll('.databaseContent'), e => {
+                return new DatabaseContent(<HTMLElement>e);
+            });
         }
 
         public toggle(show: boolean) {
@@ -34,17 +38,17 @@ namespace editor {
             if (!game) {
                 return;
             }
-            [].forEach.call(this.element_.querySelectorAll('unagi-database-content'), (e: DatabaseContentElement) => {
-                e.render(game);
-            });
+            for (let content of this.contents_) {
+                content.render(game);
+            }
         }
 
         public updateMode(mode: DatabaseMode): void {
             let modeStr = DatabaseMode[mode].toLowerCase();
             this.toolbar_.updateMode(mode);
-            [].forEach.call(this.element_.querySelectorAll('div.content > *'), (node: Node) => {
+            [].forEach.call(this.element_.querySelectorAll('.databaseContent'), (node: Node) => {
                 let e = <HTMLElement>node;
-                if (e.nodeName.toLowerCase() === "unagi-database-content" && e.getAttribute('groupname') === modeStr) {
+                if (e instanceof HTMLDivElement && e.getAttribute('groupname') === modeStr) {
                     e.style.display = 'block';
                 } else {
                     e.style.display = 'none';

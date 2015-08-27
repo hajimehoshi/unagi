@@ -13,28 +13,21 @@
 // limitations under the License.
 
 namespace editor {
-    export class DatabaseContentElement {
-        private createdCallback(): void {
-            let template = <HTMLTemplateElement>document.getElementById('unagi-database-content-template');
-            let clone = document.importNode(template.content, true);
-            let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
-            shadowRoot.appendChild(clone);
+    export class DatabaseContent {
+        private element_: HTMLElement;
 
-            let self = <HTMLElement><any>this;
-            let content = shadowRoot.querySelector('div.content');
-            while (self.firstChild) {
-                content.appendChild(self.firstChild);
-            }
+        constructor(element: HTMLElement) {
+            this.element_ = element;
 
             (<HTMLElement><any>this.list).setAttribute('groupname', this.groupName);
-            self.addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            (<HTMLElement><any>this.list).addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentDataItem();
             });
-            self.addEventListener('contextMenuNew', (e: CustomEvent) => {
+            (<HTMLElement><any>this.list).addEventListener('contextMenuNew', (e: CustomEvent) => {
                 Store.instance.addGameData(this.groupName);
             });
 
-            [].forEach.call(shadowRoot.querySelectorAll('input'), (e: HTMLInputElement) => {
+            [].forEach.call(this.element_.querySelectorAll('input'), (e: HTMLInputElement) => {
                 e.addEventListener('change', () => {
                     let value: any = e.value;
                     if (e.type === 'number') {
@@ -48,17 +41,15 @@ namespace editor {
         }
 
         private get list(): ListBoxElement {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return (<ListBoxElement><any>shadowRoot.querySelector('unagi-listbox'));
+            return <ListBoxElement><any>this.element_.querySelector('unagi-listbox');
         }
 
         private get groupName(): string {
-            return (<HTMLElement><any>this).getAttribute('groupname');
+            return this.element_.getAttribute('groupname');
         }
 
         private get inputs(): HTMLInputElement[] {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            return [].slice.call(shadowRoot.querySelectorAll('input'));
+            return [].slice.call(this.element_.querySelectorAll('input'));
         }
 
         public currentItem(game: data.Game): any {
@@ -79,8 +70,7 @@ namespace editor {
                 };
             }));
             let id = this.list.selectedId;
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let content = shadowRoot.querySelector('div.content');
+            let content = this.element_.querySelector('div.content');
             if (!id) {
                 content.classList.add('disabled');
                 for (let input of this.inputs) {
@@ -92,24 +82,24 @@ namespace editor {
 
             let item = this.currentItem(game);
             for (let key in item) {
-                let input = <HTMLInputElement>shadowRoot.querySelector(`input[name="${key}"]`);
+                let input = <HTMLInputElement>this.element_.querySelector(`input[name="${key}"]`);
                 if (input) {
                     input.value = item[key];
                     continue;
                 }
-                let imageSelector = <ImageSelectorElement><any>shadowRoot.querySelector(`unagi-image-selector[name="${key}"]`);
+                let imageSelector = <ImageSelectorElement><any>this.element_.querySelector(`unagi-image-selector[name="${key}"]`);
                 if (imageSelector) {
                     let index = this.list.selectedIndex;
                     imageSelector.path = `${this.groupName}[${index}].${key}`;
                     imageSelector.render(game, item[key], 0, 0);
                     continue;
                 }
-                let select = <HTMLSelectElement>shadowRoot.querySelector(`select[name="${key}"]`);
+                let select = <HTMLSelectElement>this.element_.querySelector(`select[name="${key}"]`);
                 if (select) {
                     select.value = data.ImageType[item[key]];
                     continue;
                 }
-                let img = <HTMLImageElement>shadowRoot.querySelector(`img[data-name="${key}"]`);
+                let img = <HTMLImageElement>this.element_.querySelector(`img[data-name="${key}"]`);
                 if (img) {
                     img.src = item[key];
                     continue;
@@ -118,8 +108,3 @@ namespace editor {
         }
     }
 }
-
-(() => {
-    (<any>editor.DatabaseContentElement.prototype).__proto__ = HTMLElement.prototype;
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-database-content', editor.DatabaseContentElement);
-})();

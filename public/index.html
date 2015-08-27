@@ -88,41 +88,6 @@
     <li id="contextNew">New</li>
   </menu>
 </template>
-<template id="unagi-database-content-template">
-  <style>
-    :host {
-      display: block;
-    }
-    unagi-listbox {
-      height: 100%;
-      width: 128px;
-    }
-    .content {
-      background-color: #f5f5f5;
-      height: 100%;
-      left: calc(128px + 1px);
-      overflow: auto;
-      position: absolute;
-      top: 0;
-      width: calc(100% - 128px - 1px);
-    }
-    .disabled {
-      color: rgba(0, 0, 0, 0.56);
-      opacity: 0.56;
-      pointer-events: none;
-    }
-    img {
-      background-color: #9e9e9e;
-      image-rendering: pixelated;
-    }
-    input[type=number] {
-      text-align: right;
-    }
-  </style>
-  <unagi-listbox></unagi-listbox>
-  <div class="content">
-  </div>
-</template>
 <template id="unagi-image-selector-template">
   <style>
     :host {
@@ -256,7 +221,7 @@
     width: 100%;
     z-index: 1;
   }
-  #database .content {
+  #database > .content {
     height: calc(100% - 33px);
     font-size: 14px;
     line-height: 18px;
@@ -264,7 +229,7 @@
     top: 33px;
     width: 100%;
   }
-  #database .content > * {
+  #database > .content > * {
     height: 100%;
     position: absolute;
     width: 100%;
@@ -286,6 +251,33 @@
     position: absolute;
     width: 100%;
     z-index: 1;
+  }
+</style>
+<style>
+  .databaseContent > unagi-listbox {
+    height: 100%;
+    width: 128px;
+  }
+  .databaseContent > .content {
+    background-color: #f5f5f5;
+    height: 100%;
+    left: calc(128px + 1px);
+    overflow: auto;
+    position: absolute;
+    top: 0;
+    width: calc(100% - 128px - 1px);
+  }
+  .databaseContent .disabled {
+    color: rgba(0, 0, 0, 0.56);
+    opacity: 0.56;
+    pointer-events: none;
+  }
+  .databaseContent img {
+    background-color: #9e9e9e;
+    image-rendering: pixelated;
+  }
+  .databaseContent input[type=number] {
+    text-align: right;
   }
 </style>
 <style>
@@ -405,41 +397,50 @@
         </menu>
       </div>
       <div class="content">
-        <unagi-database-content groupname="actors">
-          <ul>
-            <li><label>Name: <input type="text" name="name"></label></li>
-            <li>Image: <unagi-image-selector name="image" width="24" height="32" src="24,64,24,32" types="Character"></unagi-image-selector></li>
-            <li><label>Initial Level: <input type="number" name="initialLevel" min="1" max="99"></label></li>
-          </ul>
-        </unagi-database-content>
-        <unagi-database-content groupname="enemies">
-          <ul>
-            <li><label>Name: <input type="text" name="name"></label></li>
-            <li>Image: <unagi-image-selector name="image" width="320" height="160" types="Enemy"></unagi-image-selector></li>
-            <li><label>Level: <input type="number" name="level" min="1" max="99"></label></li>
-            <li><label>Max HP: <input type="number" name="maxHP" min="1" max="999999"></label></li>
-            <li><label>Max MP: <input type="number" name="maxMP" min="1" max="9999"></label></li>
-            <li><label>Attack: <input type="number" name="attack" min="1" max="9999"></label></li>
-            <li><label>Defense: <input type="number" name="defense" min="1" max="9999"></label></li>
-            <li><label>Magic Attack: <input type="number" name="magicAttack" min="1" max="9999"></label></li>
-            <li><label>Magic Defense: <input type="number" name="magicDefense" min="1" max="9999"></label></li>
-            <li><label>Speed: <input type="number" name="speed" min="1" max="9999"></label></li>
-          </ul>
-        </unagi-database-content>
-        <unagi-database-content groupname="images">
-          <ul>
-            <li><label>Name: <input type="text" name="name"></label></li>
-            <li>Image: <img data-name="data"></li>
-            <li>Type:
-              <select name="type">
-                <option value="Character">Character</option>
-                <option value="Enemy">Enemy</option>
-                <option value="TileSet">Tile Set</option>
-                <option value="Picture">Picture</option>
-              </select>
-            </li>
-          </ul>
-        </unagi-database-content>
+        <div class="databaseContent" groupname="actors">
+          <unagi-listbox></unagi-listbox>
+          <div class="content">
+            <ul>
+              <li><label>Name: <input type="text" name="name"></label></li>
+              <li>Image: <unagi-image-selector name="image" width="24" height="32" src="24,64,24,32" types="Character"></unagi-image-selector></li>
+              <li><label>Initial Level: <input type="number" name="initialLevel" min="1" max="99"></label></li>
+            </ul>
+          </div>
+        </div>
+        <div class="databaseContent" groupname="enemies">
+          <unagi-listbox></unagi-listbox>
+          <div class="content">
+            <ul>
+              <li><label>Name: <input type="text" name="name"></label></li>
+              <li>Image: <unagi-image-selector name="image" width="320" height="160" types="Enemy"></unagi-image-selector></li>
+              <li><label>Level: <input type="number" name="level" min="1" max="99"></label></li>
+              <li><label>Max HP: <input type="number" name="maxHP" min="1" max="999999"></label></li>
+              <li><label>Max MP: <input type="number" name="maxMP" min="1" max="9999"></label></li>
+              <li><label>Attack: <input type="number" name="attack" min="1" max="9999"></label></li>
+              <li><label>Defense: <input type="number" name="defense" min="1" max="9999"></label></li>
+              <li><label>Magic Attack: <input type="number" name="magicAttack" min="1" max="9999"></label></li>
+              <li><label>Magic Defense: <input type="number" name="magicDefense" min="1" max="9999"></label></li>
+              <li><label>Speed: <input type="number" name="speed" min="1" max="9999"></label></li>
+            </ul>
+          </div>
+        </div>
+        <div class="databaseContent" groupname="images">
+          <unagi-listbox></unagi-listbox>
+          <div class="content">
+            <ul>
+              <li><label>Name: <input type="text" name="name"></label></li>
+              <li>Image: <img data-name="data"></li>
+              <li>Type:
+                <select name="type">
+                  <option value="Character">Character</option>
+                  <option value="Enemy">Enemy</option>
+                  <option value="TileSet">Tile Set</option>
+                  <option value="Picture">Picture</option>
+                </select>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
     <iframe class="player" sandbox="allow-scripts allow-same-origin"></iframe>
