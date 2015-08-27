@@ -51,18 +51,12 @@ namespace Images {
 
 namespace BitmapFont {
     let mplusImages: {[key:string]: graphics.Image} = {};
-    let mplusFontNames = ['latin', 'bmp-0', 'bmp-2', 'bmp-3', 'bmp-4', 'bmp-5', 'bmp-6', 'bmp-7', 'bmp-8', 'bmp-9', 'bmp-15'];
     let arcadeImage: graphics.Image;
 
     export function initialize(game: data.Game) {
-        mplusFontNames.forEach((key) => {
-            let img = new Image();
-            img.src = './images/mplus-bitmap-images/' + key + '.png';
-            img.onload = () => {
-                mplusImages[key] = new graphics.Image(img);
-            };
-            // TODO: Wait until all images are loaded.
-        });
+        for (let key of ['latin', 'bmp0', 'bmp2', 'bmp3', 'bmp4', 'bmp5', 'bmp6', 'bmp7', 'bmp8', 'bmp9', 'bmp15']) {
+            mplusImages[key] = Images.byName('mplus_' + key);
+        }
         arcadeImage = Images.byId(game.system.numberFontImage);
     }
 
@@ -72,7 +66,6 @@ namespace BitmapFont {
         const TEXT_HEIGHT = data.gridSize;
 
         function textSize(str: string): {width: number, height: number} {
-
             let width = 0;
             let height = TEXT_HEIGHT;
             let currentWidth = 0;
@@ -130,7 +123,7 @@ namespace BitmapFont {
                     continue;
                 }
                 let page = (code / 4096)|0;
-                let key = `bmp-${page}`;
+                let key = `bmp${page}`;
                 let sx = (code % 64) * TEXT_FULL_WIDTH;
                 let sy = (((code % 4096) / 64)|0) * TEXT_HEIGHT;
                 let w = TEXT_FULL_WIDTH;

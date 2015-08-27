@@ -8,7 +8,8 @@ namespace game {
         private maxHPOffset_: number;
         private maxMPOffset_: number;
 
-        constructor(id) {
+        // TODO: Pass data.Actor?
+        constructor(id: string) {
             this.id_ = id;
             let data = $idToData[id];
             this.name_ = data.name;
