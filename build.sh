@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-(cd editor; go run createdefaultimages.go ../images/default > defaultimages.ts)
-(cd editor; go run createdefaultscripts.go defaultscripts/names.txt > defaultscripts.ts)
-(cd player; go run createdeclarations.go > typescriptdeclarations.ts)
+go run tools/createdefaultimages.go images/default > editor/defaultimages.ts
+go run tools/createdefaultscripts.go editor/defaultscripts/names.txt > editor/defaultscripts.ts
+go run tools/createdeclarations.go > player/typescriptdeclarations.ts
 tsc --out public/editor.js --target ES5 data/*.ts editor/*.ts
 tsc --out public/player.js --target ES5 data/*.ts player/graphics/webgl/*.ts player/graphics/*.ts player/*.ts

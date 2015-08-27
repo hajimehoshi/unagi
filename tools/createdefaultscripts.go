@@ -50,7 +50,7 @@ func toFile(name string) string {
 	f := name
 	f = strings.Replace(f, " ", "", -1)
 	f = strings.ToLower(f)
-	return "defaultscripts/" + f + ".ts"
+	return "editor/defaultscripts/" + f + ".ts"
 }
 
 var stringLiteralContentReplacer = strings.NewReplacer(

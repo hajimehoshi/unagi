@@ -91,14 +91,14 @@ func main() {
 	declarations := []declaration{
 		{
 			name:     "lib.d.ts",
-			filename: "typescript/lib.d.ts",
+			filename: "player/typescript/lib.d.ts",
 		},
 		{
 			name:     "graphics.d.ts",
-			filename: "typescript/graphics.d.ts",
+			filename: "player/typescript/graphics.d.ts",
 		},
 	}
-	declarations = append(declarations, readDir("../data", "data")...)
+	declarations = append(declarations, readDir("data", "data")...)
 
 	declarationsStrs := make([]string, 0, len(declarations))
 	for _, d := range declarations {
