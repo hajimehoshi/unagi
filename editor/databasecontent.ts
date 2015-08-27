@@ -45,7 +45,7 @@ namespace editor {
         }
 
         private get groupName(): string {
-            return this.element_.getAttribute('groupname');
+            return this.element_.dataset['groupName'];
         }
 
         private get inputs(): HTMLInputElement[] {

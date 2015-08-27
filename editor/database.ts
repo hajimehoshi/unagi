@@ -43,12 +43,13 @@ namespace editor {
             }
         }
 
+        // TODO: Unify this to render
         public updateMode(mode: DatabaseMode): void {
             let modeStr = DatabaseMode[mode].toLowerCase();
             this.toolbar_.updateMode(mode);
-            [].forEach.call(this.element_.querySelectorAll('.databaseContent'), (node: Node) => {
+            [].forEach.call(this.element_.querySelectorAll('div.databaseContent'), (node: Node) => {
                 let e = <HTMLElement>node;
-                if (e instanceof HTMLDivElement && e.getAttribute('groupname') === modeStr) {
+                if (e.dataset['groupName'] === modeStr) {
                     e.style.display = 'block';
                 } else {
                     e.style.display = 'none';
