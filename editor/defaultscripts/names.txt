@@ -4,6 +4,7 @@ Game State
 Actor
 Character
 Event Character
+Event Command Interpreter
 
 Character Sprite
 

@@ -1,15 +1,15 @@
 namespace game {
     export class MapScene {
         private map_: data.Map;
-        private event_: EventCharacter;
         private playerSprite_: CharacterSprite;
         private eventCharacters_: EventCharacter[];
         private eventSprites_: CharacterSprite[];
+        private eventCommandInterpreter_: EventCommandInterpreter;
 
         constructor(map: data.Map) {
             this.map_ = map;
-            this.event_ = null;
             this.playerSprite_ = new CharacterSprite($gameState.playerCharacter);
+            this.eventCommandInterpreter_ = new EventCommandInterpreter();
 
             this.eventCharacters_ = this.map_.events.map((e) => {
                 return new EventCharacter(e);
@@ -37,16 +37,85 @@ namespace game {
             })[0];
         }
 
+        private tryMovePlayer(): boolean {
+            let x = $gameState.playerCharacter.x;
+            let y = $gameState.playerCharacter.y;
+            if ($input.isPressed(KEY_LEFT)) {
+                if (this.passable(x - 1, y)) {
+                    $gameState.playerCharacter.startMoving(CharacterDirection.LEFT);
+                    return true;
+                }
+                $gameState.playerCharacter.turn(CharacterDirection.LEFT);
+            }
+            if ($input.isPressed(KEY_UP)) {
+                if (this.passable(x, y - 1)) {
+                    $gameState.playerCharacter.startMoving(CharacterDirection.UP);
+                    return true;
+                }
+                $gameState.playerCharacter.turn(CharacterDirection.UP);
+            }
+            if ($input.isPressed(KEY_RIGHT)) {
+                if (this.passable(x + 1, y)) {
+                    $gameState.playerCharacter.startMoving(CharacterDirection.RIGHT);
+                    return true;
+                }
+                $gameState.playerCharacter.turn(CharacterDirection.RIGHT);
+            }
+            if ($input.isPressed(KEY_DOWN)) {
+                if (this.passable(x, y + 1)) {
+                    $gameState.playerCharacter.startMoving(CharacterDirection.DOWN);
+                    return true;
+                }
+                $gameState.playerCharacter.turn(CharacterDirection.DOWN);
+            }
+            $gameState.playerCharacter.stopMoving();
+            return false;
+        }
+
+        private get currentEvent(): EventCharacter {
+            let x = $gameState.playerCharacter.x;
+            let y = $gameState.playerCharacter.y;
+            let event = this.eventAt(x, y);
+            if (event) {
+                return event;
+            }
+            switch ($gameState.playerCharacter.direction) {
+            case CharacterDirection.LEFT:
+                event = this.eventAt(x - 1, y);
+                if (event) {
+                    return event;
+                }
+                break;
+            case CharacterDirection.UP:
+                event = this.eventAt(x, y - 1);
+                if (event) {
+                    return event;
+                }
+                break;
+            case CharacterDirection.RIGHT:
+                event = this.eventAt(x + 1, y);
+                if (event) {
+                    return event;
+                }
+                break;
+            case CharacterDirection.DOWN:
+                event = this.eventAt(x, y + 1);
+                if (event) {
+                    return event;
+                }
+                break;
+            }
+            return null;
+        }
+
         public update() {
+            let isEventCommandExecuting = this.eventCommandInterpreter_.isExecuting;
+            this.eventCommandInterpreter_.update();
             $gameState.playerCharacter.update();
             for (let eventCharacter of this.eventCharacters_) {
                 eventCharacter.update();
             }
-            if (this.event_) {
-                this.event_.update();
-                if (!this.event_.isProcessing) {
-                    this.event_ = null;
-                }
+            if (isEventCommandExecuting) {
                 return;
             }
 
@@ -56,76 +125,18 @@ namespace game {
                 return;
             }
 
-            if (this.event_ && this.event_.isProcessing) {
-                return;
-            }
             if ($gameState.playerCharacter.isMoving) {
                 return;
             }
-
-            let x = $gameState.playerCharacter.x;
-            let y = $gameState.playerCharacter.y;
-            if ($input.isPressed(KEY_LEFT)) {
-                if (this.passable(x - 1, y)) {
-                    $gameState.playerCharacter.startMoving(CharacterDirection.LEFT);
-                    return;
-                }
-                $gameState.playerCharacter.turn(CharacterDirection.LEFT);
+            if (this.tryMovePlayer()) {
+                return;
             }
-            if ($input.isPressed(KEY_UP)) {
-                if (this.passable(x, y - 1)) {
-                    $gameState.playerCharacter.startMoving(CharacterDirection.UP);
-                    return;
-                }
-                $gameState.playerCharacter.turn(CharacterDirection.UP);
-            }
-            if ($input.isPressed(KEY_RIGHT)) {
-                if (this.passable(x + 1, y)) {
-                    $gameState.playerCharacter.startMoving(CharacterDirection.RIGHT);
-                    return;
-                }
-                $gameState.playerCharacter.turn(CharacterDirection.RIGHT);
-            }
-            if ($input.isPressed(KEY_DOWN)) {
-                if (this.passable(x, y + 1)) {
-                    $gameState.playerCharacter.startMoving(CharacterDirection.DOWN);
-                    return;
-                }
-                $gameState.playerCharacter.turn(CharacterDirection.DOWN);
-            }
-            $gameState.playerCharacter.stopMoving();
             if ($input.isTrigger(KEY_ENTER)) {
-                let event = this.eventAt(x, y);
-                if (event) {
-                    this.event_ = event;
+                let event = this.currentEvent;
+                if (!event) {
                     return;
                 }
-                switch ($gameState.playerCharacter.direction) {
-                case CharacterDirection.LEFT:
-                    event = this.eventAt(x - 1, y);
-                    if (event) {
-                        this.event_ = event;
-                    }
-                    break;
-                case CharacterDirection.UP:
-                    event = this.eventAt(x, y - 1);
-                    if (event) {
-                        this.event_ = event;
-                    }
-                    break;
-                case CharacterDirection.RIGHT:
-                    event = this.eventAt(x + 1, y);
-                    if (event) {
-                        this.event_ = event;
-                    }
-                    break;
-                case CharacterDirection.DOWN:
-                    event = this.eventAt(x, y + 1);
-                    if (event) {
-                        this.event_ = event;
-                    }
-                    break;
-                }
+                this.eventCommandInterpreter_.push(event, event.currentPage.commands);
             }
         }
 
@@ -174,6 +185,8 @@ namespace game {
             }).forEach((c) => {
                 c.draw(screen, {geoM});
             });
+
+            this.eventCommandInterpreter_.draw(screen);
         }
     }
 }

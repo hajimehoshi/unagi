@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// TODO: Move to a WebWorker.
+
 declare var ts: { executeCommandLine(args: string[]): void };
 
 namespace mocks {

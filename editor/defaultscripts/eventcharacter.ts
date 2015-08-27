@@ -2,7 +2,6 @@ namespace game {
     export class EventCharacter {
         private data_: data.Event;
         private character_: Character;
-        private isProcessing_: boolean;
 
         constructor(data: data.Event) {
             this.data_ = data;
@@ -12,7 +11,6 @@ namespace game {
             character.forceMove(this.data_.x, this.data_.y);
             character.direction = page.imageY;
             this.character_ = character;
-            this.isProcessing_ = false;
         }
 
         public get image(): graphics.Image { return this.character_.image; }
@@ -23,15 +21,6 @@ namespace game {
         public get isMoving(): boolean { return this.character_.isMoving; }
         public get movingRate(): number { return this.character_.movingRate; }
 
-        public start() {
-            this.isProcessing_ = true;
-            console.log('start!');
-        }
-
-        public get isProcessing(): boolean {
-            return this.isProcessing_;
-        }
-
         public get currentPage(): data.EventPage {
             // TODO: Choice correct page
             return this.data_.pages[0];
@@ -39,7 +28,7 @@ namespace game {
 
         public update() {
             this.character_.update();
-            this.isProcessing_ = false;
+            // TODO: Updating the current page
         }
     }
 }
