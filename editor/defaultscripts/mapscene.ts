@@ -109,13 +109,13 @@ namespace game {
         }
 
         public update() {
-            let isEventCommandExecuting = this.eventCommandInterpreter_.isExecuting;
+            let isEventCommandRunning = this.eventCommandInterpreter_.isRunning;
             this.eventCommandInterpreter_.update();
             $gameState.playerCharacter.update();
             for (let eventCharacter of this.eventCharacters_) {
                 eventCharacter.update();
             }
-            if (isEventCommandExecuting) {
+            if (isEventCommandRunning) {
                 return;
             }
 
