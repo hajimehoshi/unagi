@@ -26,6 +26,10 @@ namespace game {
             return this.data_.pages[0];
         }
 
+        public get isPassable(): boolean {
+            return this.currentPage.passable;
+        }
+
         public update() {
             this.character_.update();
             // TODO: Updating the current page

@@ -82,25 +82,25 @@ namespace game {
             switch ($gameState.playerCharacter.direction) {
             case CharacterDirection.LEFT:
                 event = this.eventAt(x - 1, y);
-                if (event) {
+                if (event && !event.isPassable) {
                     return event;
                 }
                 break;
             case CharacterDirection.UP:
                 event = this.eventAt(x, y - 1);
-                if (event) {
+                if (event && !event.isPassable) {
                     return event;
                 }
                 break;
             case CharacterDirection.RIGHT:
                 event = this.eventAt(x + 1, y);
-                if (event) {
+                if (event && !event.isPassable) {
                     return event;
                 }
                 break;
             case CharacterDirection.DOWN:
                 event = this.eventAt(x, y + 1);
-                if (event) {
+                if (event && !event.isPassable) {
                     return event;
                 }
                 break;
