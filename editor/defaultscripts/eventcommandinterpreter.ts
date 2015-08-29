@@ -79,8 +79,56 @@ namespace game {
             }
             let command = this.commands_.shift();
             switch (command.data.type) {
-            case 'showMessage':
+            case 'showMessage': // TODO: Rename to showMessageWindow?
                 this.currentCommand_ = new ShowMessageEventCommand(command.data.args['content']);
+                break;
+            case 'showSelectionsWindow':
+            case 'showNumberInputWindow':
+            case 'showSelectingItemWindow':
+            case 'showScrollingMessage':
+            case 'modifySwitch':
+            case 'modifyVariables':
+            case 'modifySelfSwitch':
+            case 'useTimer':
+            case 'if':
+            case 'loop':
+            case 'break':
+            case 'exit':
+            case 'callCommonEvent':
+            case 'jump':
+            case 'label':
+            case 'comment':
+            case 'modifyMoney':
+            case 'modifyItems':
+            case 'modifyParty':
+            case 'modifyActors':
+            case 'movePlayer':
+            case 'setVehiclePosition':
+            case 'setEventPosition':
+            case 'scrollMap': // move camera?
+            case 'movePlayerOrEvent': //?
+            case 'useVechicle':
+            case 'modifyPlayer':
+            case 'showAnimation':
+            case 'showPopUp':
+            case 'hideEventTemporarily':
+            case 'modifyScreen':
+            case 'sleep':
+            case 'showPicture':
+            case 'modifyPicture':
+            case 'hidePicture':
+            case 'showWeather':
+            case 'startBattleScene':
+            case 'startShopScene':
+            case 'startNameInputScene':
+            case 'startMenuScene':
+            case 'startSaveScene':
+            case 'startGameOverScene':
+            case 'startTitleScene':
+            case 'modifySystem':
+            case 'modifyMap':
+            case 'eval':
+                console.log('not implemented');
                 break;
             }
         }
