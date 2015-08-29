@@ -17,12 +17,38 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strconv"
+	"regexp"
 )
+
+type Server struct {
+	editor http.Handler
+	player http.Handler
+}
+
+func NewServer() *Server {
+	return &Server{
+		editor: http.FileServer(http.Dir("static/editor")),
+		player: http.FileServer(http.Dir("static/player")),
+	}
+}
+
+var uuidPrefixPattern = regexp.MustCompile(`\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}.`)
+
+func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	host := req.Host
+	println(host)
+	if uuidPrefixPattern.MatchString(host) {
+		s.player.ServeHTTP(w, req)
+		return
+	}
+	s.editor.ServeHTTP(w, req)
+}
 
 func main() {
 	port := 8787
 	fmt.Printf("http://localhost:%d/\n", port)
-	http.Handle("/", http.FileServer(http.Dir("public")))
-	http.ListenAndServe(":" + strconv.Itoa(port), nil)
+
+	http.Handle("/", NewServer())
+	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	panic(err)
 }

@@ -1,7 +1,9 @@
 *~
 .DS_Store
+
 editor/defaultimages.ts
 editor/defaultscripts.ts
 player/typescriptdeclarations.ts
-public/editor.js
-public/player.js
+
+static/editor/editor.js
+static/player/player.js

@@ -15,5 +15,5 @@
 go run tools/createdefaultimages.go images/default > editor/defaultimages.ts
 go run tools/createdefaultscripts.go editor/defaultscripts/names.txt > editor/defaultscripts.ts
 go run tools/createdeclarations.go > player/typescriptdeclarations.ts
-tsc --out public/editor.js --target ES5 data/*.ts editor/*.ts
-tsc --out public/player.js --target ES5 data/*.ts player/graphics/webgl/*.ts player/graphics/*.ts player/*.ts
+tsc --out static/editor/editor.js --target ES5 data/*.ts editor/*.ts
+tsc --out static/player/player.js --target ES5 data/*.ts player/graphics/webgl/*.ts player/graphics/*.ts player/*.ts
