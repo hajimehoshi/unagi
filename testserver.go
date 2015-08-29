@@ -36,7 +36,6 @@ var uuidPrefixPattern = regexp.MustCompile(`\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	host := req.Host
-	println(host)
 	if uuidPrefixPattern.MatchString(host) {
 		s.player.ServeHTTP(w, req)
 		return
