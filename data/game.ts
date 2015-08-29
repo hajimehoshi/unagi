@@ -29,6 +29,7 @@ namespace data {
     }
 
     export declare type Game = {
+        id:                    string,
         maps:                  Map[],
         actors:                Actor[],
         enemies:               Enemy[],

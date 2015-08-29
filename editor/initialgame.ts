@@ -44,7 +44,8 @@ namespace editor {
     }
 
     export const initialGame: data.Game = {
-        maps:   [
+        id: data.UUID.generate(),
+        maps: [
             {
                 id:     mapId,
                 name:   'New Map',
