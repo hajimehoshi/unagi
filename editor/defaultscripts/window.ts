@@ -1,4 +1,10 @@
 namespace game {
+    enum WindowState {
+        NORMAL,
+        OPENING,
+        CLOSING,
+    }
+
     export class Window {
         private x_: number;
         private y_: number;
@@ -6,6 +12,8 @@ namespace game {
         private height_: number;
         private opaque_: number;
         private background_: graphics.Image;
+        private counter_: number;
+        private state_: WindowState;
 
         constructor(x, y, width, height) {
             this.x_ = x;
@@ -14,6 +22,8 @@ namespace game {
             this.height_ = height;
             this.opaque_ = 255;
             this.background_ = new graphics.Image(width - 2, height - 2);
+            this.counter_ = 0;
+            this.state_ = WindowState.NORMAL;
         }
 
         public get x(): number { return this.x_; }
@@ -23,7 +33,32 @@ namespace game {
         public get opaque(): number { return this.opaque_; }
         public set opaque(opaque: number) { this.opaque_ = opaque; }
 
+        public open() {
+            this.counter_ = this.maxCounter;
+            this.state_ = WindowState.OPENING;
+        }
+
+        public close() {
+            this.counter_ = this.maxCounter;
+            this.state_ = WindowState.CLOSING;
+        }
+
+        public get isAnimating(): boolean {
+            return this.state_ !== WindowState.NORMAL;
+        }
+
+        private get maxCounter(): number {
+            return 10;
+        }
+
         public update() {
+            if (this.counter_ === 0) {
+                return;
+            }
+            this.counter_--;
+            if (this.counter_ === 0) {
+                this.state_ = WindowState.NORMAL;
+            }
         }
 
         public draw(screen: graphics.Image) {
@@ -38,6 +73,21 @@ namespace game {
               context.restore();*/
             this.background_.fill({r: 0, g: 64, b: 128, a: this.opaque_});
             let geoM = new graphics.GeometryMatrix();
+
+            let rate = 1 - this.counter_ / this.maxCounter;
+            switch (this.state_) {
+            case WindowState.OPENING:
+                geoM.translate(0, -this.height_ / 2);
+                geoM.scale(1, rate);
+                geoM.translate(0, this.height_ / 2);
+                break;
+            case WindowState.CLOSING:
+                geoM.translate(0, -this.height_ / 2);
+                geoM.scale(1, 1- rate);
+                geoM.translate(0, this.height_ / 2);
+                break;
+            }
+
             geoM.translate(this.x_ + 1, this.y_ + 1);
             screen.drawImage(this.background_, {geoM});
         }

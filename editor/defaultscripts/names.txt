@@ -9,6 +9,7 @@ Event Command Interpreter
 Character Sprite
 
 Window
+Message Window
 
 Map Scene
 Battle Scene

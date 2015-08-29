@@ -12,23 +12,35 @@ namespace game {
 
     class ShowMessageEventCommand {
         private isTerminated_: boolean;
-        private message_: string
+        private messageWindow_: MessageWindow;
+        private isClosingStarted_: boolean;
 
         constructor(message: string) {
             this.isTerminated_ = false;
-            this.message_ = message;
+            this.messageWindow_ = new MessageWindow(message);
+            this.isClosingStarted_ = false;
+            this.messageWindow_.open();
         }
 
         public get isTerminated() { return this.isTerminated_; }
 
         public update() {
-            if ($input.isTrigger(KEY_ENTER)) {
+            this.messageWindow_.update();
+            if (this.messageWindow_.isAnimating) {
+                return;
+            }
+            if (this.isClosingStarted_) {
                 this.isTerminated_ = true;
+                return;
+            }
+            if ($input.isTrigger(KEY_ENTER)) {
+                this.messageWindow_.close();
+                this.isClosingStarted_ = true;
             }
         }
 
         public draw(screen: graphics.Image) {
-            BitmapFont.Regular.drawAt(screen, this.message_, 0, 0, {r: 255, g: 255, b: 255, a: 255});
+            this.messageWindow_.draw(screen);
         }
     }
 
