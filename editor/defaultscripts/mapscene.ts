@@ -173,7 +173,7 @@ namespace game {
                 }
             }
 
-            let tileSetImage = Images.byName('tileset');
+            let tileSetImage = $images.byName('tileset');
             screen.drawImage(tileSetImage, {imageParts, geoM});
 
             let characterSprites = [this.playerSprite_].concat(this.eventSprites_);

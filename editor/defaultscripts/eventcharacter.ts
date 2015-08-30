@@ -6,7 +6,7 @@ namespace game {
         constructor(data: data.Event) {
             this.data_ = data;
             let page = this.currentPage;
-            let image = Images.byId(page.image);
+            let image = $images.byId(page.image);
             let character = new Character(image, page.imageX);
             character.forceMove(this.data_.x, this.data_.y);
             character.direction = page.imageY;

@@ -14,7 +14,7 @@ namespace game {
 
         public draw(screen: graphics.Image) {
             // TODO: Define and use data.System.titleBackgroundImage
-            let bgImage = Images.byName('background_field');
+            let bgImage = $images.byName('background_field');
             screen.drawImage(bgImage);
         }
     }

@@ -14,37 +14,37 @@
 
 let $gameData: data.Game = null;
 let $idToData: {[id: string]: any} = {};
+let $images: Images = null;
 let $regularFont: BitmapFont = null;
 let $numberFont: BitmapFont = null;
 
-namespace Images {
-    var imgs: {[id: string]: graphics.Image} = {};
+class Images {
+    private imgs_: {[id: string]: graphics.Image} = {};
+    private imgsByName_: {[name: string]: graphics.Image} = {};
 
-    export function byId(id: string): graphics.Image {
+    public byId(id: string): graphics.Image {
         let game = $gameData;
 
-        if (id in imgs) {
-            return imgs[id];
+        if (id in this.imgs_) {
+            return this.imgs_[id];
         }
         let img = new Image();
         img.src = $idToData[id].data;
-        return imgs[id] = new graphics.Image(img);
+        return this.imgs_[id] = new graphics.Image(img);
     }
 
     // TODO: Deprecate this
-    var imgsByName: {[name: string]: graphics.Image} = {};
-
-    export function byName(name: string): graphics.Image {
+    public byName(name: string): graphics.Image {
         let game = $gameData;
 
-        if (name in imgsByName) {
-            return imgsByName[name];
+        if (name in this.imgsByName_) {
+            return this.imgsByName_[name];
         }
         for (let image of game.images) {
             if (image.name === name) {
                 let img = new Image();
                 img.src = image.data;
-                return imgsByName[name] = new graphics.Image(img);
+                return this.imgsByName_[name] = new graphics.Image(img);
             }
         }
         return null;
@@ -59,11 +59,11 @@ interface BitmapFont {
 let mplusImages: {[key:string]: graphics.Image} = {};
 let arcadeImage: graphics.Image;
 
-function initializeBitmapFonts(game: data.Game) {
+function initializeBitmapFonts(images: Images, game: data.Game) {
     for (let key of ['latin', 'bmp0', 'bmp2', 'bmp3', 'bmp4', 'bmp5', 'bmp6', 'bmp7', 'bmp8', 'bmp9', 'bmp15']) {
-        mplusImages[key] = Images.byName('mplus_' + key);
+        mplusImages[key] = images.byName('mplus_' + key);
     }
-    arcadeImage = Images.byId(game.system.numberFontImage);
+    arcadeImage = images.byId(game.system.numberFontImage);
 }
 
 class RegularFont {
@@ -272,7 +272,9 @@ window.addEventListener('load', () => {
         }
         $idToData[data.NullImage.id] = data.NullImage;
 
-        initializeBitmapFonts($gameData);
+        $images = new Images();
+
+        initializeBitmapFonts($images, $gameData);
         $regularFont = new RegularFont();
         $numberFont = new NumberFont();
 
@@ -296,10 +298,11 @@ window.addEventListener('load', () => {
             content: `
             declare var $gameData: data.Game;
             declare var $idToData: {[id: string]: any};
-            declare namespace Images {
-                export function byId(id: string): graphics.Image;
-                export function byName(name: string): graphics.Image;
+            declare class Images {
+                byId(id: string): graphics.Image;
+                byName(name: string): graphics.Image;
             }
+            declare var $images: Images;
             declare interface BitmapFont {
                 textSize(str: string): {width: number, height: number};
                 drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);

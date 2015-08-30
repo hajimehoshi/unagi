@@ -21,7 +21,7 @@ namespace game {
         }
 
         public get name(): string { return this.name_; }
-        public get image(): graphics.Image { return Images.byId(this.image_); }
+        public get image(): graphics.Image { return $images.byId(this.image_); }
         public get hp(): number { return this.hp_; }
         public get mp(): number { return this.mp_; }
         public get maxHP(): number {

@@ -64,13 +64,13 @@ namespace game {
 
         public draw(screen: graphics.Image) {
             // TODO: Do not use name to specify an image. We should use ID in any cases.
-            let bgImg = Images.byName('background_field');
+            let bgImg = $images.byName('background_field');
             screen.drawImage(bgImg);
 
             // TODO: Make a troop
             {
                 let enemy = $gameData.enemies[0];
-                let enemyImg = Images.byId(enemy.image);
+                let enemyImg = $images.byId(enemy.image);
                 let dx = (320 - enemyImg.width) / 2;
                 let dy = (160 - enemyImg.height) / 2;
                 let geoM = new graphics.GeometryMatrix();
