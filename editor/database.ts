@@ -26,15 +26,12 @@ namespace editor {
             });
         }
 
-        public toggle(show: boolean) {
-            if (show) {
+        public render(game: data.Game, info: RenderInfo): void {
+            if (info.editingMode === EditingMode.Database) {
                 this.element_.style.display = 'block';
             } else {
                 this.element_.style.display = 'none';
             }
-        }
-
-        public render(game: data.Game): void {
             if (!game) {
                 return;
             }

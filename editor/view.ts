@@ -48,10 +48,8 @@ namespace editor {
         }
 
         public render(game: data.Game, info: RenderInfo): void {
-            let editingMode = info.editingMode;
-            this.database_.toggle(editingMode === EditingMode.Database);
             this.toolbar_.render(info);
-            this.database_.render(game);
+            this.database_.render(game, info);
 
             let maps = game ? game.maps : [];
             let items = maps.map((map: data.Map): ListBoxItem => {
