@@ -141,8 +141,6 @@ namespace game {
         }
 
         public draw(screen: graphics.Image) {
-            screen.fill({r: 0, g: 0, b: 0, a: 255});
-
             let cameraX = -this.playerSprite_.x + (320 - this.playerSprite_.width) / 2;
             let cameraY = -this.playerSprite_.y + (240 - this.playerSprite_.height) / 2;
             let geoM = new graphics.GeometryMatrix()

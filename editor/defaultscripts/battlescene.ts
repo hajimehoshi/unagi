@@ -14,27 +14,17 @@ namespace game {
             this.window_.update();
         }
         
-        public drawShadowTextAt(screen: graphics.Image, text: string, x: number, y: number, color: graphics.Color) {
-            BitmapFont.Regular.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
-            BitmapFont.Regular.drawAt(screen, text, x, y, color);
-        }
-
-        public drawShadowNumberTextAt(screen: graphics.Image, text: string, x: number, y: number, color: graphics.Color) {
-            BitmapFont.Number.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
-            BitmapFont.Number.drawAt(screen, text, x, y, color);
-        }
-
         public draw(screen: graphics.Image) {
             this.window_.draw(screen);
-            this.drawShadowTextAt(screen, this.actor_.name, this.window_.x + 8, this.window_.y + 32,
+            Window.drawShadowTextAt(screen, this.actor_.name, this.window_.x + 8, this.window_.y + 32,
                                   {r: 255, g: 255, b: 192, a: 255});
             let x = this.window_.x + 8;
             let y = this.window_.y + 52;
-            this.drawShadowNumberTextAt(screen, "HP", x, y, {r: 192, g: 192, b: 255, a: 255});
-            this.drawShadowNumberTextAt(screen, "9999", x + 32, y, {r: 255, g: 255, b: 255, a: 255});
+            Window.drawShadowNumberTextAt(screen, "HP", x, y, {r: 192, g: 192, b: 255, a: 255});
+            Window.drawShadowNumberTextAt(screen, "9999", x + 32, y, {r: 255, g: 255, b: 255, a: 255});
             y += 12;
-            this.drawShadowNumberTextAt(screen, "MP", x, y, {r: 192, g: 192, b: 255, a: 255});
-            this.drawShadowNumberTextAt(screen, " 999", x + 32, y, {r: 255, g: 255, b: 255, a: 255});
+            Window.drawShadowNumberTextAt(screen, "MP", x, y, {r: 192, g: 192, b: 255, a: 255});
+            Window.drawShadowNumberTextAt(screen, " 999", x + 32, y, {r: 255, g: 255, b: 255, a: 255});
             let actorImg = this.actor_.image;
             let sx = 24;
             let sy = 64;

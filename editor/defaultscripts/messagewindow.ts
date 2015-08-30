@@ -5,7 +5,7 @@ namespace game {
 
         constructor(content: string) {
             this.window_ = new Window(0, 0, 320, 80);
-            this.content_ = content;
+            this.window_.content = content;
         }
 
         public open() {
@@ -26,10 +26,6 @@ namespace game {
 
         public draw(screen: graphics.Image) {
             this.window_.draw(screen);
-            if (this.window_.isAnimating) {
-                return;
-            }
-            BitmapFont.Regular.drawAt(screen, this.content_, this.window_.x + 8, this.window_.y + 8, {r: 255, g: 255, b: 255, a: 255});
         }
     }
 }

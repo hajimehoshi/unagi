@@ -60,7 +60,7 @@ namespace game {
                 if (this.previousScene_) {
                     this.previousScene_.draw(screen);
                 }
-                this.offscreen_.clear();
+                this.offscreen_.fill({r: 0, g: 0, b:0, a: 255});
                 this.current.draw(this.offscreen_);
                 let colorM = new graphics.ColorMatrix();
                 colorM.scale(1, 1, 1, rate);

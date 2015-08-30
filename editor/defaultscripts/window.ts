@@ -6,6 +6,16 @@ namespace game {
     }
 
     export class Window {
+        public static drawShadowTextAt(screen: graphics.Image, text: string, x: number, y: number, color: graphics.Color) {
+            BitmapFont.Regular.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
+            BitmapFont.Regular.drawAt(screen, text, x, y, color);
+        }
+
+        public static drawShadowNumberTextAt(screen: graphics.Image, text: string, x: number, y: number, color: graphics.Color) {
+            BitmapFont.Number.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
+            BitmapFont.Number.drawAt(screen, text, x, y, color);
+        }
+
         private x_: number;
         private y_: number;
         private width_: number;
@@ -14,6 +24,7 @@ namespace game {
         private background_: graphics.Image;
         private counter_: number;
         private state_: WindowState;
+        private content_: string;
 
         constructor(x, y, width, height) {
             this.x_ = x;
@@ -32,6 +43,9 @@ namespace game {
         public get height(): number { return this.height_; }
         public get opaque(): number { return this.opaque_; }
         public set opaque(opaque: number) { this.opaque_ = opaque; }
+
+        public get content(): string { return this.content_; }
+        public set content(content: string) { this.content_ = content; }
 
         public open() {
             this.counter_ = this.maxCounter;
@@ -90,6 +104,14 @@ namespace game {
 
             geoM.translate(this.x_ + 1, this.y_ + 1);
             screen.drawImage(this.background_, {geoM});
+
+            if (!this.content_) {
+                return;
+            }
+            if (this.isAnimating) {
+                return;
+            }
+            Window.drawShadowTextAt(screen, this.content_, this.x + 8, this.y + 8, {r: 255, g: 255, b: 255, a: 255});
         }
     }
 }
