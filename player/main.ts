@@ -49,177 +49,180 @@ namespace Images {
     }
 }
 
-namespace BitmapFont {
-    let mplusImages: {[key:string]: graphics.Image} = {};
-    let arcadeImage: graphics.Image;
+interface BitmapFont {
+    textSize(str: string): {width: number, height: number};
+    drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);
+}
 
-    export function initialize(game: data.Game) {
-        for (let key of ['latin', 'bmp0', 'bmp2', 'bmp3', 'bmp4', 'bmp5', 'bmp6', 'bmp7', 'bmp8', 'bmp9', 'bmp15']) {
-            mplusImages[key] = Images.byName('mplus_' + key);
+let mplusImages: {[key:string]: graphics.Image} = {};
+let arcadeImage: graphics.Image;
+
+function initializeBitmapFonts(game: data.Game) {
+    for (let key of ['latin', 'bmp0', 'bmp2', 'bmp3', 'bmp4', 'bmp5', 'bmp6', 'bmp7', 'bmp8', 'bmp9', 'bmp15']) {
+        mplusImages[key] = Images.byName('mplus_' + key);
+    }
+    arcadeImage = Images.byId(game.system.numberFontImage);
+}
+
+class RegularFont {
+    private static get TEXT_FULL_WIDTH(): number { return 12; }
+    private static get TEXT_HALF_WIDTH(): number { return 6; }
+    private static get TEXT_HEIGHT(): number { return data.gridSize; }
+
+    public textSize(str: string): {width: number, height: number} {
+        let width = 0;
+        let height = RegularFont.TEXT_HEIGHT;
+        let currentWidth = 0;
+        for (let ch of str) {
+            let code = <number>(<any>ch).codePointAt(0);
+            if (ch == '\n') {
+                height += RegularFont.TEXT_HEIGHT;
+                continue;
+            }
+            if (code <= 0xff) {
+                currentWidth += RegularFont.TEXT_HALF_WIDTH; 
+                width = Math.max(width, currentWidth);
+                continue;
+            }
+            currentWidth += RegularFont.TEXT_FULL_WIDTH;
+            width = Math.max(width, currentWidth);
         }
-        arcadeImage = Images.byId(game.system.numberFontImage);
+        return {width, height}
     }
 
-    export namespace Regular {
-        const TEXT_FULL_WIDTH = 12;
-        const TEXT_HALF_WIDTH = 6;
-        const TEXT_HEIGHT = data.gridSize;
-
-        function textSize(str: string): {width: number, height: number} {
-            let width = 0;
-            let height = TEXT_HEIGHT;
-            let currentWidth = 0;
-            for (let ch of str) {
-                let code = <number>(<any>ch).codePointAt(0);
-                if (ch == '\n') {
-                    height += TEXT_HEIGHT;
-                    continue;
-                }
-                if (code <= 0xff) {
-                    currentWidth += TEXT_HALF_WIDTH; 
-                    width = Math.max(width, currentWidth);
-                    continue;
-                }
-                currentWidth += TEXT_FULL_WIDTH;
-                width = Math.max(width, currentWidth);
-            }
-            return {width, height}
+    public drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color) {
+        let cx = 0;
+        let cy = 0;
+        let size = this.textSize(str);
+        let keyToImageParts: {[key: string]: graphics.ImagePart[]} = {};
+        for (let key in mplusImages) {
+            keyToImageParts[key] = [];
         }
 
-        export function drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color) {
-            let cx = 0;
-            let cy = 0;
-            let size = textSize(str);
-            let keyToImageParts: {[key: string]: graphics.ImagePart[]} = {};
-            for (let key in mplusImages) {
-                keyToImageParts[key] = [];
+        for (let ch of str) {
+            let code = <number>(<any>ch).codePointAt(0);
+            if (ch == '\n') {
+                cx = 0;
+                cy += RegularFont.TEXT_HEIGHT;
+                continue;
             }
-
-            for (let ch of str) {
-                let code = <number>(<any>ch).codePointAt(0);
-                if (ch == '\n') {
-                    cx = 0;
-                    cy += TEXT_HEIGHT;
-                    continue;
-                }
-                if (ch == ' ') {
-                    cx += TEXT_HALF_WIDTH;
-                    continue;
-                }
-                if (code <= 0xff) {
-                    let sx = (code % 32) * TEXT_HALF_WIDTH;
-                    let sy = ((code / 32)|0) * TEXT_HEIGHT;
-                    let w = TEXT_HALF_WIDTH;
-                    let h = TEXT_HEIGHT;
-                    keyToImageParts['latin'].push({
-                        srcX: sx, srcY: sy, srcWidth: w, srcHeight: h,
-                        dstX: cx, dstY: cy, dstWidth: w, dstHeight: h,
-                    });
-                    cx += TEXT_HALF_WIDTH;
-                    continue;
-                }
-                if (0xffff < code) {
-                    cx += TEXT_FULL_WIDTH;
-                    continue;
-                }
-                let page = (code / 4096)|0;
-                let key = `bmp${page}`;
-                let sx = (code % 64) * TEXT_FULL_WIDTH;
-                let sy = (((code % 4096) / 64)|0) * TEXT_HEIGHT;
-                let w = TEXT_FULL_WIDTH;
-                let h = TEXT_HEIGHT;
-                keyToImageParts[key].push({
+            if (ch == ' ') {
+                cx += RegularFont.TEXT_HALF_WIDTH;
+                continue;
+            }
+            if (code <= 0xff) {
+                let sx = (code % 32) * RegularFont.TEXT_HALF_WIDTH;
+                let sy = ((code / 32)|0) * RegularFont.TEXT_HEIGHT;
+                let w = RegularFont.TEXT_HALF_WIDTH;
+                let h = RegularFont.TEXT_HEIGHT;
+                keyToImageParts['latin'].push({
                     srcX: sx, srcY: sy, srcWidth: w, srcHeight: h,
                     dstX: cx, dstY: cy, dstWidth: w, dstHeight: h,
                 });
-                cx += TEXT_FULL_WIDTH;
+                cx += RegularFont.TEXT_HALF_WIDTH;
+                continue;
             }
-            let geoM = new graphics.GeometryMatrix();
-            geoM.translate(x, y);
-            let colorM = new graphics.ColorMatrix();
-            colorM.scale(color.r / 255, color.g / 255, color.b / 255, color.a / 255);
-            for (let key in keyToImageParts) {
-                let img = mplusImages[key];
-                screen.drawImage(img, {
-                    geoM:       geoM,
-                    colorM:     colorM,
-                    imageParts: keyToImageParts[key],
-                });
+            if (0xffff < code) {
+                cx += RegularFont.TEXT_FULL_WIDTH;
+                continue;
             }
+            let page = (code / 4096)|0;
+            let key = `bmp${page}`;
+            let sx = (code % 64) * RegularFont.TEXT_FULL_WIDTH;
+            let sy = (((code % 4096) / 64)|0) * RegularFont.TEXT_HEIGHT;
+            let w = RegularFont.TEXT_FULL_WIDTH;
+            let h = RegularFont.TEXT_HEIGHT;
+            keyToImageParts[key].push({
+                srcX: sx, srcY: sy, srcWidth: w, srcHeight: h,
+                dstX: cx, dstY: cy, dstWidth: w, dstHeight: h,
+            });
+            cx += RegularFont.TEXT_FULL_WIDTH;
+        }
+        let geoM = new graphics.GeometryMatrix();
+        geoM.translate(x, y);
+        let colorM = new graphics.ColorMatrix();
+        colorM.scale(color.r / 255, color.g / 255, color.b / 255, color.a / 255);
+        for (let key in keyToImageParts) {
+            let img = mplusImages[key];
+            screen.drawImage(img, {
+                geoM:       geoM,
+                colorM:     colorM,
+                imageParts: keyToImageParts[key],
+            });
         }
     }
+}
 
-    // TODO: Rename
-    export namespace Number {
-        const TEXT_WIDTH = 8;
-        const TEXT_HEIGHT = 8;
+// TODO: Rename
+class NumberFont {
+    private static get TEXT_WIDTH(): number { return 8; }
+    private static get TEXT_HEIGHT(): number { return 8; }
 
-        function textSize(str: string): {width: number, height: number} {
-            let width = 0;
-            let height = TEXT_HEIGHT;
-            let currentWidth = 0;
-            for (let ch of str) {
-                let code = <number>(<any>ch).codePointAt(0);
-                if (ch == '\n') {
-                    height += TEXT_HEIGHT;
-                    continue;
-                }
-                if (code < 0x20) {
-                    continue
-                }
-                if (0x80 <= code) {
-                    continue;
-                }
-                currentWidth += TEXT_WIDTH;
-                width = Math.max(width, currentWidth);
+    public textSize(str: string): {width: number, height: number} {
+        let width = 0;
+        let height = NumberFont.TEXT_HEIGHT;
+        let currentWidth = 0;
+        for (let ch of str) {
+            let code = <number>(<any>ch).codePointAt(0);
+            if (ch == '\n') {
+                height += NumberFont.TEXT_HEIGHT;
+                continue;
             }
-            return {width, height}
+            if (code < 0x20) {
+                continue
+            }
+            if (0x80 <= code) {
+                continue;
+            }
+            currentWidth += NumberFont.TEXT_WIDTH;
+            width = Math.max(width, currentWidth);
+        }
+        return {width, height}
+    }
+
+    public drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color) {
+        let cx = 0;
+        let cy = 0;
+        let size = this.textSize(str);
+
+        let dstCanvas = <HTMLCanvasElement>document.createElement('canvas');
+        dstCanvas.width = size.width;
+        dstCanvas.height = size.height;
+
+        let imageParts = <graphics.ImagePart[]>[];
+        for (let ch of str) {
+            let code = <number>(<any>ch).codePointAt(0);
+            if (ch == '\n') {
+                cx = 0;
+                cy += NumberFont.TEXT_HEIGHT;
+                continue;
+            }
+            if (ch == ' ') {
+                cx += NumberFont.TEXT_WIDTH;
+                continue;
+            }
+            if (code < 0x20) {
+                continue
+            }
+            if (0x80 <= code) {
+                continue
+            }
+            let sx = (code % 16) * NumberFont.TEXT_WIDTH;
+            let sy = (((code / 16)|0) - 2) * NumberFont.TEXT_HEIGHT;
+            let w = NumberFont.TEXT_WIDTH;
+            let h = NumberFont.TEXT_HEIGHT;
+            imageParts.push({
+                srcX: sx, srcY: sy, srcWidth: w, srcHeight: h,
+                dstX: cx, dstY: cy, dstWidth: w, dstHeight: h,
+            });
+            cx += NumberFont.TEXT_WIDTH;
         }
 
-        export function drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color) {
-            let cx = 0;
-            let cy = 0;
-            let size = textSize(str);
-
-            let dstCanvas = <HTMLCanvasElement>document.createElement('canvas');
-            dstCanvas.width = size.width;
-            dstCanvas.height = size.height;
-
-            let imageParts = <graphics.ImagePart[]>[];
-            for (let ch of str) {
-                let code = <number>(<any>ch).codePointAt(0);
-                if (ch == '\n') {
-                    cx = 0;
-                    cy += TEXT_HEIGHT;
-                    continue;
-                }
-                if (ch == ' ') {
-                    cx += TEXT_WIDTH;
-                    continue;
-                }
-                if (code < 0x20) {
-                    continue
-                }
-                if (0x80 <= code) {
-                    continue
-                }
-                let sx = (code % 16) * TEXT_WIDTH;
-                let sy = (((code / 16)|0) - 2) * TEXT_HEIGHT;
-                let w = TEXT_WIDTH;
-                let h = TEXT_HEIGHT;
-                imageParts.push({
-                    srcX: sx, srcY: sy, srcWidth: w, srcHeight: h,
-                    dstX: cx, dstY: cy, dstWidth: w, dstHeight: h,
-                });
-                cx += TEXT_WIDTH;
-            }
-
-            let geoM = new graphics.GeometryMatrix();
-            geoM.translate(x, y);
-            let colorM = new graphics.ColorMatrix();
-            colorM.scale(color.r / 255, color.g / 255, color.b / 255, color.a / 255);
-            screen.drawImage(arcadeImage, {geoM, colorM, imageParts});
-        }
+        let geoM = new graphics.GeometryMatrix();
+        geoM.translate(x, y);
+        let colorM = new graphics.ColorMatrix();
+        colorM.scale(color.r / 255, color.g / 255, color.b / 255, color.a / 255);
+        screen.drawImage(arcadeImage, {geoM, colorM, imageParts});
     }
 }
 
@@ -266,7 +269,9 @@ window.addEventListener('load', () => {
         }
         $idToData[data.NullImage.id] = data.NullImage;
 
-        BitmapFont.initialize($gameData);
+        initializeBitmapFonts($gameData);
+        let regularFont = new RegularFont();
+        let numberFont = new NumberFont();
 
         let scriptFiles = [];
         scriptFiles.push({
@@ -292,14 +297,12 @@ window.addEventListener('load', () => {
                 export function byId(id: string): graphics.Image;
                 export function byName(name: string): graphics.Image;
             }
-            declare namespace BitmapFont {
-                export namespace Regular {
-                    export function drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);
-                }
-                export namespace Number {
-                    export function drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);
-                }
+            declare interface BitmapFont {
+                textSize(str: string): {width: number, height: number};
+                drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);
             }
+            declare var $regularFont: BitmapFont;
+            declare var $numberFont: BitmapFont;
             declare class Env {
                 static run(f: (CanvasRenderingContext2D) => void);
             }

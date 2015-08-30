@@ -7,13 +7,13 @@ namespace game {
 
     export class Window {
         public static drawShadowTextAt(screen: graphics.Image, text: string, x: number, y: number, color: graphics.Color) {
-            BitmapFont.Regular.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
-            BitmapFont.Regular.drawAt(screen, text, x, y, color);
+            $regularFont.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
+            $regularFont.drawAt(screen, text, x, y, color);
         }
 
         public static drawShadowNumberTextAt(screen: graphics.Image, text: string, x: number, y: number, color: graphics.Color) {
-            BitmapFont.Number.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
-            BitmapFont.Number.drawAt(screen, text, x, y, color);
+            $numberFont.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
+            $numberFont.drawAt(screen, text, x, y, color);
         }
 
         private x_: number;
