@@ -312,6 +312,7 @@ window.addEventListener('load', () => {
             };
         }));
         let jsScript = typescript.compile(scriptFiles);
+        (<HTMLElement>document.querySelector('#nowLoading')).style.display = 'none';
         // Call 'eval' indirectly so that 'this' variable will be a global window.
         (0, eval)(jsScript);
     });
