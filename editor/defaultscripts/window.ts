@@ -16,6 +16,8 @@ namespace game {
             $numberFont.drawAt(screen, text, x, y, color);
         }
 
+        public static get PADDING() { return data.GRID_SIZE / 2; }
+
         private x_: number;
         private y_: number;
         private width_: number;
@@ -38,7 +40,9 @@ namespace game {
         }
 
         public get x(): number { return this.x_; }
+        public set x(x: number) { this.x_ = x; }
         public get y(): number { return this.y_; }
+        public set y(y: number) { this.y_ = y; }
         public get width(): number { return this.width_; }
         public get height(): number { return this.height_; }
         public get opaque(): number { return this.opaque_; }
@@ -111,7 +115,7 @@ namespace game {
             if (this.isAnimating) {
                 return;
             }
-            Window.drawShadowTextAt(screen, this.content_, this.x + 8, this.y + 8, {r: 255, g: 255, b: 255, a: 255});
+            Window.drawShadowTextAt(screen, this.content_, this.x_ + Window.PADDING, this.y_ + Window.PADDING, {r: 255, g: 255, b: 255, a: 255});
         }
     }
 }

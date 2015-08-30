@@ -52,7 +52,7 @@ class Images {
 }
 
 interface BitmapFont {
-    textSize(str: string): {width: number, height: number};
+    calculateTextSize(str: string): {width: number, height: number};
     drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);
 }
 
@@ -69,7 +69,7 @@ class RegularFont {
         }
     }
 
-    public textSize(str: string): {width: number, height: number} {
+    public calculateTextSize(str: string): {width: number, height: number} {
         let width = 0;
         let height = RegularFont.TEXT_HEIGHT;
         let currentWidth = 0;
@@ -93,7 +93,7 @@ class RegularFont {
     public drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color) {
         let cx = 0;
         let cy = 0;
-        let size = this.textSize(str);
+        let size = this.calculateTextSize(str);
         let keyToImageParts: {[key: string]: graphics.ImagePart[]} = {};
         for (let key in this.images_) {
             keyToImageParts[key] = [];
@@ -164,7 +164,7 @@ class NumberFont {
         this.image_ = images.byId(game.system.numberFontImage);
     }
 
-    public textSize(str: string): {width: number, height: number} {
+    public calculateTextSize(str: string): {width: number, height: number} {
         let width = 0;
         let height = NumberFont.TEXT_HEIGHT;
         let currentWidth = 0;
@@ -189,7 +189,7 @@ class NumberFont {
     public drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color) {
         let cx = 0;
         let cy = 0;
-        let size = this.textSize(str);
+        let size = this.calculateTextSize(str);
 
         let dstCanvas = <HTMLCanvasElement>document.createElement('canvas');
         dstCanvas.width = size.width;
@@ -303,7 +303,7 @@ window.addEventListener('load', () => {
             }
             declare var $images: Images;
             declare interface BitmapFont {
-                textSize(str: string): {width: number, height: number};
+                calculateTextSize(str: string): {width: number, height: number};
                 drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);
             }
             declare var $regularFont: BitmapFont;
