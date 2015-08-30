@@ -65,12 +65,9 @@ namespace editor {
 
             // TODO: Move this to store?
             info.tileSetImage = this.tileSetImage_;
+
             this.tiles_.render(game, info);
             this.palette_.render(info);
-        }
-
-        public updateSelectedTiles(s: SelectedTiles): void {
-            this.palette_.selectedTiles = s;
         }
 
         public playGame(game: data.Game): void {

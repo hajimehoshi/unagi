@@ -80,11 +80,8 @@ namespace editor {
             return x + y * Palette.tileXNum;
         }
 
-        public set selectedTiles(s: SelectedTiles) {
-            this.selectedTiles_ = s;
-        }
-
         public render(info: RenderInfo): void {
+            this.selectedTiles_ = info.selectedTiles;
             let canvas = <HTMLCanvasElement>this.element_.querySelector('canvas');
             let context = canvas.getContext('2d');
             (<any>context).imageSmoothingEnabled = false;
