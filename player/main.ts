@@ -14,6 +14,8 @@
 
 let $gameData: data.Game = null;
 let $idToData: {[id: string]: any} = {};
+let $regularFont: BitmapFont = null;
+let $numberFont: BitmapFont = null;
 
 namespace Images {
     var imgs: {[id: string]: graphics.Image} = {};
@@ -271,8 +273,8 @@ window.addEventListener('load', () => {
         $idToData[data.NullImage.id] = data.NullImage;
 
         initializeBitmapFonts($gameData);
-        let regularFont = new RegularFont();
-        let numberFont = new NumberFont();
+        $regularFont = new RegularFont();
+        $numberFont = new NumberFont();
 
         let scriptFiles = [];
         scriptFiles.push({
