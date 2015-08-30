@@ -4,7 +4,7 @@ namespace game {
         private content_: string;
 
         constructor(content: string) {
-            this.window_ = new Window(0, 160, 320, 80);
+            this.window_ = new Window(0, 0, 320, 80);
             this.content_ = content;
         }
 
