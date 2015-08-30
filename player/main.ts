@@ -56,20 +56,18 @@ interface BitmapFont {
     drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);
 }
 
-let mplusImages: {[key:string]: graphics.Image} = {};
-let arcadeImage: graphics.Image;
-
-function initializeBitmapFonts(images: Images, game: data.Game) {
-    for (let key of ['latin', 'bmp0', 'bmp2', 'bmp3', 'bmp4', 'bmp5', 'bmp6', 'bmp7', 'bmp8', 'bmp9', 'bmp15']) {
-        mplusImages[key] = images.byName('mplus_' + key);
-    }
-    arcadeImage = images.byId(game.system.numberFontImage);
-}
-
 class RegularFont {
     private static get TEXT_FULL_WIDTH(): number { return 12; }
     private static get TEXT_HALF_WIDTH(): number { return 6; }
     private static get TEXT_HEIGHT(): number { return data.GRID_SIZE; }
+
+    private images_: {[key:string]: graphics.Image} = {};
+
+    constructor(images: Images, game: data.Game) {
+        for (let key of ['latin', 'bmp0', 'bmp2', 'bmp3', 'bmp4', 'bmp5', 'bmp6', 'bmp7', 'bmp8', 'bmp9', 'bmp15']) {
+            this.images_[key] = images.byName('mplus_' + key);
+        }
+    }
 
     public textSize(str: string): {width: number, height: number} {
         let width = 0;
@@ -97,7 +95,7 @@ class RegularFont {
         let cy = 0;
         let size = this.textSize(str);
         let keyToImageParts: {[key: string]: graphics.ImagePart[]} = {};
-        for (let key in mplusImages) {
+        for (let key in this.images_) {
             keyToImageParts[key] = [];
         }
 
@@ -145,7 +143,7 @@ class RegularFont {
         let colorM = new graphics.ColorMatrix();
         colorM.scale(color.r / 255, color.g / 255, color.b / 255, color.a / 255);
         for (let key in keyToImageParts) {
-            let img = mplusImages[key];
+            let img = this.images_[key];
             screen.drawImage(img, {
                 geoM:       geoM,
                 colorM:     colorM,
@@ -159,6 +157,12 @@ class RegularFont {
 class NumberFont {
     private static get TEXT_WIDTH(): number { return 8; }
     private static get TEXT_HEIGHT(): number { return 8; }
+
+    private image_: graphics.Image;
+
+    constructor(images: Images, game: data.Game) {
+        this.image_ = images.byId(game.system.numberFontImage);
+    }
 
     public textSize(str: string): {width: number, height: number} {
         let width = 0;
@@ -224,7 +228,7 @@ class NumberFont {
         geoM.translate(x, y);
         let colorM = new graphics.ColorMatrix();
         colorM.scale(color.r / 255, color.g / 255, color.b / 255, color.a / 255);
-        screen.drawImage(arcadeImage, {geoM, colorM, imageParts});
+        screen.drawImage(this.image_, {geoM, colorM, imageParts});
     }
 }
 
@@ -273,10 +277,8 @@ window.addEventListener('load', () => {
         $idToData[data.NullImage.id] = data.NullImage;
 
         $images = new Images();
-
-        initializeBitmapFonts($images, $gameData);
-        $regularFont = new RegularFont();
-        $numberFont = new NumberFont();
+        $regularFont = new RegularFont($images, $gameData);
+        $numberFont = new NumberFont($images, $gameData);
 
         let scriptFiles = [];
         scriptFiles.push({
