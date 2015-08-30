@@ -92,13 +92,13 @@ namespace editor {
 
             if ((this.editingMode_ === EditingMode.Event) ||
                 (info.selectedTiles && info.cursorPositionX !== void(0))) {
-                let x = info.cursorPositionX * data.gridSize * this.scale_ - info.offsetX;
-                let y = info.cursorPositionY * data.gridSize * this.scale_ - info.offsetY;
+                let x = info.cursorPositionX * data.GRID_SIZE * this.scale_ - info.offsetX;
+                let y = info.cursorPositionY * data.GRID_SIZE * this.scale_ - info.offsetY;
                 if (this.editingMode_ !== EditingMode.Event) {
                     info.selectedTiles.renderFrameAt(context, x, y);
                 } else {
-                    let width = data.gridSize * this.scale_;
-                    let height = data.gridSize * this.scale_;
+                    let width = data.GRID_SIZE * this.scale_;
+                    let height = data.GRID_SIZE * this.scale_;
                     Canvas.drawFrame(context, x, y, width, height);
                 }
             }
@@ -131,8 +131,8 @@ namespace editor {
             if (e.buttons === 2) {
                 let x = e.offsetX + this.offsetX_;
                 let y = e.offsetY + this.offsetY_;
-                let tx = (((x / data.gridSize)|0) / this.scale_)|0;
-                let ty = (((y / data.gridSize)|0) / this.scale_)|0;
+                let tx = (((x / data.GRID_SIZE)|0) / this.scale_)|0;
+                let ty = (((y / data.GRID_SIZE)|0) / this.scale_)|0;
                 this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
                 Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
             }
@@ -164,8 +164,8 @@ namespace editor {
                 }
                 let x = e.offsetX + this.offsetX_;
                 let y = e.offsetY + this.offsetY_;
-                let tx = (((x / data.gridSize)|0) / this.scale_)|0;
-                let ty = (((y / data.gridSize)|0) / this.scale_)|0;
+                let tx = (((x / data.GRID_SIZE)|0) / this.scale_)|0;
+                let ty = (((y / data.GRID_SIZE)|0) / this.scale_)|0;
                 let px = Math.min(tx, this.tilesSelectingState_.startX);
                 let py = Math.min(ty, this.tilesSelectingState_.startY);
                 Store.instance.updateTilesCursorPosition(px, py);
@@ -188,8 +188,8 @@ namespace editor {
                 }
                 let x = e.offsetX + this.offsetX_;
                 let y = e.offsetY + this.offsetY_;
-                let tx = (((x / data.gridSize)|0) / this.scale_)|0;
-                let ty = (((y / data.gridSize)|0) / this.scale_)|0;
+                let tx = (((x / data.GRID_SIZE)|0) / this.scale_)|0;
+                let ty = (((y / data.GRID_SIZE)|0) / this.scale_)|0;
                 this.tilesSelectingState_.moveTo(tx, ty);
                 Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInTiles(this.map_));
                 this.tilesSelectingState_ = null;

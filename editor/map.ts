@@ -52,8 +52,8 @@ namespace editor {
             if (x < 0 || y < 0) {
                 return {x: void(0), y: void(0)};
             }
-            let tileX = (((x / data.gridSize)|0) / scale)|0;
-            let tileY = (((y / data.gridSize)|0) / scale)|0;
+            let tileX = (((x / data.GRID_SIZE)|0) / scale)|0;
+            let tileY = (((y / data.GRID_SIZE)|0) / scale)|0;
             return {x: tileX, y: tileY};
         }
 
@@ -82,14 +82,14 @@ namespace editor {
             for (let j = 0; j < this.yNum; j++) {
                 for (let i = 0; i < this.xNum; i++) {
                     let tile = this.tileAt(i, j);
-                    let srcX = tile % Palette.tileXNum * data.gridSize;
-                    let srcY = ((tile / Palette.tileXNum)|0) * data.gridSize;
-                    let srcWidth = data.gridSize;
-                    let srcHeight = data.gridSize;
-                    let dstX = i * data.gridSize * scale - offsetX;
-                    let dstY = j * data.gridSize * scale - offsetY;
-                    let dstWidth = data.gridSize * scale;
-                    let dstHeight = data.gridSize * scale;
+                    let srcX = tile % Palette.tileXNum * data.GRID_SIZE;
+                    let srcY = ((tile / Palette.tileXNum)|0) * data.GRID_SIZE;
+                    let srcWidth = data.GRID_SIZE;
+                    let srcHeight = data.GRID_SIZE;
+                    let dstX = i * data.GRID_SIZE * scale - offsetX;
+                    let dstY = j * data.GRID_SIZE * scale - offsetY;
+                    let dstWidth = data.GRID_SIZE * scale;
+                    let dstHeight = data.GRID_SIZE * scale;
                     context.drawImage(tileSetImage, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight);
                 }
             }
@@ -103,9 +103,9 @@ namespace editor {
 
             context.beginPath();
             let minX = -offsetX;
-            let maxX = this.xNum * data.gridSize * scale - offsetX;
+            let maxX = this.xNum * data.GRID_SIZE * scale - offsetX;
             let minY = -offsetY;
-            let maxY = this.yNum * data.gridSize * scale - offsetY;
+            let maxY = this.yNum * data.GRID_SIZE * scale - offsetY;
             context.moveTo(minX, minY);
             context.lineTo(maxX, minY);
             context.lineTo(maxX, maxY);
@@ -116,12 +116,12 @@ namespace editor {
 
             context.beginPath();
             for (let j = 0; j < this.yNum + 1; j++) {
-                let y = j * data.gridSize * scale - offsetY;
+                let y = j * data.GRID_SIZE * scale - offsetY;
                 context.moveTo(minX, y);
                 context.lineTo(maxX, y);
             }
             for (let i = 0; i < this.xNum + 1; i++) {
-                let x = i * data.gridSize * scale - offsetX;
+                let x = i * data.GRID_SIZE * scale - offsetX;
                 context.moveTo(x, minY);
                 context.lineTo(x, maxY);
             }
@@ -137,10 +137,10 @@ namespace editor {
             context.strokeStyle = '#f5f5f5';
             context.fillStyle = '#9e9e9e';
             for (let event of this.data_.events) {
-                let x = event.x * data.gridSize * scale - offsetX;
-                let y = event.y * data.gridSize * scale - offsetY;
-                let width = data.gridSize * scale;
-                let height = data.gridSize * scale;;
+                let x = event.x * data.GRID_SIZE * scale - offsetX;
+                let y = event.y * data.GRID_SIZE * scale - offsetY;
+                let width = data.GRID_SIZE * scale;
+                let height = data.GRID_SIZE * scale;;
                 context.strokeRect(x + 4, y + 4, width - 8, height - 8);
                 context.fillRect(x + 5, y + 5, width - 10, height - 10);
                 if (event.pages.length === 0) {

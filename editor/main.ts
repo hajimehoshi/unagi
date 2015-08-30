@@ -71,8 +71,8 @@ namespace editor {
                 return;
 
             let tile = this.tiles_[0];
-            let x = (tile % Palette.tileXNum) * data.gridSize * Palette.scale;
-            let y = ((tile / Palette.tileXNum)|0) * data.gridSize * Palette.scale;
+            let x = (tile % Palette.tileXNum) * data.GRID_SIZE * Palette.scale;
+            let y = ((tile / Palette.tileXNum)|0) * data.GRID_SIZE * Palette.scale;
 
             Canvas.drawFrame(context, x, y, this.width, this.height);
         }
@@ -101,11 +101,11 @@ namespace editor {
         }
 
         private get width(): number {
-            return this.xNum_ * data.gridSize * Palette.scale;
+            return this.xNum_ * data.GRID_SIZE * Palette.scale;
         }
 
         private get height(): number {
-            return this.yNum_ * data.gridSize * Palette.scale;
+            return this.yNum_ * data.GRID_SIZE * Palette.scale;
         }
     }
 

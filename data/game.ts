@@ -13,7 +13,7 @@
 // limitations under the License.
 
 namespace data {
-    export const gridSize = 16; // TODO: Rename
+    export const GRID_SIZE = 16;
 
     export const MAX_LEVEL    = 99;
     export const MAX_ACTOR_HP = 9999;

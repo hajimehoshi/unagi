@@ -67,7 +67,7 @@ function initializeBitmapFonts(game: data.Game) {
 class RegularFont {
     private static get TEXT_FULL_WIDTH(): number { return 12; }
     private static get TEXT_HALF_WIDTH(): number { return 6; }
-    private static get TEXT_HEIGHT(): number { return data.gridSize; }
+    private static get TEXT_HEIGHT(): number { return data.GRID_SIZE; }
 
     public textSize(str: string): {width: number, height: number} {
         let width = 0;
@@ -247,6 +247,7 @@ class Env {
 }
 
 window.addEventListener('load', () => {
+    // TODO: Use this in game scripts
     const width = 320;
     const height = 240;
 

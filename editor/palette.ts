@@ -26,8 +26,8 @@ namespace editor {
             this.element_ = element;
 
             let canvas = <HTMLCanvasElement>this.element_.querySelector('canvas');
-            let width = Palette.tileXNum * data.gridSize;
-            let height = Palette.tileYNum * data.gridSize;
+            let width = Palette.tileXNum * data.GRID_SIZE;
+            let height = Palette.tileYNum * data.GRID_SIZE;
             let scale = Palette.scale;
             canvas.width = width * scale;
             canvas.height = height * scale;
@@ -40,8 +40,8 @@ namespace editor {
             this.element_.addEventListener('mousedown', (e: MouseEvent) => {
                 let x = e.offsetX;
                 let y = e.offsetY;
-                let tx = (((x / data.gridSize)|0) / Palette.scale)|0;
-                let ty = (((y / data.gridSize)|0) / Palette.scale)|0;
+                let tx = (((x / data.GRID_SIZE)|0) / Palette.scale)|0;
+                let ty = (((y / data.GRID_SIZE)|0) / Palette.scale)|0;
                 this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
                 Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInPalette());
             })
@@ -55,8 +55,8 @@ namespace editor {
                 }
                 let x = e.offsetX;
                 let y = e.offsetY;
-                let tx = (((x / data.gridSize)|0) / Palette.scale)|0;
-                let ty = (((y / data.gridSize)|0) / Palette.scale)|0;
+                let tx = (((x / data.GRID_SIZE)|0) / Palette.scale)|0;
+                let ty = (((y / data.GRID_SIZE)|0) / Palette.scale)|0;
                 this.tilesSelectingState_.moveTo(tx, ty);
                 Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInPalette());
             })
@@ -66,8 +66,8 @@ namespace editor {
                 }
                 let x = e.offsetX;
                 let y = e.offsetY;
-                let tx = (((x / data.gridSize)|0) / Palette.scale)|0;
-                let ty = (((y / data.gridSize)|0) / Palette.scale)|0;
+                let tx = (((x / data.GRID_SIZE)|0) / Palette.scale)|0;
+                let ty = (((y / data.GRID_SIZE)|0) / Palette.scale)|0;
                 this.tilesSelectingState_.moveTo(tx, ty);
                 Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInPalette());
                 this.tilesSelectingState_ = null;
@@ -75,8 +75,8 @@ namespace editor {
         }
 
         private positionToTile(px: number, py: number): number {
-            let x = (px / (data.gridSize * Palette.scale))|0;
-            let y = (py / (data.gridSize * Palette.scale))|0;
+            let x = (px / (data.GRID_SIZE * Palette.scale))|0;
+            let y = (py / (data.GRID_SIZE * Palette.scale))|0;
             return x + y * Palette.tileXNum;
         }
 

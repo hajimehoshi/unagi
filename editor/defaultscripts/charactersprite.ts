@@ -47,8 +47,8 @@ namespace game {
         }
 
         public get x(): number {
-            let x = this.character_.x * data.gridSize - (this.width - data.gridSize) / 2;
-            let nextX = x + this.movingDirectionX * data.gridSize;
+            let x = this.character_.x * data.GRID_SIZE - (this.width - data.GRID_SIZE) / 2;
+            let nextX = x + this.movingDirectionX * data.GRID_SIZE;
             if (x !== nextX) {
                 let rate = this.character_.movingRate;
                 x = ((1 - rate) * x + rate * nextX)|0;
@@ -57,8 +57,8 @@ namespace game {
         }
 
         public get y(): number {
-            let y = this.character_.y * data.gridSize - this.height + data.gridSize;
-            let nextY = y + this.movingDirectionY * data.gridSize;
+            let y = this.character_.y * data.GRID_SIZE - this.height + data.GRID_SIZE;
+            let nextY = y + this.movingDirectionY * data.GRID_SIZE;
             if (y !== nextY) {
                 let rate = this.character_.movingRate;
                 y = ((1 - rate) * y + rate * nextY)|0;

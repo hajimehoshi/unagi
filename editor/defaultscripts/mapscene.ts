@@ -146,8 +146,8 @@ namespace game {
             let geoM = new graphics.GeometryMatrix()
             geoM.translate(cameraX, cameraY);
 
-            let cx = (-cameraX / data.gridSize)|0;
-            let cy = (-cameraY / data.gridSize)|0;
+            let cx = (-cameraX / data.GRID_SIZE)|0;
+            let cy = (-cameraY / data.GRID_SIZE)|0;
             let minI = Math.max(cx - 1, 0);
             let maxI = Math.min(cx + 20, this.map_.xNum);
             let minJ = Math.max(cy - 1, 0);
@@ -156,19 +156,19 @@ namespace game {
             for (let j = minJ; j <= maxJ; j++) {
                 for (let i = minI; i <= maxI; i++) {
                     let tile = this.map_.tiles[i + this.map_.xNum * j];
-                    let sx = (tile % 8) * data.gridSize;
-                    let sy = ((tile / 8)|0) * data.gridSize;
-                    let dx = i * data.gridSize;
-                    let dy = j * data.gridSize;
+                    let sx = (tile % 8) * data.GRID_SIZE;
+                    let sy = ((tile / 8)|0) * data.GRID_SIZE;
+                    let dx = i * data.GRID_SIZE;
+                    let dy = j * data.GRID_SIZE;
                     imageParts.push({
                         srcX:      sx,
                         srcY:      sy,
-                        srcWidth:  data.gridSize,
-                        srcHeight: data.gridSize,
+                        srcWidth:  data.GRID_SIZE,
+                        srcHeight: data.GRID_SIZE,
                         dstX:      dx,
                         dstY:      dy,
-                        dstWidth:  data.gridSize,
-                        dstHeight: data.gridSize,
+                        dstWidth:  data.GRID_SIZE,
+                        dstHeight: data.GRID_SIZE,
                     });
                 }
             }
