@@ -49,7 +49,6 @@ namespace editor {
 
         public render(game: data.Game, info: RenderInfo): void {
             this.toolbar_.render(info);
-            this.database_.updateMode(info.databaseMode);
             this.database_.render(game, info);
 
             let maps = game ? game.maps : [];

@@ -31,19 +31,11 @@ namespace editor {
                 this.element_.style.display = 'block';
             } else {
                 this.element_.style.display = 'none';
-            }
-            if (!game) {
                 return;
             }
-            for (let content of this.contents_) {
-                content.render(game);
-            }
-        }
 
-        // TODO: Unify this to render
-        public updateMode(mode: DatabaseMode): void {
-            let modeStr = DatabaseMode[mode].toLowerCase();
-            this.toolbar_.updateMode(mode);
+            let modeStr = DatabaseMode[info.databaseMode].toLowerCase();
+            this.toolbar_.updateMode(info.databaseMode);
             [].forEach.call(this.element_.querySelectorAll('div.databaseContent'), (node: Node) => {
                 let e = <HTMLElement>node;
                 if (e.dataset['groupName'] === modeStr) {
@@ -52,6 +44,13 @@ namespace editor {
                     e.style.display = 'none';
                 }
             });
+
+            if (!game) {
+                return;
+            }
+            for (let content of this.contents_) {
+                content.render(game);
+            }
         }
     }
 }
