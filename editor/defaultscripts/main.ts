@@ -12,8 +12,8 @@ namespace game {
         }
 
         $input.update();
-        $sceneStack.current.update();
-        $sceneStack.current.draw(screen);
+        $sceneStack.update();
+        $sceneStack.draw(screen);
     }
 
     Env.run(update);

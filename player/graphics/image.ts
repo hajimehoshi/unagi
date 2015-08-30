@@ -129,6 +129,7 @@ namespace graphics {
             this.framebuffer_.fill(color)
         }
 
+        // TODO: Define type of options type
         public drawImage(image: Image, options?: {[key: string]: any}) {
             this.pixels_ = null;
             let geoM = new GeometryMatrix();

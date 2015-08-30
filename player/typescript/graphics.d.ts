@@ -68,7 +68,7 @@ declare namespace graphics {
         public setAt(i: number, j: number, e: number);
         public add(other: GeometryMatrix);
         public concat(other: GeometryMatrix);
-        public scale(x: number, y: number);
-        public translate(tx: number, ty: number);
+        public scale(r: number, g: number, b: number, a: number);
+        public translate(r: number, g: number, b: number, a: number);
     }
 }
