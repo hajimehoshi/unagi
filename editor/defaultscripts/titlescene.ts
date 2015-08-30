@@ -4,7 +4,7 @@ namespace game {
         }
 
         public update() {
-            if ($input.isTrigger(KEY_ENTER)) {
+            if ($input.isTrigger(Key.ENTER)) {
                 let initialPosition = $gameData.playerInitialPosition;
                 let map = <data.Map>$idToData[initialPosition.mapId];
                 $sceneStack.push(new MapScene(map));

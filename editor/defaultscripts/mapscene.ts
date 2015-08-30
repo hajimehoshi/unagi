@@ -40,28 +40,28 @@ namespace game {
         private tryMovePlayer(): boolean {
             let x = $gameState.playerCharacter.x;
             let y = $gameState.playerCharacter.y;
-            if ($input.isPressed(KEY_LEFT)) {
+            if ($input.isPressed(Key.LEFT)) {
                 if (this.passable(x - 1, y)) {
                     $gameState.playerCharacter.startMoving(CharacterDirection.LEFT);
                     return true;
                 }
                 $gameState.playerCharacter.turn(CharacterDirection.LEFT);
             }
-            if ($input.isPressed(KEY_UP)) {
+            if ($input.isPressed(Key.UP)) {
                 if (this.passable(x, y - 1)) {
                     $gameState.playerCharacter.startMoving(CharacterDirection.UP);
                     return true;
                 }
                 $gameState.playerCharacter.turn(CharacterDirection.UP);
             }
-            if ($input.isPressed(KEY_RIGHT)) {
+            if ($input.isPressed(Key.RIGHT)) {
                 if (this.passable(x + 1, y)) {
                     $gameState.playerCharacter.startMoving(CharacterDirection.RIGHT);
                     return true;
                 }
                 $gameState.playerCharacter.turn(CharacterDirection.RIGHT);
             }
-            if ($input.isPressed(KEY_DOWN)) {
+            if ($input.isPressed(Key.DOWN)) {
                 if (this.passable(x, y + 1)) {
                     $gameState.playerCharacter.startMoving(CharacterDirection.DOWN);
                     return true;
@@ -131,7 +131,7 @@ namespace game {
             if (this.tryMovePlayer()) {
                 return;
             }
-            if ($input.isTrigger(KEY_ENTER)) {
+            if ($input.isTrigger(Key.ENTER)) {
                 let event = this.currentEvent;
                 if (!event) {
                     return;

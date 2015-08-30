@@ -1,10 +1,11 @@
 namespace game {
-    // TODO: Use enum
-    export const KEY_ENTER = 13;
-    export const KEY_LEFT  = 37;
-    export const KEY_UP    = 38;
-    export const KEY_RIGHT = 39;
-    export const KEY_DOWN  = 40;
+    export enum Key {
+        ENTER = 13,
+        LEFT  = 37,
+        UP    = 38,
+        RIGHT = 39,
+        DOWN  = 40,
+    }
 
     export class Input {
         private keyPressed_: {[key: number]: boolean};
@@ -28,11 +29,11 @@ namespace game {
             }
         }
 
-        public isPressed(key: number): boolean {
+        public isPressed(key: Key): boolean {
             return 0 < this.keyStates_[key];
         }
 
-        public isTrigger(key: number): boolean {
+        public isTrigger(key: Key): boolean {
             return this.keyStates_[key] === 1;
         }
 

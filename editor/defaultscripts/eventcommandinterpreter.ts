@@ -33,7 +33,7 @@ namespace game {
                 this.isTerminated_ = true;
                 return;
             }
-            if ($input.isTrigger(KEY_ENTER)) {
+            if ($input.isTrigger(Key.ENTER)) {
                 this.messageWindow_.close();
                 this.isClosingStarted_ = true;
             }
