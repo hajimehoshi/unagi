@@ -31,6 +31,12 @@ declare namespace graphics {
         dstHeight: number;
     }
 
+    export type DrawImageOptions = {
+        geoM?:       GeometryMatrix;
+        colorM?:     ColorMatrix;
+        imageParts?: ImagePart[];
+    }
+
     export class Image {
         constructor(width: number, height: number);
         constructor(imageData: ImageData);
@@ -41,7 +47,7 @@ declare namespace graphics {
         public height: number;
         public clear();
         public fill(color: Color);
-        public drawImage(image: Image, options?: {[key: string]: any});
+        public drawImage(image: Image, options?: DrawImageOptions);
         public at(i: number, j: number): Color;
     }
 

@@ -66,7 +66,7 @@ namespace game {
             return y;
         }
 
-        public draw(screen: graphics.Image, options: {[key: string]: any}) {
+        public draw(screen: graphics.Image, options?: graphics.DrawImageOptions) {
             if (!options) {
                 options = {};
             }
@@ -84,7 +84,7 @@ namespace game {
                     dstHeight: this.height,
                 }
             ];
-            options['imageParts'] = imageParts;
+            options.imageParts = imageParts;
             screen.drawImage(this.character_.image, options);
         }
     }

@@ -31,6 +31,12 @@ namespace graphics {
         dstHeight: number;
     };
 
+    export declare type DrawImageOptions = {
+        geoM?:       GeometryMatrix;
+        colorM?:     ColorMatrix;
+        imageParts?: ImagePart[];
+    };
+
     export class Image {
         private static canvas_: HTMLCanvasElement;
         private static gl_: WebGLRenderingContext;
@@ -130,7 +136,7 @@ namespace graphics {
         }
 
         // TODO: Define type of options type
-        public drawImage(image: Image, options?: {[key: string]: any}) {
+        public drawImage(image: Image, options?: DrawImageOptions) {
             this.pixels_ = null;
             let geoM = new GeometryMatrix();
             let colorM = new ColorMatrix();
@@ -150,13 +156,13 @@ namespace graphics {
             ];
             if (options) {
                 if ('geoM' in options) {
-                    geoM = <GeometryMatrix>options['geoM'];
+                    geoM = options.geoM;
                 }
                 if ('colorM' in options) {
-                    colorM = <ColorMatrix>options['colorM'];
+                    colorM = options.colorM;
                 }
                 if ('imageParts' in options) {
-                    imageParts = <ImagePart[]>options['imageParts'];
+                    imageParts = options.imageParts;
                 }
             }
             let quads = <webgl.TextureQuad[]>[];
