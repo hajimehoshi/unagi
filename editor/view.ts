@@ -49,6 +49,7 @@ namespace editor {
 
         public render(game: data.Game, info: RenderInfo): void {
             this.toolbar_.render(info);
+            this.database_.updateMode(info.databaseMode);
             this.database_.render(game, info);
 
             let maps = game ? game.maps : [];
@@ -94,10 +95,6 @@ namespace editor {
             let iframe = <HTMLIFrameElement>document.querySelector('iframe.player');
             iframe.src = 'about:blank';
             iframe.style.display = 'none';
-        }
-
-        public updateDatabaseMode(databaseMode: DatabaseMode): void {
-            this.database_.updateMode(databaseMode);
         }
     }
 }

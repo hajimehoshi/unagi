@@ -32,6 +32,7 @@ namespace editor {
 
     export declare type RenderInfo = {
         editingMode:     EditingMode;
+        databaseMode:    DatabaseMode;
         mapId:           string;
         map:             Map; // TODO: Calc from mapId
         offsetX:         number;
@@ -61,6 +62,7 @@ namespace editor {
         private tilesCursorY_: number;
         private tilesOffset_: {[id: string]: {x: number, y: number}};
         private editingMode_: EditingMode;
+        private databaseMode_: DatabaseMode;
 
         constructor() {
             if (Store.instance_) {
@@ -71,8 +73,8 @@ namespace editor {
         public initialize(view: View, game: data.Game): void {
             this.view_ = view;
             this.tilesOffset_ = {};
-            this.updateEditingMode(EditingMode.Map);
-            this.updateDatabaseMode(DatabaseMode.Actors);
+            this.editingMode_ = EditingMode.Map;
+            this.databaseMode_ = DatabaseMode.Actors;
             this.updateGame(game);
         }
 
@@ -91,6 +93,7 @@ namespace editor {
             let offsetY = offset ? offset.y : void(0);
             this.view_.render(this.game_, {
                 editingMode:     this.editingMode_,
+                databaseMode:    this.databaseMode_,
                 mapId:           this.currentMapId_,
                 map:             this.currentMap,
                 offsetX:         offsetX,
@@ -182,7 +185,8 @@ namespace editor {
         }
 
         public updateDatabaseMode(databaseMode: DatabaseMode): void {
-            this.view_.updateDatabaseMode(databaseMode);
+            this.databaseMode_ = databaseMode;
+            this.render();
         }
 
         public updateCurrentDataItem(): void {
