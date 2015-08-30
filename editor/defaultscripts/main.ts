@@ -32,9 +32,7 @@ namespace game {
     export var $sceneStack = new SceneStack();
 
     (() => {
-        $sceneStack.push(new MapScene($gameData.maps[0]));
-        let initialPosition = $gameData.playerInitialPosition;
-        $gameState.moveTo(initialPosition.mapId, initialPosition.x, initialPosition.y);
+        $sceneStack.push(new TitleScene());
     })()
 
     function update(screen: graphics.Image) {

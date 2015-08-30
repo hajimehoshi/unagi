@@ -255,6 +255,9 @@ window.addEventListener('load', () => {
     canvas.focus();
     window.addEventListener('message', (e) => {
         $gameData = <data.Game>e.data;
+        for (let map of $gameData.maps) {
+            $idToData[map.id] = map;
+        }
         for (let actor of $gameData.actors) {
             $idToData[actor.id] = actor;
         }

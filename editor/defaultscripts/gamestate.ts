@@ -29,8 +29,7 @@ namespace game {
             return this.party_.length;
         }
 
-        public moveTo(mapId: string, x: number, y: number) {
-            // TODO: Use mapId
+        public moveTo(x: number, y: number) {
             this.playerCharacter_.forceMove(x, y);
         }
     }

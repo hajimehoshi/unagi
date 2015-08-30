@@ -11,6 +11,7 @@ Character Sprite
 Window
 Message Window
 
+Title Scene
 Map Scene
 Battle Scene
 

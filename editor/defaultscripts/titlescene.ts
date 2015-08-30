@@ -1,0 +1,21 @@
+namespace game {
+    export class TitleScene {
+        constructor() {
+        }
+
+        public update() {
+            if ($input.isTrigger(KEY_ENTER)) {
+                let initialPosition = $gameData.playerInitialPosition;
+                let map = <data.Map>$idToData[initialPosition.mapId];
+                $sceneStack.push(new MapScene(map));
+                $gameState.moveTo(initialPosition.x, initialPosition.y);
+            }
+        }
+
+        public draw(screen: graphics.Image) {
+            // TODO: Define and use data.System.titleBackgroundImage
+            let bgImage = Images.byName('background_field');
+            screen.drawImage(bgImage);
+        }
+    }
+}
