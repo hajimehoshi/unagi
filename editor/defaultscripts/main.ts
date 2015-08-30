@@ -16,5 +16,5 @@ namespace game {
         $sceneStack.draw(screen);
     }
 
-    Env.run(update);
+    runLoop(update);
 }

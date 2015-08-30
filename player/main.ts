@@ -232,24 +232,21 @@ class NumberFont {
     }
 }
 
-// TODO: Better name?
-class Env {
-    public static run(f: (CanvasRenderingContext2D) => void) {
-        let canvas = <HTMLCanvasElement>window.document.querySelector('canvas');
-        let offscreen = new graphics.Image(canvas.width, canvas.height);
-        let defaultRenderTarget = graphics.Image.defaultRenderTarget;
+function runLoop(f: (CanvasRenderingContext2D) => void) {
+    let canvas = <HTMLCanvasElement>window.document.querySelector('canvas');
+    let offscreen = new graphics.Image(canvas.width, canvas.height);
+    let defaultRenderTarget = graphics.Image.defaultRenderTarget;
 
-        let loop = () => {
-            offscreen.clear();
-            f(offscreen);
+    let loop = () => {
+        offscreen.clear();
+        f(offscreen);
 
-            defaultRenderTarget.clear();
-            defaultRenderTarget.drawImage(offscreen);
+        defaultRenderTarget.clear();
+        defaultRenderTarget.drawImage(offscreen);
 
-            window.requestAnimationFrame(loop);
-        };
-        loop();
-    }
+        window.requestAnimationFrame(loop);
+    };
+    loop();
 }
 
 window.addEventListener('load', () => {
@@ -311,9 +308,7 @@ window.addEventListener('load', () => {
             }
             declare var $regularFont: BitmapFont;
             declare var $numberFont: BitmapFont;
-            declare class Env {
-                static run(f: (CanvasRenderingContext2D) => void);
-            }
+            declare function runLoop(f: (CanvasRenderingContext2D) => void);
             `,
         })
         scriptFiles = scriptFiles.concat($gameData.scripts.map(s => {
