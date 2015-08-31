@@ -41,6 +41,26 @@ namespace editor {
             mapListElement.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentMap(e.detail.id);
             });
+
+            let div = document.createElement('div');
+            div.innerHTML = '<div style="width: 256px; height: 256px;">';
+            div.style.height = '128px';
+            div.style.width = '128px';
+
+            document.body.appendChild(div);
+            div.style.overflow = 'scroll';
+            let scrollBarWidth = div.offsetWidth - div.clientWidth;
+            document.body.removeChild(div);
+
+            let palette = <HTMLElement>document.querySelector('#palette')
+            palette.style.width = `calc(256px + ${scrollBarWidth}px)`;
+
+            let maps = <HTMLElement>document.querySelector('unagi-listbox.maps');
+            maps.style.width = `calc(256px + ${scrollBarWidth}px)`;
+
+            let tiles = <HTMLElement>document.querySelector('#tiles')
+            tiles.style.left = `calc(256px + ${scrollBarWidth}px + 1px)`;
+            tiles.style.width = `calc(100% - 256px - ${scrollBarWidth}px - 1px)`;
         }
 
         private get mapList(): ListBoxElement {
