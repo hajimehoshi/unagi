@@ -82,6 +82,7 @@ namespace editor {
             let str = localStorage.getItem('temporary');
             if (str) {
                 game = JSON.parse(str);
+                game.scripts = editor.initialGame.scripts;
             } else {
                 game = editor.initialGame;
             }
@@ -91,7 +92,7 @@ namespace editor {
                 if (!this.needToSave_) {
                     return;
                 }
-                // TODO: Need to compress?
+                // TODO: Use MessagePack if needed.
                 localStorage.setItem('temporary', JSON.stringify(this.game_));
                 this.needToSave_ = false;
             }, 1000);
