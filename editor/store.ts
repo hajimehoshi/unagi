@@ -63,6 +63,7 @@ namespace editor {
         private tilesOffset_: {[id: string]: {x: number, y: number}};
         private editingMode_: EditingMode;
         private databaseMode_: DatabaseMode;
+        private needToSave_: boolean;
 
         constructor() {
             if (Store.instance_) {
@@ -70,12 +71,29 @@ namespace editor {
             }
         }
 
-        public initialize(view: View, game: data.Game): void {
+        public initialize(view: View): void {
             this.view_ = view;
             this.tilesOffset_ = {};
             this.editingMode_ = EditingMode.Map;
             this.databaseMode_ = DatabaseMode.Actors;
+
+            let game: data.Game = null;
+            let str = localStorage.getItem('temporary');
+            if (str) {
+                game = JSON.parse(str);
+            } else {
+                game = editor.initialGame;
+            }
             this.updateGame(game);
+            this.needToSave_ = true;
+            setInterval(() => {
+                if (!this.needToSave_) {
+                    return;
+                }
+                // TODO: Need to compress?
+                localStorage.setItem('temporary', JSON.stringify(this.game_));
+                this.needToSave_ = false;
+            }, 1000);
         }
 
         private get currentMap(): Map {
@@ -103,9 +121,10 @@ namespace editor {
                 selectedTiles:   this.selectedTiles_,
                 tileSetImage:    null,
             });
+            this.needToSave_ = true;
         }
 
-        public updateGame(game: data.Game): void {
+        private updateGame(game: data.Game): void {
             this.game_ = game;
             this.idToMap_ = {}; // TODO: Use standard Map.
             for (let map of this.game_.maps) {

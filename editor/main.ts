@@ -192,6 +192,6 @@ namespace editor {
 (() => {
     window.addEventListener('load', () => {
         let store = editor.Store.instance;
-        store.initialize(new editor.View(), editor.initialGame);
+        store.initialize(new editor.View());
     });
 })();
