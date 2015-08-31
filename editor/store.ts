@@ -78,6 +78,7 @@ namespace editor {
             this.databaseMode_ = DatabaseMode.Actors;
 
             let game: data.Game = null;
+            // TODO: Clear localStorage when data.Game is fixed breaking compatibility.
             let str = localStorage.getItem('temporary');
             if (str) {
                 game = JSON.parse(str);

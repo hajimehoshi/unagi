@@ -43,6 +43,14 @@ namespace editor {
         return result;
     }
 
+    function createEmptyTiles(size: number) {
+        let arr = new Array(size);
+        for (let i = 0; i < arr.length; i++) {
+            arr[i] = 0;
+        }
+        return arr;
+    }
+
     export const initialGame: data.Game = {
         id: data.UUID.generate(),
         maps: [
@@ -51,7 +59,7 @@ namespace editor {
                 name:   'New Map',
                 xNum:   100,
                 yNum:   100,
-                tiles:  new Int16Array(100 * 100),
+                tiles:  createEmptyTiles(100 * 100),
                 events: [
                     {
                         id:     data.UUID.generate(),
@@ -81,7 +89,7 @@ namespace editor {
                 name:   'New Map 2',
                 xNum:   20,
                 yNum:   15,
-                tiles:  new Int16Array(20 * 15),
+                tiles:  createEmptyTiles(20 * 15),
                 events: [],
             },
         ],
