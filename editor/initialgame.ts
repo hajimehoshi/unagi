@@ -213,6 +213,6 @@ namespace editor {
         initialGame.actors[3].image = idFromName(initialGame.images, 'character7');
         initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_ebiten');
         initialGame.system.numberFontImage = idFromName(initialGame.images, 'font_arcade');
-        initialGame.system.windowImage = idFromName(initialGame.images, 'font_arcade');
+        initialGame.system.windowImage = idFromName(initialGame.images, 'window');
     })()
 }

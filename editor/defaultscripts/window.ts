@@ -7,6 +7,8 @@ namespace game {
     }
 
     export class Window {
+        private static windowImage_: graphics.Image;
+
         public static drawShadowTextAt(screen: graphics.Image, text: string, x: number, y: number, color: graphics.Color) {
             $regularFont.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
             $regularFont.drawAt(screen, text, x, y, color);
@@ -17,6 +19,13 @@ namespace game {
             $numberFont.drawAt(screen, text, x, y, color);
         }
 
+        private static get windowImage(): graphics.Image {
+            if (Window.windowImage_) {
+                return Window.windowImage_;
+            }
+            return Window.windowImage_ = $images.byId($gameData.system.windowImage);
+        }
+
         public static get PADDING() { return data.GRID_SIZE / 2; }
 
         private x_: number;
@@ -24,7 +33,6 @@ namespace game {
         private width_: number;
         private height_: number;
         private opaque_: number;
-        private background_: graphics.Image;
         private counter_: number;
         private state_: WindowState;
         private content_: string;
@@ -35,7 +43,6 @@ namespace game {
             this.width_ = width;
             this.height_ = height;
             this.opaque_ = 255;
-            this.background_ = new graphics.Image(width - 2, height - 2);
             this.counter_ = 0;
             this.state_ = WindowState.NORMAL;
         }
@@ -93,18 +100,7 @@ namespace game {
                 return;
             }
 
-            // TODO: Draw the frame
-            /*context.save();
-              context.fillStyle = `rgba(0, 64, 128, ${alpha})`;
-              context.fillRect(this.x_, this.y_, this.width_, this.height_);
-              context.strokeStyle = `rgba(128, 128, 128, 1)`;
-              context.strokeRect(this.x_ + 0.5, this.y_ + 0.5, this.width_ - 1, this.height_ - 1);
-              context.strokeStyle = `rgba(255, 255, 255, 1)`;
-              context.strokeRect(this.x_ + 1.5, this.y_ + 1.5, this.width_ - 3, this.height_ - 3);
-              context.restore();*/
-            this.background_.fill({r: 0, g: 64, b: 128, a: this.opaque_});
             let geoM = new graphics.GeometryMatrix();
-
             let rate = 1 - this.counter_ / this.maxCounter;
             switch (this.state_) {
             case WindowState.OPENING:
@@ -118,9 +114,116 @@ namespace game {
                 geoM.translate(0, this.height_ / 2);
                 break;
             }
+            geoM.translate(this.x_, this.y_);
 
-            geoM.translate(this.x_ + 1, this.y_ + 1);
-            screen.drawImage(this.background_, {geoM});
+            let imageParts: graphics.ImagePart[] = [
+                {
+                    srcX: 0,
+                    srcY: 0,
+                    srcWidth: 32,
+                    srcHeight: 32,
+                    dstX: 0,
+                    dstY: 0,
+                    dstWidth: this.width_,
+                    dstHeight: this.height_,
+                },
+            ];
+            screen.drawImage(Window.windowImage, {geoM, imageParts});
+
+            let frameOX = 32;
+            let frameOY = 0;
+            imageParts = [
+                // upper left
+                {
+                    srcX: frameOX + 0,
+                    srcY: frameOY + 0,
+                    srcWidth: 8,
+                    srcHeight: 8,
+                    dstX: 0,
+                    dstY: 0,
+                    dstWidth: 8,
+                    dstHeight: 8,
+                },
+                // upper
+                {
+                    srcX: frameOX + 8,
+                    srcY: frameOY + 0,
+                    srcWidth: 16,
+                    srcHeight: 8,
+                    dstX: 8,
+                    dstY: 0,
+                    dstWidth: this.width - 16,
+                    dstHeight: 8,
+                },
+                // upper right
+                {
+                    srcX: frameOX + 24,
+                    srcY: frameOY + 0,
+                    srcWidth: 8,
+                    srcHeight: 8,
+                    dstX: this.width_ - 8,
+                    dstY: 0,
+                    dstWidth: 8,
+                    dstHeight: 8,
+                },
+                // left
+                {
+                    srcX: frameOX + 0,
+                    srcY: frameOY + 8,
+                    srcWidth: 8,
+                    srcHeight: 16,
+                    dstX: 0,
+                    dstY: 8,
+                    dstWidth: 8,
+                    dstHeight: this.height - 16,
+                },
+                // right
+                {
+                    srcX: frameOX + 24,
+                    srcY: frameOY + 8,
+                    srcWidth: 8,
+                    srcHeight: 16,
+                    dstX: this.width - 8,
+                    dstY: 8,
+                    dstWidth: 8,
+                    dstHeight: this.height - 16,
+                },
+                // lower left
+                {
+                    srcX: frameOX + 0,
+                    srcY: frameOY + 24,
+                    srcWidth: 8,
+                    srcHeight: 8,
+                    dstX: 0,
+                    dstY: this.height_ - 8,
+                    dstWidth: 8,
+                    dstHeight: 8,
+                },
+                // lower
+                {
+                    srcX: frameOX + 8,
+                    srcY: frameOY + 24,
+                    srcWidth: 16,
+                    srcHeight: 8,
+                    dstX: 8,
+                    dstY: this.height - 8,
+                    dstWidth: this.width - 16,
+                    dstHeight: 8,
+                },
+                // lower right
+                {
+                    srcX: frameOX + 24,
+                    srcY: frameOY + 24,
+                    srcWidth: 8,
+                    srcHeight: 8,
+                    dstX: this.width_ - 8,
+                    dstY: this.height_ - 8,
+                    dstWidth: 8,
+                    dstHeight: 8,
+                },
+                
+            ];
+            screen.drawImage(Window.windowImage, {geoM, imageParts});
 
             if (!this.content_) {
                 return;

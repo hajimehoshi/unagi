@@ -74,6 +74,8 @@ namespace data {
         windowImage:     string,
     }
 
+    // TODO: Don't use enum because this is easy to break backward-compatibility.
+    // Use strings instead.
     export enum ImageType {
         Null,
         Character,

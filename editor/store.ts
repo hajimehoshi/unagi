@@ -79,13 +79,14 @@ namespace editor {
 
             let game: data.Game = null;
             // TODO: Clear localStorage when data.Game is fixed breaking compatibility.
-            let str = localStorage.getItem('temporary');
+            /*let str = localStorage.getItem('temporary');
             if (str) {
                 game = JSON.parse(str);
                 game.scripts = editor.initialGame.scripts;
             } else {
                 game = editor.initialGame;
-            }
+            }*/
+            game = editor.initialGame;
             this.updateGame(game);
             this.needToSave_ = true;
             setInterval(() => {
