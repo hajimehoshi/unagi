@@ -42,6 +42,8 @@ namespace editor {
                 let y = e.offsetY;
                 let tx = (((x / data.GRID_SIZE)|0) / Palette.scale)|0;
                 let ty = (((y / data.GRID_SIZE)|0) / Palette.scale)|0;
+                tx = Math.min(tx, Palette.tileXNum - 1);
+                ty = Math.min(ty, Palette.tileYNum - 1);
                 this.tilesSelectingState_ = new TilesSelectingState(tx, ty);
                 Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInPalette());
             })
@@ -57,6 +59,8 @@ namespace editor {
                 let y = e.offsetY;
                 let tx = (((x / data.GRID_SIZE)|0) / Palette.scale)|0;
                 let ty = (((y / data.GRID_SIZE)|0) / Palette.scale)|0;
+                tx = Math.min(tx, Palette.tileXNum - 1);
+                ty = Math.min(ty, Palette.tileYNum - 1);
                 this.tilesSelectingState_.moveTo(tx, ty);
                 Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInPalette());
             })
@@ -68,6 +72,8 @@ namespace editor {
                 let y = e.offsetY;
                 let tx = (((x / data.GRID_SIZE)|0) / Palette.scale)|0;
                 let ty = (((y / data.GRID_SIZE)|0) / Palette.scale)|0;
+                tx = Math.min(tx, Palette.tileXNum - 1);
+                ty = Math.min(ty, Palette.tileYNum - 1);
                 this.tilesSelectingState_.moveTo(tx, ty);
                 Store.instance.updateSelectedTiles(this.tilesSelectingState_.toSelectedTilesInPalette());
                 this.tilesSelectingState_ = null;
