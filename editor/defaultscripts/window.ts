@@ -81,7 +81,7 @@ namespace game {
             this.counter_--;
             if (this.counter_ === 0) {
                 if (this.state_ === WindowState.CLOSING) {
-                this.state_ = WindowState.CLOSED;
+                    this.state_ = WindowState.CLOSED;
                     return;
                 }
                 this.state_ = WindowState.NORMAL;
