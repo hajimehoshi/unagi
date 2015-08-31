@@ -71,14 +71,16 @@ namespace data {
         title:           string,
         initialParty:    string[],
         numberFontImage: string,
+        windowImage:     string,
     }
 
     export enum ImageType {
         Null,
         Character,
         Enemy,
-        TileSet,
         Picture,
+        TileSet,
+        Window,
     }
 
     export declare type Image = {
