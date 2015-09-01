@@ -133,7 +133,7 @@ namespace editor {
             if (typesAttr === null) {
                 typesAttr = '';
             }
-            let types = typesAttr.split(' ').map(t => data.ImageType[t]);
+            let types = typesAttr.split(' ');
             let items = game.images.filter(i => types.indexOf(i.type) >= 0).map(i => ({
                 title: i.name,
                 id:    i.id,

@@ -75,7 +75,19 @@ namespace editor {
                                     {
                                         type: 'showMessage',
                                         args: {
-                                            'content': 'Hello!',
+                                            'content': 'Hello! This is a test message.',
+                                        },
+                                    },
+                                    {
+                                        type: 'showMessage',
+                                        args: {
+                                            'content': '観自在菩薩行深般若波羅蜜多時、照見五蘊皆空、度一\n切苦厄。舎利子。色不異空、空不異色、色即是空、空\n即是色。',
+                                        },
+                                    },
+                                    {
+                                        type: 'showMessage',
+                                        args: {
+                                            'content': 'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
                                         },
                                     },
                                 ],
@@ -189,15 +201,15 @@ namespace editor {
 
     (() => {
         for (let image of defaultImages) {
-            let type = data.ImageType.Picture;
+            let type = 'picture';
             if (image.name.match(/^character/)) {
-                type = data.ImageType.Character;
+                type = 'character';
             } else if (image.name.match(/^enemy/)) {
-                type = data.ImageType.Enemy;
+                type = 'enemy';
             } else if (image.name.match(/^tileset/)) {
-                type = data.ImageType.TileSet;
+                type = 'tileSet';
             } else if (image.name.match(/^window/)) {
-                type = data.ImageType.Window;
+                type = 'window';
             }
             initialGame.images.push({
                 id:   data.UUID.generate(),

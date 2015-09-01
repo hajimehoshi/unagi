@@ -27,14 +27,14 @@ namespace editor {
                 Store.instance.addGameData(this.groupName);
             });
 
-            [].forEach.call(this.element_.querySelectorAll('input'), (e: HTMLInputElement) => {
+            [].forEach.call(this.element_.querySelectorAll('input, select'), (e: HTMLElement) => {
                 e.addEventListener('change', () => {
-                    let value: any = e.value;
-                    if (e.type === 'number') {
+                    let value: any = (<any>e).value;
+                    if (e instanceof HTMLInputElement && e.type === 'number') {
                         value = parseInt(value, 10);
                     }
                     let index = this.list.selectedIndex;
-                    let path = `${this.groupName}[${index}].${e.name}`;
+                    let path = `${this.groupName}[${index}].${(<any>e).name}`;
                     Store.instance.updateGameData(path, value);
                 });
             });
@@ -96,7 +96,7 @@ namespace editor {
                 }
                 let select = <HTMLSelectElement>this.element_.querySelector(`select[name="${key}"]`);
                 if (select) {
-                    select.value = data.ImageType[item[key]];
+                    select.value = item[key];
                     continue;
                 }
                 let img = <HTMLImageElement>this.element_.querySelector(`img[data-name="${key}"]`);

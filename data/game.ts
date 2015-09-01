@@ -74,29 +74,18 @@ namespace data {
         windowImage:     string,
     }
 
-    // TODO: Don't use enum because this is easy to break backward-compatibility.
-    // Use strings instead.
-    export enum ImageType {
-        Null,
-        Character,
-        Enemy,
-        Picture,
-        TileSet,
-        Window,
-    }
-
     export declare type Image = {
         id:   string,
         name: string,
         data: string,
-        type: ImageType,
+        type: string,
     }
 
     export const NullImage: Image = {
         id:   'ebdc76b2-beab-4aa5-8064-cab21c967e19',
         name: '',
         data: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=',
-        type: ImageType.Null,
+        type: 'null',
     };
 
     export declare type Script = {

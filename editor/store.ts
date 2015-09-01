@@ -241,7 +241,7 @@ namespace editor {
             let updated = false;
             for (let i = 0; i < keys.length; i++) {
                 let key = keys[i];
-                let m = key.match(/^(.+?)\[(\d?)\]$/);
+                let m = key.match(/^(.+?)\[(\d+?)\]$/);
                 let index = -1;
                 if (m) {
                     key = m[1];
