@@ -10,8 +10,8 @@ namespace game {
                 width = Math.max(size.width, width);
                 height += size.height;
             }
-            width += Window.PADDING * 2;
-            height += Window.PADDING * 2;
+            width += Window.PADDING_X * 2;
+            height += Window.PADDING_Y * 2;
             this.window_ = new Window(x, y, width, height);
             this.window_.content = items.join('\n');
         }

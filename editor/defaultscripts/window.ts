@@ -26,25 +26,28 @@ namespace game {
             return Window.windowImage_ = $images.byId($gameData.system.windowImage);
         }
 
-        public static get PADDING() { return data.GRID_SIZE / 2; }
+        public static get PADDING_X() { return data.GRID_SIZE; }
+        public static get PADDING_Y() { return data.GRID_SIZE / 2; }
 
         private x_: number;
         private y_: number;
         private width_: number;
         private height_: number;
-        private opaque_: number;
+        private opacity_: number;
         private counter_: number;
         private state_: WindowState;
         private content_: string;
+        private contentOffscreen_: graphics.Image;
 
         constructor(x, y, width, height) {
             this.x_ = x;
             this.y_ = y;
             this.width_ = width;
             this.height_ = height;
-            this.opaque_ = 255;
+            this.opacity_ = 255;
             this.counter_ = 0;
             this.state_ = WindowState.NORMAL;
+            this.contentOffscreen_ = new graphics.Image(width - 2 * Window.PADDING_X, height - 2 * Window.PADDING_Y);
         }
 
         public get x(): number { return this.x_; }
@@ -53,8 +56,8 @@ namespace game {
         public set y(y: number) { this.y_ = y; }
         public get width(): number { return this.width_; }
         public get height(): number { return this.height_; }
-        public get opaque(): number { return this.opaque_; }
-        public set opaque(opaque: number) { this.opaque_ = opaque; }
+        public get opacity(): number { return this.opacity_; }
+        public set opacity(opacity: number) { this.opacity_ = opacity; }
 
         public get content(): string { return this.content_; }
         public set content(content: string) { this.content_ = content; }
@@ -116,6 +119,9 @@ namespace game {
             }
             geoM.translate(this.x_, this.y_);
 
+            let colorM = new graphics.ColorMatrix();
+            colorM.scale(1, 1, 1, this.opacity_ / 255);
+
             let imageParts: graphics.ImagePart[] = [
                 {
                     srcX: 0,
@@ -128,7 +134,7 @@ namespace game {
                     dstHeight: this.height_,
                 },
             ];
-            screen.drawImage(Window.windowImage, {geoM, imageParts});
+            screen.drawImage(Window.windowImage, {geoM, colorM, imageParts});
 
             let frameOX = 32;
             let frameOY = 0;
@@ -231,7 +237,11 @@ namespace game {
             if (this.isAnimating) {
                 return;
             }
-            Window.drawShadowTextAt(screen, this.content_, this.x_ + Window.PADDING, this.y_ + Window.PADDING, {r: 255, g: 255, b: 255, a: 255});
+            this.contentOffscreen_.clear();
+            Window.drawShadowTextAt(this.contentOffscreen_, this.content_, 0, 0, {r: 255, g: 255, b: 255, a: 255});
+            geoM = new graphics.GeometryMatrix();
+            geoM.translate(this.x_ + Window.PADDING_X, this.y_ + Window.PADDING_Y);
+            screen.drawImage(this.contentOffscreen_, {geoM});
         }
     }
 }

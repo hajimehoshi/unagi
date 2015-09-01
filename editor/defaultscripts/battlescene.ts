@@ -7,7 +7,7 @@ namespace game {
             this.actor_ = $gameState.getPartyMember(index);
             // TODO: Centering?
             this.window_ = new Window(80 * index, 160, 80, 80);
-            this.window_.opaque = 128;
+            this.window_.opacity = 192;
         }
 
         public update() {
