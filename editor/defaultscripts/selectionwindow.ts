@@ -25,6 +25,7 @@ namespace game {
 
         public update() {
             this.window_.update();
+            this.window_.setSelection(Window.PADDING_X / 2, Window.PADDING_Y, this.window_.width - Window.PADDING_X, 16);
         }
 
         public draw(screen: graphics.Image) {

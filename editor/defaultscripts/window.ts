@@ -65,6 +65,11 @@ namespace game {
         private width_: number;
         private height_: number;
         private opacity_: number;
+        private selectionX_: number;
+        private selectionY_: number;
+        private selectionWidth_: number;
+        private selectionHeight_: number;
+        private timer_: number;
         private counter_: number;
         private state_: WindowState;
         private content_: string;
@@ -76,6 +81,11 @@ namespace game {
             this.width_ = width;
             this.height_ = height;
             this.opacity_ = 255;
+            this.selectionX_ = 0;
+            this.selectionY_ = 0;
+            this.selectionWidth_ = 0;
+            this.selectionHeight_ = 0;
+            this.timer_ = 0;
             this.counter_ = 0;
             this.state_ = WindowState.NORMAL;
             this.contentOffscreen_ = new graphics.Image(width - 2 * Window.PADDING_X, height - 2 * Window.PADDING_Y);
@@ -89,6 +99,13 @@ namespace game {
         public get height(): number { return this.height_; }
         public get opacity(): number { return this.opacity_; }
         public set opacity(opacity: number) { this.opacity_ = opacity; }
+
+        public setSelection(x: number, y: number, width: number, height: number) {
+            this.selectionX_ = x;
+            this.selectionY_ = y;
+            this.selectionWidth_ = width;
+            this.selectionHeight_ = height;
+        }
 
         public get content(): string { return this.content_; }
         public set content(content: string) { this.content_ = content; }
@@ -116,6 +133,7 @@ namespace game {
         }
 
         public update() {
+            this.timer_++;
             if (this.counter_ === 0) {
                 return;
             }
@@ -169,6 +187,12 @@ namespace game {
 
             imageParts = Window.toNineImageParts(32, 0, 32, 32, 0, 0, this.width_, this.height_, 8, 8);
             screen.drawImage(Window.windowImage, {geoM, imageParts});
+
+            if (this.selectionWidth_ && this.selectionHeight_) {
+                let srcX = ((this.timer_ / 20)|0) % 2 === 0 ? 64 : 96;
+                let imageParts = Window.toNineImageParts(srcX, 0, 32, 32, this.selectionX_, this.selectionY_, this.selectionWidth_, this.selectionHeight_, 8, 8);
+                screen.drawImage(Window.windowImage, {geoM, imageParts});
+            }
 
             if (!this.content_) {
                 return;
