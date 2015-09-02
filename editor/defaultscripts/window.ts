@@ -26,6 +26,37 @@ namespace game {
             return Window.windowImage_ = $images.byId($gameData.system.windowImage);
         }
 
+        private static toNineImageParts(
+            srcX: number, srcY: number, srcWidth: number, srcHeight: number,
+            dstX: number, dstY: number, dstWidth: number, dstHeight: number,
+            paddingX: number, paddingY: number): graphics.ImagePart[] {
+            let srcXs = [srcX, srcX + paddingX, srcX + srcWidth - paddingX];
+            let srcYs = [srcY, srcY + paddingY, srcY + srcHeight - paddingY];
+            let srcWidths = [paddingX, srcWidth - 2 * paddingX, paddingX];
+            let srcHeights = [paddingY, srcHeight - 2 * paddingY, paddingY];
+            let dstXs = [dstX, dstX + paddingX, dstX + dstWidth - paddingX];
+            let dstYs = [dstY, dstY + paddingY, dstY + dstHeight - paddingY];
+            let dstWidths = [paddingX, dstWidth - 2 * paddingX, paddingX];
+            let dstHeights = [paddingY, dstHeight - 2 * paddingY, paddingY];
+
+            let parts: graphics.ImagePart[] = [];
+            for (let j = 0; j < 3; j++) {
+                for (let i = 0; i < 3; i++) {
+                    parts.push({
+                        srcX:      srcXs[i],
+                        srcY:      srcYs[j],
+                        srcWidth:  srcWidths[i],
+                        srcHeight: srcHeights[j],
+                        dstX:      dstXs[i],
+                        dstY:      dstYs[j],
+                        dstWidth:  dstWidths[i],
+                        dstHeight: dstHeights[j],
+                    });
+                }
+            }
+            return parts;
+        }
+
         public static get PADDING_X() { return data.GRID_SIZE; }
         public static get PADDING_Y() { return data.GRID_SIZE / 2; }
 
@@ -81,7 +112,7 @@ namespace game {
         }
 
         private get maxCounter(): number {
-            return 10;
+            return 5;
         }
 
         public update() {
@@ -136,99 +167,7 @@ namespace game {
             ];
             screen.drawImage(Window.windowImage, {geoM, colorM, imageParts});
 
-            let frameOX = 32;
-            let frameOY = 0;
-            imageParts = [
-                // upper left
-                {
-                    srcX: frameOX + 0,
-                    srcY: frameOY + 0,
-                    srcWidth: 8,
-                    srcHeight: 8,
-                    dstX: 0,
-                    dstY: 0,
-                    dstWidth: 8,
-                    dstHeight: 8,
-                },
-                // upper
-                {
-                    srcX: frameOX + 8,
-                    srcY: frameOY + 0,
-                    srcWidth: 16,
-                    srcHeight: 8,
-                    dstX: 8,
-                    dstY: 0,
-                    dstWidth: this.width - 16,
-                    dstHeight: 8,
-                },
-                // upper right
-                {
-                    srcX: frameOX + 24,
-                    srcY: frameOY + 0,
-                    srcWidth: 8,
-                    srcHeight: 8,
-                    dstX: this.width_ - 8,
-                    dstY: 0,
-                    dstWidth: 8,
-                    dstHeight: 8,
-                },
-                // left
-                {
-                    srcX: frameOX + 0,
-                    srcY: frameOY + 8,
-                    srcWidth: 8,
-                    srcHeight: 16,
-                    dstX: 0,
-                    dstY: 8,
-                    dstWidth: 8,
-                    dstHeight: this.height - 16,
-                },
-                // right
-                {
-                    srcX: frameOX + 24,
-                    srcY: frameOY + 8,
-                    srcWidth: 8,
-                    srcHeight: 16,
-                    dstX: this.width - 8,
-                    dstY: 8,
-                    dstWidth: 8,
-                    dstHeight: this.height - 16,
-                },
-                // lower left
-                {
-                    srcX: frameOX + 0,
-                    srcY: frameOY + 24,
-                    srcWidth: 8,
-                    srcHeight: 8,
-                    dstX: 0,
-                    dstY: this.height_ - 8,
-                    dstWidth: 8,
-                    dstHeight: 8,
-                },
-                // lower
-                {
-                    srcX: frameOX + 8,
-                    srcY: frameOY + 24,
-                    srcWidth: 16,
-                    srcHeight: 8,
-                    dstX: 8,
-                    dstY: this.height - 8,
-                    dstWidth: this.width - 16,
-                    dstHeight: 8,
-                },
-                // lower right
-                {
-                    srcX: frameOX + 24,
-                    srcY: frameOY + 24,
-                    srcWidth: 8,
-                    srcHeight: 8,
-                    dstX: this.width_ - 8,
-                    dstY: this.height_ - 8,
-                    dstWidth: 8,
-                    dstHeight: 8,
-                },
-                
-            ];
+            imageParts = Window.toNineImageParts(32, 0, 32, 32, 0, 0, this.width_, this.height_, 8, 8);
             screen.drawImage(Window.windowImage, {geoM, imageParts});
 
             if (!this.content_) {
