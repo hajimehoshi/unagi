@@ -10,12 +10,12 @@ namespace game {
         private static windowImage_: graphics.Image;
 
         public static drawShadowTextAt(screen: graphics.Image, text: string, x: number, y: number, color: graphics.Color) {
-            $regularFont.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
+            $regularFont.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 128});
             $regularFont.drawAt(screen, text, x, y, color);
         }
 
         public static drawShadowNumberTextAt(screen: graphics.Image, text: string, x: number, y: number, color: graphics.Color) {
-            $numberFont.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 255});
+            $numberFont.drawAt(screen, text, x+1, y+1, {r: 0, g: 0, b: 0, a: 128});
             $numberFont.drawAt(screen, text, x, y, color);
         }
 

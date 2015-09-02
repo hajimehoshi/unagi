@@ -5,9 +5,8 @@ namespace game {
         constructor() {
             // TODO: Define terms at $gameData
             let items = [
-                'New Game',
-                'Continue',
-                'Exit',
+                'New Game (初めから)',
+                'Continue (続きから)',
             ];
             this.menuWindow_ = new SelectionWindow(items, 0, 0);
             this.menuWindow_.x = (320 - this.menuWindow_.width) / 2;
