@@ -1,5 +1,5 @@
 namespace game {
-    export class SelectionWindow {
+    export class CommandWindow {
         private window_: Window;
 
         constructor(items: string[], x: number, y: number) {
