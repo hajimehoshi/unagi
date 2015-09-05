@@ -1,7 +1,12 @@
 namespace game {
+    declare type CommandWindowItem = {
+        name:      string,
+        isEnabled: boolean,
+    };
+
     export class CommandWindow {
         private window_: Window;
-        private commands_: string[];
+        private commands_: CommandWindowItem[];
         private currentCommand_: number = 0; // TODO: currentCommandIndex_?
 
         constructor(commands: string[], x: number, y: number) {
@@ -15,12 +20,21 @@ namespace game {
             width += Window.PADDING_X * 2;
             height += Window.PADDING_Y * 2;
             this.window_ = new Window(x, y, width, height);
-            this.window_.content = commands.join('\n');
 
             this.commands_ = [];
             for (let command of commands) {
-                this.commands_.push(command);
+                this.commands_.push({
+                    name:      command,
+                    isEnabled: true,
+                });
             }
+
+            let texts: WindowText[] = [];
+            for (let i = 0; i < this.commands_.length; i++) {
+                let command = this.commands_[i];
+                texts.push(new WindowText(command.name, 0, i * 16));
+            }
+            this.window_.setTexts(texts);
         }
 
         public get x(): number { return this.window_.x; }

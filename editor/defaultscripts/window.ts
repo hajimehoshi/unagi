@@ -6,6 +6,28 @@ namespace game {
         CLOSED,
     }
 
+    export class WindowText {
+        private text_: string;
+        private x_: number;
+        private y_: number;
+        private color_: graphics.Color;
+
+        constructor(text: string, x: number, y: number, color?: graphics.Color) {
+            this.text_ = text;
+            this.x_ = x;
+            this.y_ = y;
+            if (color !== void(0)) {
+                this.color_ = color;
+            } else {
+                this.color_ = {r: 255, g: 255, b: 255, a: 255};
+            }
+        }
+
+        public draw(screen: graphics.Image) {
+            Window.drawShadowTextAt(screen, this.text_, this.x_, this.y_, this.color_);
+        }
+    }
+
     export class Window {
         private static windowImage_: graphics.Image;
 
@@ -72,7 +94,7 @@ namespace game {
         private timer_: number;
         private counter_: number;
         private state_: WindowState;
-        private content_: string;
+        private texts_: WindowText[];
         private contentOffscreen_: graphics.Image;
 
         constructor(x, y, width, height) {
@@ -88,6 +110,7 @@ namespace game {
             this.timer_ = 0;
             this.counter_ = 0;
             this.state_ = WindowState.NORMAL;
+            this.texts_ = [];
             this.contentOffscreen_ = new graphics.Image(width - 2 * Window.PADDING_X, height - 2 * Window.PADDING_Y);
         }
 
@@ -107,8 +130,12 @@ namespace game {
             this.selectionHeight_ = height;
         }
 
-        public get content(): string { return this.content_; }
-        public set content(content: string) { this.content_ = content; }
+        public setTexts(texts: WindowText[]) {
+            this.texts_.length = 0;
+            for (let text of texts) {
+                this.texts_.push(text);
+            }
+        }
 
         public open() {
             this.counter_ = this.maxCounter;
@@ -194,14 +221,16 @@ namespace game {
                 screen.drawImage(Window.windowImage, {geoM, imageParts});
             }
 
-            if (!this.content_) {
+            if (!this.texts_) {
                 return;
             }
             if (this.isAnimating) {
                 return;
             }
             this.contentOffscreen_.clear();
-            Window.drawShadowTextAt(this.contentOffscreen_, this.content_, 0, 0, {r: 255, g: 255, b: 255, a: 255});
+            for (let text of this.texts_) {
+                text.draw(this.contentOffscreen_);
+            }
             geoM = new graphics.GeometryMatrix();
             geoM.translate(this.x_ + Window.PADDING_X, this.y_ + Window.PADDING_Y);
             screen.drawImage(this.contentOffscreen_, {geoM});

@@ -4,11 +4,12 @@ namespace game {
 
         constructor(content: string) {
             this.window_ = new Window(0, 0, 320, 80);
-            this.window_.content = content;
+            this.window_.setTexts([new WindowText(content, 0, 0)]);
         }
 
-        public get content(): string { return this.window_.content; }
-        public set content(content: string) { this.window_.content = content; }
+        public set content(content: string) {
+            this.window_.setTexts([new WindowText(content, 0, 0)]);
+        }
 
         public open() {
             this.window_.open();
