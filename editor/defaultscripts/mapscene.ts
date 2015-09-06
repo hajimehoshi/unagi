@@ -131,13 +131,11 @@ namespace game {
             if (this.tryMovePlayer()) {
                 return;
             }
-            if ($input.isTrigger(Key.ENTER)) {
-                let event = this.currentEvent;
-                if (!event) {
-                    return;
-                }
-                this.eventCommandInterpreter_.push(event, event.currentPage.commands);
+            let event = this.currentEvent;
+            if (!event) {
+                return;
             }
+            event.tryStartCommands(this.eventCommandInterpreter_);
         }
 
         public draw(screen: graphics.Image) {

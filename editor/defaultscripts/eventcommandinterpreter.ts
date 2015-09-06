@@ -40,7 +40,8 @@ namespace game {
                 if (!$input.isTrigger(Key.ENTER)) {
                     return;
                 }
-                if (this.commands_.length === 0) {
+                if (this.commands_.length === 0 ||
+                    this.commands_[0].data.type !== 'showMessage') {
                     this.messageWindow_.close();
                     return;
                 }
@@ -106,6 +107,11 @@ namespace game {
             case 'modifyMap':
             case 'eval':
                 console.log('not implemented');
+                break;
+            case '_cleanUp':
+                // TODO: What if the event turns another direction in event commands?
+                let originalDirection = command.data.args['originalDirection'];
+                command.sender.turn(originalDirection);
                 break;
             }
         }
