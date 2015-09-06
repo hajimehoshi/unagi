@@ -17,6 +17,9 @@ namespace game {
         public update() {
             this.menuWindow_.update();
             if ($input.isTrigger(Key.ENTER)) {
+                if (this.menuWindow_.currentCommandIndex === 1) {
+                    return;
+                }
                 let initialPosition = $gameData.playerInitialPosition;
                 let map = <data.Map>$idToData[initialPosition.mapId];
                 $sceneStack.push(new MapScene(map));

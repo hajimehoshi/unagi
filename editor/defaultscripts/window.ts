@@ -94,7 +94,6 @@ namespace game {
         private timer_: number;
         private counter_: number;
         private state_: WindowState;
-        private texts_: WindowText[];
         private contentOffscreen_: graphics.Image;
 
         constructor(x, y, width, height) {

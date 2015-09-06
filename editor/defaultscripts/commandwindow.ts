@@ -36,6 +36,7 @@ namespace game {
         public set y(y: number) { this.window_.y = y; }
         public get width(): number { return this.window_.width; }
         public get height(): number { return this.window_.height; }
+        public get currentCommandIndex(): number { return this.currentCommandIndex_; }
 
         public setEnabled(index: number, enabled: boolean) {
             this.commands_[index].isEnabled = enabled;
