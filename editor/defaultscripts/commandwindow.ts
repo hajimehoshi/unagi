@@ -7,7 +7,7 @@ namespace game {
     export class CommandWindow {
         private window_: Window;
         private commands_: CommandWindowItem[];
-        private currentCommand_: number = 0; // TODO: currentCommandIndex_?
+        private currentCommandIndex_: number = 0;
 
         constructor(commands: string[], x: number, y: number) {
             let width = 0;
@@ -28,13 +28,6 @@ namespace game {
                     isEnabled: true,
                 });
             }
-
-            let texts: WindowText[] = [];
-            for (let i = 0; i < this.commands_.length; i++) {
-                let command = this.commands_[i];
-                texts.push(new WindowText(command.name, 0, i * 16));
-            }
-            this.window_.setTexts(texts);
         }
 
         public get x(): number { return this.window_.x; }
@@ -44,23 +37,39 @@ namespace game {
         public get width(): number { return this.window_.width; }
         public get height(): number { return this.window_.height; }
 
+        public setEnabled(index: number, enabled: boolean) {
+            this.commands_[index].isEnabled = enabled;
+        }
+
         public update() {
             this.window_.update();
 
             if ($input.isTrigger(Key.DOWN)) {
-                this.currentCommand_ = Math.min(this.currentCommand_ + 1, this.commands_.length - 1);
+                this.currentCommandIndex_ = Math.min(this.currentCommandIndex_ + 1, this.commands_.length - 1);
             }
             if ($input.isTrigger(Key.UP)) {
-                this.currentCommand_ = Math.max(this.currentCommand_ - 1, 0);
+                this.currentCommandIndex_ = Math.max(this.currentCommandIndex_ - 1, 0);
             }
 
             let x = Window.PADDING_X / 2;
-            let y = Window.PADDING_Y + 16 * this.currentCommand_;
+            let y = Window.PADDING_Y + 16 * this.currentCommandIndex_;
             this.window_.setSelection(x, y, this.window_.width - Window.PADDING_X, 16);
         }
 
         public draw(screen: graphics.Image) {
-            this.window_.draw(screen);
+            let texts: WindowText[] = [];
+            for (let i = 0; i < this.commands_.length; i++) {
+                let command = this.commands_[i];
+                let text: WindowText = null;
+                if (command.isEnabled) {
+                    text = new WindowText(command.name, 0, i * 16);
+                } else {
+                    text = new WindowText(command.name, 0, i * 16, {r: 128, g: 128, b: 128, a: 255});
+                }
+                texts.push(text);
+            }
+
+            this.window_.draw(screen, texts);
         }
     }
 }

@@ -1,14 +1,15 @@
 namespace game {
     export class MessageWindow {
         private window_: Window;
+        private content_: string;
 
         constructor(content: string) {
             this.window_ = new Window(0, 0, 320, 80);
-            this.window_.setTexts([new WindowText(content, 0, 0)]);
+            this.content_ = content;
         }
 
         public set content(content: string) {
-            this.window_.setTexts([new WindowText(content, 0, 0)]);
+            this.content_ = content;
         }
 
         public open() {
@@ -32,7 +33,7 @@ namespace game {
         }
 
         public draw(screen: graphics.Image) {
-            this.window_.draw(screen);
+            this.window_.draw(screen, [new WindowText(this.content_, 0, 0)]);
         }
     }
 }

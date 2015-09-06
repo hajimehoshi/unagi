@@ -11,6 +11,7 @@ namespace game {
             this.menuWindow_ = new CommandWindow(items, 0, 0);
             this.menuWindow_.x = (320 - this.menuWindow_.width) / 2;
             this.menuWindow_.y = (240 - this.menuWindow_.height) - data.GRID_SIZE;
+            this.menuWindow_.setEnabled(1, false);
         }
 
         public update() {

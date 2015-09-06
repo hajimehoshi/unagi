@@ -110,7 +110,6 @@ namespace game {
             this.timer_ = 0;
             this.counter_ = 0;
             this.state_ = WindowState.NORMAL;
-            this.texts_ = [];
             this.contentOffscreen_ = new graphics.Image(width - 2 * Window.PADDING_X, height - 2 * Window.PADDING_Y);
         }
 
@@ -128,13 +127,6 @@ namespace game {
             this.selectionY_ = y;
             this.selectionWidth_ = width;
             this.selectionHeight_ = height;
-        }
-
-        public setTexts(texts: WindowText[]) {
-            this.texts_.length = 0;
-            for (let text of texts) {
-                this.texts_.push(text);
-            }
         }
 
         public open() {
@@ -174,7 +166,7 @@ namespace game {
             }
         }
 
-        public draw(screen: graphics.Image) {
+        public draw(screen: graphics.Image, texts?: WindowText[]) {
             if (this.isClosed) {
                 return;
             }
@@ -221,14 +213,14 @@ namespace game {
                 screen.drawImage(Window.windowImage, {geoM, imageParts});
             }
 
-            if (!this.texts_) {
+            if (!texts) {
                 return;
             }
             if (this.isAnimating) {
                 return;
             }
             this.contentOffscreen_.clear();
-            for (let text of this.texts_) {
+            for (let text of texts) {
                 text.draw(this.contentOffscreen_);
             }
             geoM = new graphics.GeometryMatrix();
