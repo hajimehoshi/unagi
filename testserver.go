@@ -32,7 +32,7 @@ func NewServer() *Server {
 	}
 }
 
-var uuidPrefixPattern = regexp.MustCompile(`\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}.`)
+var uuidPrefixPattern = regexp.MustCompile(`\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.player\.`)
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	host := req.Host
