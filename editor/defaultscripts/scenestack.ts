@@ -22,7 +22,7 @@ namespace game {
         }
 
         private get maxCounter() {
-            return 15;
+            return 30;
         }
 
         private startFading(previousScene: Scene) {
@@ -55,19 +55,24 @@ namespace game {
         }
 
         public draw(screen: graphics.Image) {
+            this.offscreen_.fill({r: 0, g: 0, b:0, a: 255});
+
             let rate = 1 - this.counter_ / this.maxCounter;
-            if (rate < 1) {
+            let opaque = 1;
+            if (rate < 0.5) {
+                // TODO: |previousScene_| is undefined only at the very beginning.
+                // Can we make the counter half then?
                 if (this.previousScene_) {
-                    this.previousScene_.draw(screen);
+                    this.previousScene_.draw(this.offscreen_);
                 }
-                this.offscreen_.fill({r: 0, g: 0, b:0, a: 255});
-                this.current.draw(this.offscreen_);
-                let colorM = new graphics.ColorMatrix();
-                colorM.scale(1, 1, 1, rate);
-                screen.drawImage(this.offscreen_, {colorM});
+                opaque = 1 - rate * 2;
             } else {
-                this.current.draw(screen);
+                this.current.draw(this.offscreen_);
+                opaque = (rate - 0.5) * 2;
             }
+            let colorM = new graphics.ColorMatrix();
+            colorM.scale(1, 1, 1, opaque);
+            screen.drawImage(this.offscreen_, {colorM});
         }
     }
 }
