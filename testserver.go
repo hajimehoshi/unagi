@@ -17,7 +17,7 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"regexp"
+	"strings"
 )
 
 type Server struct {
@@ -32,11 +32,9 @@ func NewServer() *Server {
 	}
 }
 
-var uuidPrefixPattern = regexp.MustCompile(`\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.player\.`)
-
 func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	host := req.Host
-	if uuidPrefixPattern.MatchString(host) {
+	if strings.HasPrefix(host, "player.") {
 		s.player.ServeHTTP(w, req)
 		return
 	}

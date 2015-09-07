@@ -94,9 +94,8 @@ namespace editor {
             this.toolbar_.playGame();
 
             let iframe = <HTMLIFrameElement>document.querySelector('iframe.player');
-            let id = game.id;
             let host = window.location.host;
-            iframe.src = `//${id}.player.${host}/player.html`;
+            iframe.src = `//player.${host}/player.html`;
             iframe.style.display = 'block';
             let f = (e) => {
                 iframe.contentWindow.postMessage(game, '*');
