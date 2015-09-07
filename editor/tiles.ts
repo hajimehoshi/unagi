@@ -114,6 +114,7 @@ namespace editor {
         }
 
         private onMouseDown(e: MouseEvent): void {
+            e.preventDefault();
             if (this.eventDialog_.open) {
                 return;
             }
@@ -139,6 +140,7 @@ namespace editor {
         }
 
         private onMouseMove(e: MouseEvent): void {
+            e.preventDefault();
             if (this.eventDialog_.open) {
                 return;
             }
@@ -175,6 +177,7 @@ namespace editor {
         }
 
         private onMouseUp(e: MouseEvent): void {
+            e.preventDefault();
             if (this.eventDialog_.open) {
                 return;
             }
@@ -197,6 +200,7 @@ namespace editor {
         }
 
         private onMouseLeave(e: MouseEvent): void {
+            e.preventDefault();
             if (this.eventDialog_.open) {
                 return;
             }
@@ -204,6 +208,7 @@ namespace editor {
         }
 
         private onDblClick(e: MouseEvent): void {
+            e.preventDefault();
             if (this.editingMode_ !== EditingMode.Event) {
                 return;
             }
