@@ -114,10 +114,10 @@ namespace editor {
         }
 
         private onMouseDown(e: MouseEvent): void {
-            e.preventDefault();
             if (this.eventDialog_.open) {
                 return;
             }
+            e.preventDefault();
             if (!e.buttons) {
                 return;
             }
@@ -140,10 +140,10 @@ namespace editor {
         }
 
         private onMouseMove(e: MouseEvent): void {
-            e.preventDefault();
             if (this.eventDialog_.open) {
                 return;
             }
+            e.preventDefault();
             if (e.buttons !== 2) {
                 let x = e.offsetX + this.offsetX_;
                 let y = e.offsetY + this.offsetY_;
@@ -177,10 +177,10 @@ namespace editor {
         }
 
         private onMouseUp(e: MouseEvent): void {
-            e.preventDefault();
             if (this.eventDialog_.open) {
                 return;
             }
+            e.preventDefault();
             this.isDrawing_ = false;
             if (this.editingMode_ != EditingMode.Map) {
                 return;
@@ -200,15 +200,14 @@ namespace editor {
         }
 
         private onMouseLeave(e: MouseEvent): void {
-            e.preventDefault();
             if (this.eventDialog_.open) {
                 return;
             }
+            e.preventDefault();
             Store.instance.updateTilesCursorPosition(void(0), void(0));
         }
 
         private onDblClick(e: MouseEvent): void {
-            e.preventDefault();
             if (this.editingMode_ !== EditingMode.Event) {
                 return;
             }
@@ -216,6 +215,7 @@ namespace editor {
             if (this.eventDialog_.open) {
                 return;
             }
+            e.preventDefault();
             this.eventDialog_.showModal();
         }
 

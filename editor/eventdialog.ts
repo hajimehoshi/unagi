@@ -14,14 +14,26 @@
 
 namespace editor {
     export class EventDialog {
+        private static commandToString(command: data.EventCommand): string {
+            return `${command.type} ${JSON.stringify(command.args)}`;
+        }
+
+        private static stringToCommand(str: string): data.EventCommand {
+            console.log(str);
+            let m = str.match(/^([^ ]+) (.+)$/);
+            console.log(m);
+            return {
+                type: m[1],
+                args: JSON.parse(m[2]),
+            };
+        }
+
         // TODO: Use HTMLDialogElement in the future
         private element_: any;
-
         private pagePath_: string;
 
         constructor(element: any) {
             this.element_ = element;
-
             this.element_.addEventListener('click', (e: MouseEvent) => {
                 e.stopPropagation();
                 let rect = this.element_.getBoundingClientRect();
@@ -71,10 +83,11 @@ namespace editor {
 
             // TODO: TextArea is a temporaly thing. Replace this with a listbox.
             let commandsTextArea = <HTMLTextAreaElement>this.element_.querySelector('textarea.commands');
-            commandsTextArea.value = JSON.stringify(page.commands, null, '  ');
+            //commandsTextArea.value = JSON.stringify(page.commands, null, '  ');
+            commandsTextArea.value = page.commands.map(c => EventDialog.commandToString(c)).join('\n')
             commandsTextArea.onchange = (e) => {
                 try {
-                    let commands = JSON.parse(commandsTextArea.value);
+                    let commands = commandsTextArea.value.split('\n').map(l => EventDialog.stringToCommand(l));
                     let path = `${this.pagePath_}.commands`;
                     Store.instance.updateGameData(path, commands);
                 } catch (e) {
