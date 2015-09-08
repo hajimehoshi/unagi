@@ -64,7 +64,7 @@ class RegularFont {
     private image_: graphics.Image;
 
     constructor(images: Images, game: data.Game) {
-        this.image_ = images.byName('font_mplus');
+        this.image_ = images.byId(game.system.regularFontImage);
     }
 
     public calculateTextSize(str: string): {width: number, height: number} {

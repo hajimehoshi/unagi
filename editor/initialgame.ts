@@ -181,10 +181,11 @@ namespace editor {
             }
         ],
         system: {
-            title:           'New RPG',
-            initialParty:    actorIds.slice(),
-            numberFontImage: data.NullImage.id,
-            windowImage:     null,
+            title:            'New RPG',
+            initialParty:     actorIds.slice(),
+            regularFontImage: data.NullImage.id,
+            numberFontImage:  data.NullImage.id,
+            windowImage:      null,
         },
         images: [
         ],
@@ -230,6 +231,7 @@ namespace editor {
         initialGame.actors[2].image = idFromName(initialGame.images, 'character4');
         initialGame.actors[3].image = idFromName(initialGame.images, 'character7');
         initialGame.enemies[0].image = idFromName(initialGame.images, 'enemy_ebiten');
+        initialGame.system.regularFontImage = idFromName(initialGame.images, 'font_mplus');
         initialGame.system.numberFontImage = idFromName(initialGame.images, 'font_arcade');
         initialGame.system.windowImage = idFromName(initialGame.images, 'window');
     })()

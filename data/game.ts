@@ -68,10 +68,11 @@ namespace data {
     }
 
     export declare type System = {
-        title:           string,
-        initialParty:    string[],
-        numberFontImage: string,
-        windowImage:     string,
+        title:            string,
+        initialParty:     string[],
+        regularFontImage: string,
+        numberFontImage:  string,
+        windowImage:      string,
     }
 
     export declare type Image = {
