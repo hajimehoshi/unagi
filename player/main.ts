@@ -61,12 +61,10 @@ class RegularFont {
     private static get TEXT_HALF_WIDTH(): number { return 6; }
     private static get TEXT_HEIGHT(): number { return data.GRID_SIZE; }
 
-    private images_: {[key:string]: graphics.Image} = {};
+    private image_: graphics.Image;
 
     constructor(images: Images, game: data.Game) {
-        for (let key of ['latin', 'bmp0', 'bmp2', 'bmp3', 'bmp4', 'bmp5', 'bmp6', 'bmp7', 'bmp8', 'bmp9', 'bmp15']) {
-            this.images_[key] = images.byName('mplus_' + key);
-        }
+        this.image_ = images.byName('font_mplus');
     }
 
     public calculateTextSize(str: string): {width: number, height: number} {
@@ -94,10 +92,7 @@ class RegularFont {
         let cx = 0;
         let cy = 0;
         let size = this.calculateTextSize(str);
-        let keyToImageParts: {[key: string]: graphics.ImagePart[]} = {};
-        for (let key in this.images_) {
-            keyToImageParts[key] = [];
-        }
+        let imageParts: graphics.ImagePart[] = [];
 
         for (let ch of str) {
             let code = <number>(<any>ch).codePointAt(0);
@@ -106,16 +101,12 @@ class RegularFont {
                 cy += RegularFont.TEXT_HEIGHT;
                 continue;
             }
-            if (ch == ' ') {
-                cx += RegularFont.TEXT_HALF_WIDTH;
-                continue;
-            }
             if (code <= 0xff) {
-                let sx = (code % 32) * RegularFont.TEXT_HALF_WIDTH;
-                let sy = ((code / 32)|0) * RegularFont.TEXT_HEIGHT;
+                let sx = code * RegularFont.TEXT_FULL_WIDTH;
+                let sy = 0;
                 let w = RegularFont.TEXT_HALF_WIDTH;
                 let h = RegularFont.TEXT_HEIGHT;
-                keyToImageParts['latin'].push({
+                imageParts.push({
                     srcX: sx, srcY: sy, srcWidth: w, srcHeight: h,
                     dstX: cx, dstY: cy, dstWidth: w, dstHeight: h,
                 });
@@ -126,13 +117,11 @@ class RegularFont {
                 cx += RegularFont.TEXT_FULL_WIDTH;
                 continue;
             }
-            let page = (code / 4096)|0;
-            let key = `bmp${page}`;
-            let sx = (code % 64) * RegularFont.TEXT_FULL_WIDTH;
-            let sy = (((code % 4096) / 64)|0) * RegularFont.TEXT_HEIGHT;
+            let sx = (code % 256) * RegularFont.TEXT_FULL_WIDTH;
+            let sy = ((code / 256)|0) * RegularFont.TEXT_HEIGHT;
             let w = RegularFont.TEXT_FULL_WIDTH;
             let h = RegularFont.TEXT_HEIGHT;
-            keyToImageParts[key].push({
+            imageParts.push({
                 srcX: sx, srcY: sy, srcWidth: w, srcHeight: h,
                 dstX: cx, dstY: cy, dstWidth: w, dstHeight: h,
             });
@@ -142,14 +131,11 @@ class RegularFont {
         geoM.translate(x, y);
         let colorM = new graphics.ColorMatrix();
         colorM.scale(color.r / 255, color.g / 255, color.b / 255, color.a / 255);
-        for (let key in keyToImageParts) {
-            let img = this.images_[key];
-            screen.drawImage(img, {
-                geoM:       geoM,
-                colorM:     colorM,
-                imageParts: keyToImageParts[key],
-            });
-        }
+        screen.drawImage(this.image_, {
+            geoM:       geoM,
+            colorM:     colorM,
+            imageParts: imageParts,
+        });
     }
 }
 
@@ -201,10 +187,6 @@ class NumberFont {
             if (ch == '\n') {
                 cx = 0;
                 cy += NumberFont.TEXT_HEIGHT;
-                continue;
-            }
-            if (ch == ' ') {
-                cx += NumberFont.TEXT_WIDTH;
                 continue;
             }
             if (code < 0x20) {
