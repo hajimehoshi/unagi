@@ -75,19 +75,25 @@ namespace editor {
                                     {
                                         type: 'showMessage',
                                         args: {
-                                            'content': 'Hello! This is a test message.',
+                                            content: 'Hello! This is a test message.',
+                                        },
+                                    },
+                                    {
+                                        type: 'showSelectionWindow',
+                                        args: {
+                                            options: ['Yes', 'No'],
                                         },
                                     },
                                     {
                                         type: 'showMessage',
                                         args: {
-                                            'content': '隴西の李徴は博学才穎、天宝の末年、若くして名を\n虎榜に連ね、ついで江南尉に補せられたが、\n性、狷介、自から恃むところ頗る厚く、\n賤吏に甘んずるを潔しとしなかった。',
+                                            content: '隴西の李徴は博学才穎、天宝の末年、若くして名を\n虎榜に連ね、ついで江南尉に補せられたが、\n性、狷介、自から恃むところ頗る厚く、\n賤吏に甘んずるを潔しとしなかった。',
                                         },
                                     },
                                     {
                                         type: 'showMessage',
                                         args: {
-                                            'content': '長い文章テストです。\nああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
+                                            content: '長い文章テストです。\nああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
                                         },
                                     },
                                 ],

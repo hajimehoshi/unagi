@@ -12,21 +12,10 @@ namespace game {
             this.content_ = content;
         }
 
-        public open() {
-            this.window_.open();
-        }
-
-        public close() {
-            this.window_.close();
-        }
-
-        public get isAnimating(): boolean {
-            return this.window_.isAnimating;
-        }
-
-        public get isClosed(): boolean {
-            return this.window_.isClosed;
-        }
+        public open() { this.window_.open(); }
+        public close() { this.window_.close(); }
+        public get isAnimating(): boolean { return this.window_.isAnimating; }
+        public get isClosed(): boolean { return this.window_.isClosed; }
 
         public update() {
             this.window_.update();

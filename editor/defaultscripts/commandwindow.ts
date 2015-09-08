@@ -38,6 +38,11 @@ namespace game {
         public get height(): number { return this.window_.height; }
         public get currentCommandIndex(): number { return this.currentCommandIndex_; }
 
+        public open() { this.window_.open(); }
+        public close() { this.window_.close(); }
+        public get isAnimating(): boolean { return this.window_.isAnimating; }
+        public get isClosed(): boolean { return this.window_.isClosed; }
+
         public setEnabled(index: number, enabled: boolean) {
             this.commands_[index].isEnabled = enabled;
         }
