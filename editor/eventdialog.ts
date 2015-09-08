@@ -19,9 +19,7 @@ namespace editor {
         }
 
         private static stringToCommand(str: string): data.EventCommand {
-            console.log(str);
             let m = str.match(/^([^ ]+) (.+)$/);
-            console.log(m);
             return {
                 type: m[1],
                 args: JSON.parse(m[2]),
@@ -87,7 +85,9 @@ namespace editor {
             commandsTextArea.value = page.commands.map(c => EventDialog.commandToString(c)).join('\n')
             commandsTextArea.onchange = (e) => {
                 try {
-                    let commands = commandsTextArea.value.split('\n').map(l => EventDialog.stringToCommand(l));
+                    let commands = commandsTextArea.value.split('\n').filter(l => {
+                        return l.trim() != "";
+                    }).map(l => EventDialog.stringToCommand(l));
                     let path = `${this.pagePath_}.commands`;
                     Store.instance.updateGameData(path, commands);
                 } catch (e) {
