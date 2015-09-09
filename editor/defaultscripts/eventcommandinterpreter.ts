@@ -7,24 +7,26 @@ namespace game {
     class WindowManager {
         private messageWindow_: MessageWindow = null;
         private selectionWindow_: CommandWindow = null;
-        private isMessageWindowSuspended_: boolean = false;
+        private isMessageWindowWaiting_: boolean = false;
 
-        private updateMessageWindow(): boolean {
+        private updateMessageWindow() {
+            if (this.isMessageWindowWaiting_) {
+                return;
+            }
             if (!this.messageWindow_) {
-                return false;
+                return;
             }
             this.messageWindow_.update();
             if (this.messageWindow_.isAnimating) {
-                return true;
+                return;
             }
             if (this.messageWindow_.isClosed) {
                 this.messageWindow_ = null;
-                return false;
+                return;
             }
-            if (!$input.isTrigger(Key.ENTER)) {
-                return true;
+            if ($input.isTrigger(Key.ENTER)) {
+                this.isMessageWindowWaiting_ = true;
             }
-            return false;
         }
 
         private updateSelectionWindow() {
@@ -39,12 +41,9 @@ namespace game {
                 this.selectionWindow_ = null;
                 return;
             }
-            if (!$input.isTrigger(Key.ENTER)) {
-                return;
+            if ($input.isTrigger(Key.ENTER)) {
+                this.selectionWindow_.close();
             }
-            this.selectionWindow_.close();
-            // |this.selectionWindow_| must be finished when a new command starts.
-            return;
         }
 
         public get isRunning(): boolean {
@@ -53,6 +52,7 @@ namespace game {
         }
 
         public setMessageWindowContent(content: string) {
+            this.isMessageWindowWaiting_ = false;
             if (!this.messageWindow_) {
                 this.messageWindow_ = new MessageWindow(content);
                 this.messageWindow_.open();
@@ -70,18 +70,25 @@ namespace game {
         }
 
         public closeMessageWindowIfNeeded() {
+            this.isMessageWindowWaiting_ = false;
             if (this.messageWindow_) {
                 this.messageWindow_.close();
             }
         }
 
-        public update(): boolean {
+        public get isWaitingForNextCommand(): boolean {
+            if (this.messageWindow_ && !this.isMessageWindowWaiting_) {
+                return false;
+            }
+            if (this.selectionWindow_) {
+                return false;
+            }
+            return true;
+        }
+
+        public update() {
             this.updateMessageWindow();
             this.updateSelectionWindow();
-            // TODO: if |isMessageWindowActive| becomes true once, we should keep this until we go to the next command.
-            let isMessageWindowActive = this.updateMessageWindow();
-            this.updateSelectionWindow();
-            return isMessageWindowActive || !!this.selectionWindow_;
         }
 
         public draw(screen: graphics.Image) {
@@ -118,7 +125,8 @@ namespace game {
         }
 
         public update() {
-            if (this.windowManager_.update()) {
+            this.windowManager_.update();
+            if (!this.windowManager_.isWaitingForNextCommand) {
                 return;
             }
             if (this.commands_.length === 0) {
