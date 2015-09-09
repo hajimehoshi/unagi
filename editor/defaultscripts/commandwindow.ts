@@ -30,6 +30,10 @@ namespace game {
             }
         }
 
+        public dispose() {
+            this.window_.dispose();
+        }
+
         public get x(): number { return this.window_.x; }
         public set x(x: number) { this.window_.x = x; }
         public get y(): number { return this.window_.y; }

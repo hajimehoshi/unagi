@@ -9,6 +9,17 @@ namespace game {
         private selectionWindow_: CommandWindow = null;
         private isMessageWindowWaiting_: boolean = false;
 
+        public dispose() {
+            if (this.messageWindow_) {
+                this.messageWindow_.dispose();
+                this.messageWindow_ = null;
+            }
+            if (this.selectionWindow_) {
+                this.selectionWindow_.dispose();
+                this.selectionWindow_ = null;
+            }
+        }
+
         private updateMessageWindow() {
             if (this.isMessageWindowWaiting_) {
                 return;
@@ -21,6 +32,7 @@ namespace game {
                 return;
             }
             if (this.messageWindow_.isClosed) {
+                this.messageWindow_.dispose();
                 this.messageWindow_ = null;
                 return;
             }
@@ -38,6 +50,7 @@ namespace game {
                 return;
             }
             if (this.selectionWindow_.isClosed) {
+                this.selectionWindow_.dispose();
                 this.selectionWindow_ = null;
                 return;
             }
@@ -110,6 +123,10 @@ namespace game {
             this.windowManager_ = new WindowManager();
         }
 
+        public dispose() {
+            this.windowManager_.dispose();
+        }
+
         public get isRunning(): boolean {
             // TODO: Redefine
             return this.windowManager_.isRunning;
@@ -155,7 +172,7 @@ namespace game {
             case 'break':
             case 'exit':
             case 'callCommonEvent':
-            case 'jump':
+            case 'goto':
             case 'label':
             case 'comment':
             case 'modifyMoney':

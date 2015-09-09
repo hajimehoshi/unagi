@@ -113,7 +113,7 @@ namespace graphics {
 
             public dispose(): void {
                 if (this.native_ === Framebuffer.zero) {
-                    return;
+                    throw 'zero value framebuffer can\'t be removed';
                 }
                 let gl = this.gl_;
                 gl.deleteFramebuffer(this.native_);

@@ -10,6 +10,10 @@ namespace game {
             this.window_.opacity = 192;
         }
 
+        public dispose() {
+            this.window_.dispose();
+        }
+
         public update() {
             this.window_.update();
         }
@@ -53,6 +57,12 @@ namespace game {
             this.playerWindows_ = [];
             for (let i = 0; i < $gameState.partySize; i++) {
                 this.playerWindows_.push(new BattlePlayerWindow(i));
+            }
+        }
+
+        public dispose() {
+            for (let window of this.playerWindows_) {
+                window.dispose();
             }
         }
 

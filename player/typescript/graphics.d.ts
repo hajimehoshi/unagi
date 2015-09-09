@@ -43,6 +43,7 @@ declare namespace graphics {
         constructor(image: HTMLImageElement);
         constructor(canvas: HTMLCanvasElement);
 
+        public dispose();
         public width: number;
         public height: number;
         public clear();

@@ -8,6 +8,10 @@ namespace game {
             this.content_ = content;
         }
 
+        public dispose() {
+            this.window_.dispose();
+        }
+
         public set content(content: string) {
             this.content_ = content;
         }

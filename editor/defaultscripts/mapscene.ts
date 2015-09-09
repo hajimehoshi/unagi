@@ -19,6 +19,10 @@ namespace game {
             });
         }
 
+        public dispose() {
+            this.eventCommandInterpreter_.dispose();
+        }
+
         private passable(x: number, y: number): boolean {
             for (let e of this.eventCharacters_) {
                 if (e.x !== x || e.y !== y) {

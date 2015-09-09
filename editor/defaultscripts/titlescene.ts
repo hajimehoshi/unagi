@@ -14,6 +14,10 @@ namespace game {
             this.menuWindow_.setEnabled(1, false);
         }
 
+        public dispose() {
+            this.menuWindow_.dispose();
+        }
+
         public update() {
             this.menuWindow_.update();
             if ($input.isTrigger(Key.ENTER)) {

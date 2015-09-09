@@ -117,6 +117,14 @@ namespace graphics {
             throw 'graphics.Image.constructor: invalid argments';
         }
 
+        public dispose() {
+            if (!this.texture_) {
+                throw 'this.texture_ is null; Is this the main screen?';
+            }
+            this.framebuffer_.dispose();
+            this.texture_.dispose();
+        }
+
         public get width(): number {
             return this.framebuffer_.width;
         }

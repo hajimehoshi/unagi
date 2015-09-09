@@ -112,6 +112,10 @@ namespace game {
             this.contentOffscreen_ = new graphics.Image(width - 2 * Window.PADDING_X, height - 2 * Window.PADDING_Y);
         }
 
+        public dispose() {
+            this.contentOffscreen_.dispose();
+        }
+
         public get x(): number { return this.x_; }
         public set x(x: number) { this.x_ = x; }
         public get y(): number { return this.y_; }

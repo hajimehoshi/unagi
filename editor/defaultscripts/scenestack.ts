@@ -1,5 +1,6 @@
 namespace game {
     export interface Scene {
+        dispose();
         update();
         draw(screen: graphics.Image);
     }
@@ -38,17 +39,26 @@ namespace game {
 
         public pop() {
             let previous = this.current;
-            return this.stack_.pop();
+            let next = this.stack_.pop();
             this.startFading(previous);
+            return next;
         }
 
         public clear() {
-            this.stack_.length = 0;
+            let scene = this.stack_.pop();
+            while (scene) {
+                scene.dispose();
+                scene = this.stack_.pop();
+            }
         }
 
         public update() {
             if (0 < this.counter_) {
                 this.counter_--;
+                if (this.counter_ === 0 && this.previousScene_) {
+                    this.previousScene_.dispose();
+                    this.previousScene_ = null;
+                }
                 return;
             }
             this.current.update();
