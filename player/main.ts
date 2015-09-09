@@ -51,6 +51,7 @@ class Images {
     }
 }
 
+// TODO: Move to the game script.
 interface BitmapFont {
     calculateTextSize(str: string): {width: number, height: number};
     drawAt(screen: graphics.Image, str: string, x: number, y: number, color: graphics.Color);

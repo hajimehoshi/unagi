@@ -67,7 +67,7 @@ namespace editor {
                         y:      1,
                         pages:  [
                             {
-                                image:    null,
+                                image:    data.NullImage.id,
                                 imageX:   1,
                                 imageY:   2,
                                 passable: false,
