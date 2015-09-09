@@ -152,7 +152,7 @@ namespace game {
             // TODO: Use a command index
             let command = this.commands_.shift();
             switch (command.data.type) {
-            case 'showMessage': // TODO: Rename to showMessageWindow?
+            case 'showMessageWindow':
                 let content = command.data.args['content'];
                 this.windowManager_.setMessageWindowContent(content);
                 break;

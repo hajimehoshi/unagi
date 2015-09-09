@@ -73,7 +73,7 @@ namespace editor {
                                 passable: false,
                                 commands: [
                                     {
-                                        type: 'showMessage',
+                                        type: 'showMessageWindow',
                                         args: {
                                             content: 'Hello! This is a test message.',
                                         },
@@ -81,17 +81,17 @@ namespace editor {
                                     {
                                         type: 'showSelectionWindow',
                                         args: {
-                                            options: ['Yes', 'No'],
+                                            options: ['Yes', 'No', 'I don\'t know'],
                                         },
                                     },
                                     {
-                                        type: 'showMessage',
+                                        type: 'showMessageWindow',
                                         args: {
                                             content: '隴西の李徴は博学才穎、天宝の末年、若くして名を\n虎榜に連ね、ついで江南尉に補せられたが、\n性、狷介、自から恃むところ頗る厚く、\n賤吏に甘んずるを潔しとしなかった。',
                                         },
                                     },
                                     {
-                                        type: 'showMessage',
+                                        type: 'showMessageWindow',
                                         args: {
                                             content: '長い文章テストです。\nああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
                                         },
