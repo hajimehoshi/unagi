@@ -6,7 +6,7 @@ namespace game {
 
     class WindowManager {
         private messageWindow_: MessageWindow = null;
-        private selectionWindow_: CommandWindow = null;
+        private selectionWindow_: SelectionWindow = null;
         private isMessageWindowWaiting_: boolean = false;
 
         public dispose() {
@@ -78,7 +78,7 @@ namespace game {
             if (this.selectionWindow_) {
                 throw 'this.selectionWindow_ should be null';
             }
-            this.selectionWindow_ = new CommandWindow(options, 0, 80);
+            this.selectionWindow_ = new SelectionWindow(options, 0, 80);
             this.selectionWindow_.open();
         }
 

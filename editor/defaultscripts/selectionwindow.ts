@@ -1,13 +1,13 @@
 namespace game {
-    declare type CommandWindowItem = {
+    declare type SelectionWindowItem = {
         name:      string,
         isEnabled: boolean,
     };
 
-    export class CommandWindow {
+    export class SelectionWindow {
         private window_: Window;
-        private commands_: CommandWindowItem[];
-        private currentCommandIndex_: number = 0;
+        private commands_: SelectionWindowItem[];
+        private currentSelectionIndex_: number = 0;
 
         constructor(commands: string[], x: number, y: number) {
             let width = 0;
@@ -40,7 +40,7 @@ namespace game {
         public set y(y: number) { this.window_.y = y; }
         public get width(): number { return this.window_.width; }
         public get height(): number { return this.window_.height; }
-        public get currentCommandIndex(): number { return this.currentCommandIndex_; }
+        public get currentSelectionIndex(): number { return this.currentSelectionIndex_; }
 
         public open() { this.window_.open(); }
         public close() { this.window_.close(); }
@@ -55,14 +55,14 @@ namespace game {
             this.window_.update();
 
             if ($input.isTrigger(Key.DOWN)) {
-                this.currentCommandIndex_ = Math.min(this.currentCommandIndex_ + 1, this.commands_.length - 1);
+                this.currentSelectionIndex_ = Math.min(this.currentSelectionIndex_ + 1, this.commands_.length - 1);
             }
             if ($input.isTrigger(Key.UP)) {
-                this.currentCommandIndex_ = Math.max(this.currentCommandIndex_ - 1, 0);
+                this.currentSelectionIndex_ = Math.max(this.currentSelectionIndex_ - 1, 0);
             }
 
             let x = Window.PADDING_X / 2;
-            let y = Window.PADDING_Y + 16 * this.currentCommandIndex_;
+            let y = Window.PADDING_Y + 16 * this.currentSelectionIndex_;
             this.window_.setSelection(x, y, this.window_.width - Window.PADDING_X, 16);
         }
 

@@ -1,6 +1,6 @@
 namespace game {
     export class TitleScene {
-        private menuWindow_: CommandWindow;
+        private menuWindow_: SelectionWindow;
 
         constructor() {
             // TODO: Define terms at $gameData
@@ -8,7 +8,7 @@ namespace game {
                 'New Game',
                 'Continue',
             ];
-            this.menuWindow_ = new CommandWindow(items, 0, 0);
+            this.menuWindow_ = new SelectionWindow(items, 0, 0);
             this.menuWindow_.x = (320 - this.menuWindow_.width) / 2;
             this.menuWindow_.y = (240 - this.menuWindow_.height) - data.GRID_SIZE;
             this.menuWindow_.setEnabled(1, false);
@@ -21,7 +21,7 @@ namespace game {
         public update() {
             this.menuWindow_.update();
             if ($input.isTrigger(Key.ENTER)) {
-                if (this.menuWindow_.currentCommandIndex === 1) {
+                if (this.menuWindow_.currentSelectionIndex === 1) {
                     return;
                 }
                 let initialPosition = $gameData.playerInitialPosition;

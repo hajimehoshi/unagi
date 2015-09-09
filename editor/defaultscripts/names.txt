@@ -10,7 +10,7 @@ Event Command Interpreter
 Character Sprite
 
 Window
-Command Window
+Selection Window
 Message Window
 
 Title Scene
