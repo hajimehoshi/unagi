@@ -39,26 +39,28 @@ namespace game {
             // TODO: Updating the current page
         }
 
-        public tryStartCommands(eventCommandInterpreter: EventCommandInterpreter) {
+        public get isCommandsStartable(): boolean {
+            return $input.isTrigger(Key.ENTER);
+        }
+
+        public startCommands(eventCommandInterpreter: EventCommandInterpreter) {
             let origDirection = this.character_.direction;
-            if ($input.isTrigger(Key.ENTER)) {
-                // TODO: Whether the event turns or not depends on the trigger.
-                let x = $gameState.playerCharacter.x;
-                let y = $gameState.playerCharacter.y;
-                if (this.x !== x || this.y !== y) {
-                    if (this.x + 1 === x && this.y === y) {
-                        this.character_.turn(CharacterDirection.RIGHT);
-                    } else if (this.x - 1 === x && this.y === y) {
-                        this.character_.turn(CharacterDirection.LEFT);
-                    } else if (this.x === x && this.y + 1 === y) {
-                        this.character_.turn(CharacterDirection.DOWN);
-                    } else if (this.x === x && this.y - 1 === y) {
-                        this.character_.turn(CharacterDirection.UP);
-                    }
+
+            // TODO: Whether the event turns or not depends on the trigger.
+            let x = $gameState.playerCharacter.x;
+            let y = $gameState.playerCharacter.y;
+            if (this.x !== x || this.y !== y) {
+                if (this.x + 1 === x && this.y === y) {
+                    this.character_.turn(CharacterDirection.RIGHT);
+                } else if (this.x - 1 === x && this.y === y) {
+                    this.character_.turn(CharacterDirection.LEFT);
+                } else if (this.x === x && this.y + 1 === y) {
+                    this.character_.turn(CharacterDirection.DOWN);
+                } else if (this.x === x && this.y - 1 === y) {
+                    this.character_.turn(CharacterDirection.UP);
                 }
-            } else {
-                return;
             }
+
             let commands = this.currentPage.commands;
             commands = commands.concat({
                 type: '_cleanUp',

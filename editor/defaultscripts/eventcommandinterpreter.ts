@@ -20,6 +20,16 @@ namespace game {
             }
         }
 
+        public get isTerminated(): boolean {
+            if (this.messageWindow_) {
+                return false;
+            }
+            if (this.selectionWindow_) {
+                return false;
+            }
+            return true;
+        }
+
         private updateMessageWindow() {
             if (this.isMessageWindowWaiting_) {
                 return;
@@ -57,11 +67,6 @@ namespace game {
             if ($input.isTrigger(Key.ENTER)) {
                 this.selectionWindow_.close();
             }
-        }
-
-        public get isRunning(): boolean {
-            // TODO: Redefine
-            return !!this.messageWindow_;
         }
 
         public setMessageWindowContent(content: string) {
@@ -116,6 +121,7 @@ namespace game {
 
     export class EventCommandInterpreter {
         private commands_: EventCommandData[];
+        private index_: number = 0;
         private windowManager_: WindowManager;
 
         constructor() {
@@ -127,9 +133,11 @@ namespace game {
             this.windowManager_.dispose();
         }
 
-        public get isRunning(): boolean {
-            // TODO: Redefine
-            return this.windowManager_.isRunning;
+        public get isTerminated(): boolean {
+            if (!this.windowManager_.isTerminated) {
+                return false;
+            }
+            return this.commands_.length <= this.index_;
         }
 
         public push(sender: EventCharacter, commands: data.EventCommand[]) {
@@ -146,11 +154,11 @@ namespace game {
             if (!this.windowManager_.isWaitingForNextCommand) {
                 return;
             }
-            if (this.commands_.length === 0) {
+            if (this.isTerminated) {
                 return;
             }
-            // TODO: Use a command index
-            let command = this.commands_.shift();
+            let command = this.commands_[this.index_];
+            this.index_++;
             switch (command.data.type) {
             case 'showMessageWindow':
                 let content = command.data.args['content'];

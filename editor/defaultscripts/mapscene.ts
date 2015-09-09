@@ -4,12 +4,11 @@ namespace game {
         private playerSprite_: CharacterSprite;
         private eventCharacters_: EventCharacter[];
         private eventSprites_: CharacterSprite[];
-        private eventCommandInterpreter_: EventCommandInterpreter;
+        private eventCommandInterpreter_: EventCommandInterpreter = null;
 
         constructor(map: data.Map) {
             this.map_ = map;
             this.playerSprite_ = new CharacterSprite($gameState.playerCharacter);
-            this.eventCommandInterpreter_ = new EventCommandInterpreter();
 
             this.eventCharacters_ = this.map_.events.map((e) => {
                 return new EventCharacter(e);
@@ -20,7 +19,9 @@ namespace game {
         }
 
         public dispose() {
-            this.eventCommandInterpreter_.dispose();
+            if (this.eventCommandInterpreter_) {
+                this.eventCommandInterpreter_.dispose();
+            }
         }
 
         private passable(x: number, y: number): boolean {
@@ -113,13 +114,18 @@ namespace game {
         }
 
         public update() {
-            let isEventCommandRunning = this.eventCommandInterpreter_.isRunning;
-            this.eventCommandInterpreter_.update();
+            if (this.eventCommandInterpreter_) {
+                this.eventCommandInterpreter_.update();
+                if (this.eventCommandInterpreter_.isTerminated) {
+                    this.eventCommandInterpreter_.dispose();
+                    this.eventCommandInterpreter_ = null;
+                }
+            }
             $gameState.playerCharacter.update();
             for (let eventCharacter of this.eventCharacters_) {
                 eventCharacter.update();
             }
-            if (isEventCommandRunning) {
+            if (this.eventCommandInterpreter_) {
                 return;
             }
 
@@ -139,7 +145,10 @@ namespace game {
             if (!event) {
                 return;
             }
-            event.tryStartCommands(this.eventCommandInterpreter_);
+            if (event.isCommandsStartable) {
+                this.eventCommandInterpreter_ = new EventCommandInterpreter();
+                event.startCommands(this.eventCommandInterpreter_);
+            }
         }
 
         public draw(screen: graphics.Image) {
@@ -188,7 +197,9 @@ namespace game {
                 c.draw(screen, {geoM});
             });
 
-            this.eventCommandInterpreter_.draw(screen);
+            if (this.eventCommandInterpreter_) {
+                this.eventCommandInterpreter_.draw(screen);
+            }
         }
     }
 }
