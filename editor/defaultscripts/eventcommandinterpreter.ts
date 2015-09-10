@@ -221,6 +221,9 @@ namespace game {
                 let originalDirection = command.data.args['originalDirection'];
                 command.sender.turn(originalDirection);
                 break;
+            default:
+                throw `invalid event command type ${command.data.type}`;
+                break;
             }
         }
 

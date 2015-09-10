@@ -38,8 +38,10 @@ namespace data {
         commands: EventCommand[],
     };
 
-    export declare type EventCommand = {
-        type: string,
-        args: {[key: string]: any},
-    };
+    // Use interface here because type aliasing can't be used recursively.
+    export interface EventCommand {
+        type:      string,
+        args:      {[key: string]: any},
+        branches?: EventCommand[],
+    }
 }

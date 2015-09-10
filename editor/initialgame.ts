@@ -83,6 +83,26 @@ namespace editor {
                                         args: {
                                             options: ['Yes', 'No', 'I don\'t know'],
                                         },
+                                        branches: [
+                                            {
+                                                type: 'showMessageWindow',
+                                                args: {
+                                                    content: 'You chose yes.',
+                                                },
+                                            },
+                                            {
+                                                type: 'showMessageWindow',
+                                                args: {
+                                                    content: 'You chose no.',
+                                                },
+                                            },
+                                            {
+                                                type: 'showMessageWindow',
+                                                args: {
+                                                    content: 'You don\'t know.',
+                                                },
+                                            },
+                                        ],
                                     },
                                     {
                                         type: 'showMessageWindow',
