@@ -43,7 +43,7 @@ namespace game {
             return $input.isTrigger(Key.ENTER);
         }
 
-        public startCommands(eventCommandInterpreter: EventCommandInterpreter) {
+        public startCommands(): EventCommandInterpreter {
             let origDirection = this.character_.direction;
 
             // TODO: Whether the event turns or not depends on the trigger.
@@ -68,7 +68,7 @@ namespace game {
                     originalDirection: origDirection,
                 },
             });
-            eventCommandInterpreter.push(this, commands);
+            return new EventCommandInterpreter(this, commands);
         }
     }
 }

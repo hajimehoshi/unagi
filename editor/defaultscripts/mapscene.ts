@@ -146,8 +146,7 @@ namespace game {
                 return;
             }
             if (event.isCommandsStartable) {
-                this.eventCommandInterpreter_ = new EventCommandInterpreter();
-                event.startCommands(this.eventCommandInterpreter_);
+                this.eventCommandInterpreter_ = event.startCommands();
             }
         }
 

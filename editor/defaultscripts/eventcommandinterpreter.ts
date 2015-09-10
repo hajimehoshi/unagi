@@ -1,5 +1,5 @@
 namespace game {
-    declare type EventCommandData = {
+    declare type EventCommand = {
         sender: EventCharacter,
         data:   data.EventCommand,
     }
@@ -120,12 +120,18 @@ namespace game {
     }
 
     export class EventCommandInterpreter {
-        private commands_: EventCommandData[];
+        private commands_: EventCommand[];
         private index_: number = 0;
         private windowManager_: WindowManager;
 
-        constructor() {
+        constructor(sender: EventCharacter, commands: data.EventCommand[]) {
             this.commands_ = [];
+            for (let command of commands) {
+                this.commands_.push({
+                    sender: sender,
+                    data:   command,
+                });
+            }
             this.windowManager_ = new WindowManager();
         }
 
@@ -138,15 +144,6 @@ namespace game {
                 return false;
             }
             return this.commands_.length <= this.index_;
-        }
-
-        public push(sender: EventCharacter, commands: data.EventCommand[]) {
-            for (let command of commands) {
-                this.commands_.push({
-                    sender: sender,
-                    data:   command,
-                });
-            }
         }
 
         public update() {
