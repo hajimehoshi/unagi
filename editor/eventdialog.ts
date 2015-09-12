@@ -15,14 +15,16 @@
 namespace editor {
     export class EventDialog {
         private static commandToString(command: data.EventCommand): string {
-            return `${command.type} ${JSON.stringify(command.args)}`;
+            let indent = new Array(command.indent).map(_ => '  ').join('');
+            return `${indent}${command.type} ${JSON.stringify(command.args)}`;
         }
 
         private static stringToCommand(str: string): data.EventCommand {
-            let m = str.match(/^([^ ]+) (.+)$/);
+            let m = str.match(/^( *)^([^ ]+) (.+)$/);
             return {
-                type: m[1],
-                args: JSON.parse(m[2]),
+                type:   m[2],
+                args:   JSON.parse(m[3]),
+                indent: m[1].length / 2,
             };
         }
 

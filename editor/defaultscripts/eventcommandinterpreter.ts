@@ -120,19 +120,18 @@ namespace game {
     }
 
     export class EventCommandInterpreter {
-        private commands_: EventCommand[];
+        private commands_: EventCommand[] = [];
         private index_: number = 0;
-        private windowManager_: WindowManager;
+        private windowManager_: WindowManager = new WindowManager();
 
         constructor(sender: EventCharacter, commands: data.EventCommand[]) {
-            this.commands_ = [];
+            // TODO: Compile to asm-like language?
             for (let command of commands) {
                 this.commands_.push({
                     sender: sender,
                     data:   command,
                 });
             }
-            this.windowManager_ = new WindowManager();
         }
 
         public dispose() {
@@ -155,15 +154,16 @@ namespace game {
                 return;
             }
             let command = this.commands_[this.index_];
-            this.index_++;
             switch (command.data.type) {
             case 'showMessageWindow':
                 let content = command.data.args['content'];
                 this.windowManager_.setMessageWindowContent(content);
+                this.index_++;
                 break;
             case 'showSelectionWindow':
                 let options = command.data.args['options'];
                 this.windowManager_.setSelectionWindowOptions(options);
+                this.index_++; // fix this
                 break;
             case 'showNumberInputWindow':
             case 'showSelectingItemWindow':
@@ -211,12 +211,14 @@ namespace game {
             case 'modifyMap':
             case 'eval':
                 console.log('not implemented');
+                this.index_++;
                 break;
             case '_cleanUp':
                 this.windowManager_.closeMessageWindowIfNeeded();
                 // TODO: What if the event turns another direction in event commands?
                 let originalDirection = command.data.args['originalDirection'];
                 command.sender.turn(originalDirection);
+                this.index_++;
                 break;
             default:
                 throw `invalid event command type ${command.data.type}`;

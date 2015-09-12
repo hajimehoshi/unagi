@@ -67,6 +67,7 @@ namespace game {
                 args: {
                     originalDirection: origDirection,
                 },
+                indent: 0,
             });
             return new EventCommandInterpreter(this, commands);
         }
