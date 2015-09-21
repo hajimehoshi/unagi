@@ -23,7 +23,7 @@ namespace editor {
         }
 
         private static stringToCommand(str: string): data.EventCommand {
-            let m = str.match(/^( *)^([^ ]+) (.+)$/);
+            let m = str.match(/^( *)([^ ]+) (.+)$/);
             return {
                 type:   m[2],
                 args:   JSON.parse(m[3]),
