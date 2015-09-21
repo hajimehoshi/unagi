@@ -18,55 +18,56 @@ namespace editor {
         id:    string,
     }
 
-    export class ListBoxElement {
+    export class ListBox {
+        private element_: HTMLElement;
         private namePostfix_: string;
 
-        private createdCallback(): void {
+        constructor() {
             this.namePostfix_ = data.UUID.generate();
 
-            let template = <HTMLTemplateElement>document.getElementById('unagi-listbox-template');
-            let clone = document.importNode(template.content, true);
-            let shadowRoot = (<HTMLElementES6><any>this).createShadowRoot();
-            shadowRoot.appendChild(clone);
+            let template = <HTMLTemplateElement>document.getElementById('listbox-template');
+            let fragment = <DocumentFragment>document.importNode(template.content, true);
+            this.element_ = <HTMLElement>fragment.querySelector('div.listbox');
 
-            let ul = <HTMLUListElement>shadowRoot.querySelector('ul.list');
-            let self = <HTMLElement><any>this;
-            self.addEventListener('contextmenu', (e: MouseEvent) => {
+            let ul = <HTMLUListElement>this.element_.querySelector('ul');
+            this.element_.addEventListener('contextmenu', (e: MouseEvent) => {
                 e.preventDefault();
-                if (self.getAttribute('contextmenu') === 'none') {
+                if (this.element_.getAttribute('contextmenu') === 'none') {
                     return;
                 }
-                let menu = <HTMLMenuElement>shadowRoot.querySelector('menu.context');
+                let menu = <HTMLMenuElement>this.element_.querySelector('menu.context');
                 menu.style.display = 'block';
-                let rect = self.getBoundingClientRect();
+                let rect = this.element_.getBoundingClientRect();
                 menu.style.left = (e.pageX - rect.left) + 'px';
                 menu.style.top = (e.pageY - rect.top) + 'px';
             });
             // TODO: Want to close the menu on clicking anywhere.
-            self.addEventListener('click', (e: MouseEvent) => {
-                let menu = <HTMLMenuElement>shadowRoot.querySelector('menu.context');
+            this.element_.addEventListener('click', (e: MouseEvent) => {
+                let menu = <HTMLMenuElement>this.element_.querySelector('menu.context');
                 menu.style.display = 'none';
             });
-            (<HTMLLIElement>shadowRoot.querySelector('#contextNew')).addEventListener('click', (e: MouseEvent) => {
+            (<HTMLLIElement>this.element_.querySelector('#contextNew')).addEventListener('click', (e: MouseEvent) => {
                 e.preventDefault();
                 let ce = new CustomEvent('contextMenuNew');
-                (<HTMLElement><any>this).dispatchEvent(ce);
+                this.element_.dispatchEvent(ce);
             });
         }
 
+        public get element(): HTMLElement {
+            return this.element_;
+        }
+
         public get selectedIndex(): number {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let input = <Node>shadowRoot.querySelector('input:checked');
+            let input = <Node>this.element_.querySelector('input:checked');
             let li = input;
             while (li && li.nodeName !== 'LI') {
                 li = li.parentNode;
             }
-            return [].indexOf.call(shadowRoot.querySelectorAll('ul.list li'), li);
+            return [].indexOf.call(this.element_.querySelectorAll('ul li'), li);
         }
 
         public get selectedId(): string {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let input = <HTMLInputElement>shadowRoot.querySelector('input:checked');
+            let input = <HTMLInputElement>this.element_.querySelector('input:checked');
             if (!input) {
                 return null;
             }
@@ -74,8 +75,7 @@ namespace editor {
         }
 
         public set selectedId(id: string) {
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let li = shadowRoot.querySelector(`li[data-id="${id}"]`);
+            let li = this.element_.querySelector(`li[data-id="${id}"]`);
             let input = <HTMLInputElement>li.querySelector('input');
             input.checked = true;
         }
@@ -89,8 +89,7 @@ namespace editor {
 
         public replaceItems(items: ListBoxItem[]): void {
             // TODO: Fix implementation to update items that are only needed
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let ul = shadowRoot.querySelector('ul.list');
+            let ul = this.element_.querySelector('ul');
             let idToLi: {[id: string]: HTMLLIElement} = {};
             while (ul.firstChild) {
                 if (ul.firstChild.nodeType !== Node.ELEMENT_NODE) {
@@ -128,7 +127,7 @@ namespace editor {
                             id: input.value,
                         },
                     });
-                    (<HTMLElement><any>this).dispatchEvent(ce);
+                    this.element_.dispatchEvent(ce);
                 });
                 label.appendChild(input);
 
@@ -144,14 +143,8 @@ namespace editor {
 
         public select(id: string): void {
             // TODO: Check id's syntax
-            let shadowRoot = (<HTMLElementES6><any>this).shadowRoot;
-            let input = <HTMLInputElement>shadowRoot.querySelector(`input[value="${id}"]`);
+            let input = <HTMLInputElement>this.element_.querySelector(`input[value="${id}"]`);
             input.checked = true;
         }
     }
 }
-
-(() => {
-    (<any>editor.ListBoxElement.prototype).__proto__ = HTMLElement.prototype;
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-listbox', editor.ListBoxElement);
-})();

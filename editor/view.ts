@@ -18,6 +18,7 @@ namespace editor {
         private palette_: Palette;
         private tiles_: Tiles;
         private database_: Database;
+        private mapList_: ListBox;
 
         // TODO: Remove this
         private tileSetImage_: HTMLImageElement;
@@ -37,9 +38,12 @@ namespace editor {
                 }
             });
 
-            let mapListElement = <HTMLElement><any>this.mapList;
-            mapListElement.addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            this.mapList_ = new ListBox();
+            this.mapList_.element.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentMap(e.detail.id);
+            });
+            this.mapList_.element.addEventListener('contextMenuNew', (e: CustomEvent) => {
+                console.log('New Map: not implemented yet');
             });
 
             let div = document.createElement('div');
@@ -55,7 +59,8 @@ namespace editor {
             let palette = <HTMLElement>document.querySelector('#palette')
             palette.style.width = `calc(256px + ${scrollBarWidth}px)`;
 
-            let maps = <HTMLElement>document.querySelector('unagi-listbox.maps');
+            let maps = <HTMLElement>document.querySelector('.maps');
+            maps.appendChild(this.mapList_.element);
             maps.style.width = `calc(256px + ${scrollBarWidth}px)`;
 
             let tiles = <HTMLElement>document.querySelector('#tiles')
@@ -63,8 +68,8 @@ namespace editor {
             tiles.style.width = `calc(100% - 256px - ${scrollBarWidth}px - 1px)`;
         }
 
-        private get mapList(): ListBoxElement {
-            return <ListBoxElement><any>document.querySelector('unagi-listbox.maps');
+        private get mapList(): ListBox {
+            return this.mapList_;
         }
 
         public render(game: data.Game, info: RenderInfo): void {

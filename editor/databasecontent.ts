@@ -15,19 +15,24 @@
 namespace editor {
     export class DatabaseContent {
         private element_: HTMLElement;
+        private list_: ListBox;
 
         constructor(element: HTMLElement) {
             this.element_ = element;
 
-            (<HTMLElement><any>this.list).setAttribute('groupname', this.groupName);
-            (<HTMLElement><any>this.list).addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            this.list_ = new ListBox();
+            this.element_.querySelector('.list').appendChild(this.list_.element);
+
+            this.list.element.setAttribute('groupname', this.groupName);
+            this.list.element.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentDataItem();
             });
-            (<HTMLElement><any>this.list).addEventListener('contextMenuNew', (e: CustomEvent) => {
+            this.list.element.addEventListener('contextMenuNew', (e: CustomEvent) => {
                 Store.instance.addGameData(this.groupName);
             });
 
-            [].forEach.call(this.element_.querySelectorAll('input, select'), (e: HTMLElement) => {
+            let editor = this.element_.querySelector('.databaseEditor');
+            [].forEach.call(editor.querySelectorAll('input, select'), (e: HTMLElement) => {
                 e.addEventListener('change', () => {
                     let value: any = (<any>e).value;
                     if (e instanceof HTMLInputElement && e.type === 'number') {
@@ -40,8 +45,8 @@ namespace editor {
             });
         }
 
-        private get list(): ListBoxElement {
-            return <ListBoxElement><any>this.element_.querySelector('unagi-listbox');
+        private get list(): ListBox {
+            return this.list_;
         }
 
         private get groupName(): string {
@@ -49,7 +54,7 @@ namespace editor {
         }
 
         private get inputs(): HTMLInputElement[] {
-            return [].slice.call(this.element_.querySelectorAll('input'));
+            return [].slice.call(this.element_.querySelectorAll('.databaseEditor input'));
         }
 
         private currentItem(game: data.Game): any {
@@ -70,19 +75,19 @@ namespace editor {
                 };
             }));
             let id = this.list.selectedId;
-            let content = this.element_.querySelector('div.content');
+            let editor = this.element_.querySelector('.databaseEditor');
             if (!id) {
-                content.classList.add('disabled');
+                editor.classList.add('disabled');
                 for (let input of this.inputs) {
                     input.value = null;
                 }
                 return;
             }
-            content.classList.remove('disabled');
+            editor.classList.remove('disabled');
 
             let item = this.currentItem(game);
             for (let key in item) {
-                let input = <HTMLInputElement>this.element_.querySelector(`input[name="${key}"]`);
+                let input = <HTMLInputElement>this.element_.querySelector(`.databaseEditor input[name="${key}"]`);
                 if (input) {
                     input.value = item[key];
                     continue;
@@ -94,12 +99,12 @@ namespace editor {
                     imageSelector.render(game, item[key], 0, 0);
                     continue;
                 }
-                let select = <HTMLSelectElement>this.element_.querySelector(`select[name="${key}"]`);
+                let select = <HTMLSelectElement>this.element_.querySelector(`.databaseEditor select[name="${key}"]`);
                 if (select) {
                     select.value = item[key];
                     continue;
                 }
-                let img = <HTMLImageElement>this.element_.querySelector(`img[data-name="${key}"]`);
+                let img = <HTMLImageElement>this.element_.querySelector(`.databaseEditor img[data-name="${key}"]`);
                 if (img) {
                     img.src = item[key];
                     continue;

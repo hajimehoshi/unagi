@@ -14,6 +14,7 @@
 
 namespace editor {
     export class ImageSelectorElement {
+        private list_: ListBox;
         private path_: string;
         private imageXPath_: string;
         private imageYPath_: string;
@@ -36,6 +37,9 @@ namespace editor {
             let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-dialog-style-template');
             let styleClone = document.importNode(styleTemplate.content, true);
             shadowRoot.appendChild(styleClone);
+
+            this.list_ = new ListBox();
+            shadowRoot.querySelector('.list').appendChild(this.list_.element);
 
             let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas.current');
             canvas.addEventListener('click', (e: MouseEvent) => {
@@ -63,8 +67,7 @@ namespace editor {
                 dialog.close();
             });
 
-            let dialogList = <HTMLElement>dialog.querySelector('unagi-listbox');
-            dialogList.addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            this.list_.element.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateGameData(this.path, e.detail.id);
             });
 
@@ -128,7 +131,6 @@ namespace editor {
             }
 
             let dialog = <any>shadowRoot.querySelector('dialog');
-            let dialogList = <ListBoxElement><any>dialog.querySelector('unagi-listbox');
             let typesAttr = (<HTMLElement><any>this).getAttribute('types');
             if (typesAttr === null) {
                 typesAttr = '';
@@ -142,8 +144,8 @@ namespace editor {
                 title: '(None)',
                 id:    data.NullImage.id,
             });
-            dialogList.replaceItems(items);
-            dialogList.selectedId = imageId;
+            this.list_.replaceItems(items);
+            this.list_.selectedId = imageId;
 
             let dialogCanvas = <HTMLCanvasElement>dialog.querySelector('dialog canvas');
             this.drawAtCenter(dialogCanvas, img, 0, 0, img.width, img.height);
@@ -196,6 +198,8 @@ namespace editor {
 }
 
 (() => {
-    (<any>editor.ImageSelectorElement.prototype).__proto__ = HTMLElement.prototype;
-    (<editor.HTMLDocumentES6>document).registerElement('unagi-image-selector', editor.ImageSelectorElement);
+    window.addEventListener('load', () => {
+        (<any>editor.ImageSelectorElement.prototype).__proto__ = HTMLElement.prototype;
+        (<editor.HTMLDocumentES6>document).registerElement('unagi-image-selector', editor.ImageSelectorElement);
+    });
 })();
