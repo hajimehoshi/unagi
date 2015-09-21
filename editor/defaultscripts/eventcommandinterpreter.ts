@@ -243,11 +243,26 @@ namespace game {
                 case 'break':
                     console.log('not implemented');
                     break;
-                case 'goto':
-                    console.log('not implemented');
+                case 'goto': {
+                    let label = command.data.args['label'];
+                    for (let commandIndex = 0;
+                         commandIndex < this.commands_.length;
+                         commandIndex++) {
+                        let nextCommand = this.commands_[commandIndex];
+                        if (nextCommand.data.type !== 'label') {
+                            continue;
+                        }
+                        if (nextCommand.data.args['content'] !== label) {
+                            continue;
+                        }
+                        this.nextIndex_ = commandIndex;
+                        break;
+                    }
+                    throw `label '${label}' not found`
                     break;
+                }
                 case 'label':
-                    console.log('not implemented');
+                    this.goNextCommand();
                     break;
                 case 'showMessageWindow': {
                     let content = command.data.args['content'];
