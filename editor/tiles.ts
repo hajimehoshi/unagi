@@ -30,11 +30,6 @@ namespace editor {
             this.offsetX_ = 0;
             this.offsetY_ = 0;
 
-            // TODO: Remove this
-            let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-dialog-style-template');
-            let styleClone = document.importNode(styleTemplate.content, true);
-            document.querySelector('head').appendChild(styleClone);
-
             let eventDialogElement = <any>this.element_.querySelector('dialog.event');
             this.eventDialog_ = new EventDialog(eventDialogElement);
 

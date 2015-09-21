@@ -24,6 +24,14 @@ namespace editor {
         private tileSetImage_: HTMLImageElement;
 
         constructor() {
+            // TODO: Remove this
+            let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-dialog-style-template');
+            let styleClone = document.importNode(styleTemplate.content, true);
+            document.querySelector('head').appendChild(styleClone);
+            styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-listbox-style-template');
+            styleClone = document.importNode(styleTemplate.content, true);
+            document.querySelector('head').appendChild(styleClone);
+
             this.toolbar_ = new Toolbar(<HTMLElement>document.querySelector('#toolbar'));
             this.palette_ = new Palette(<HTMLElement>document.querySelector('#palette'));
             this.tiles_ = new Tiles(<HTMLElement>document.querySelector('#tiles'));

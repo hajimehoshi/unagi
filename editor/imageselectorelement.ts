@@ -37,6 +37,9 @@ namespace editor {
             let styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-dialog-style-template');
             let styleClone = document.importNode(styleTemplate.content, true);
             shadowRoot.appendChild(styleClone);
+            styleTemplate = <HTMLTemplateElement>document.getElementById('unagi-listbox-style-template');
+            styleClone = document.importNode(styleTemplate.content, true);
+            shadowRoot.appendChild(styleClone);
 
             this.list_ = new ListBox();
             shadowRoot.querySelector('.list').appendChild(this.list_.element);
