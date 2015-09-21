@@ -7,6 +7,7 @@ namespace game {
     class WindowManager {
         private messageWindow_: MessageWindow = null;
         private selectionWindow_: SelectionWindow = null;
+        private selectionIndex_: number = 0;
         private isMessageWindowWaiting_: boolean = false;
 
         public dispose() {
@@ -18,6 +19,10 @@ namespace game {
                 this.selectionWindow_.dispose();
                 this.selectionWindow_ = null;
             }
+        }
+
+        public get selectionIndex(): number {
+            return this.selectionIndex_;
         }
 
         public get isTerminated(): boolean {
@@ -62,9 +67,11 @@ namespace game {
             if (this.selectionWindow_.isClosed) {
                 this.selectionWindow_.dispose();
                 this.selectionWindow_ = null;
+                this.selectionIndex_ = 0;
                 return;
             }
             if ($input.isTrigger(Key.ENTER)) {
+                this.selectionIndex_ = this.selectionWindow_.currentSelectionIndex;
                 this.selectionWindow_.close();
             }
         }
@@ -122,6 +129,7 @@ namespace game {
     export class EventCommandInterpreter {
         private commands_: EventCommand[] = [];
         private index_: number = 0;
+        private nextIndex_: number = 0;
         private windowManager_: WindowManager = new WindowManager();
 
         constructor(sender: EventCharacter, commands: data.EventCommand[]) {
@@ -150,21 +158,25 @@ namespace game {
             if (!this.windowManager_.isWaitingForNextCommand) {
                 return;
             }
+            this.index_ = this.nextIndex_;
             if (this.isTerminated) {
                 return;
             }
             let command = this.commands_[this.index_];
             switch (command.data.type) {
-            case 'showMessageWindow':
+            case 'showMessageWindow': {
                 let content = command.data.args['content'];
                 this.windowManager_.setMessageWindowContent(content);
-                this.index_++;
+                this.nextIndex_ = this.index_ + 1;
                 break;
-            case 'showSelectionWindow':
+            }
+            case 'showSelectionWindow': {
                 let options = command.data.args['options'];
                 this.windowManager_.setSelectionWindowOptions(options);
-                this.index_++; // fix this
+                this.nextIndex_ = this.index_ + 1; // fix this.
                 break;
+            }
+            case 'case':
             case 'showNumberInputWindow':
             case 'showSelectingItemWindow':
             case 'showScrollingMessage':
@@ -210,15 +222,15 @@ namespace game {
             case 'modifySystem':
             case 'modifyMap':
             case 'eval':
-                console.log('not implemented');
-                this.index_++;
+                console.log(`not implemented command: ${command.data.type}`);
+                this.nextIndex_ = this.index_ + 1;
                 break;
             case '_cleanUp':
                 this.windowManager_.closeMessageWindowIfNeeded();
                 // TODO: What if the event turns another direction in event commands?
                 let originalDirection = command.data.args['originalDirection'];
                 command.sender.turn(originalDirection);
-                this.index_++;
+                this.nextIndex_ = this.index_ + 1;
                 break;
             default:
                 throw `invalid event command type ${command.data.type}`;

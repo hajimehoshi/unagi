@@ -15,7 +15,10 @@
 namespace editor {
     export class EventDialog {
         private static commandToString(command: data.EventCommand): string {
-            let indent = new Array(command.indent).map(_ => '  ').join('');
+            let indent = '';
+            for (let i = 0; i < command.indent; i++) {
+                indent += '  ';
+            }
             return `${indent}${command.type} ${JSON.stringify(command.args)}`;
         }
 

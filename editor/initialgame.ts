@@ -87,6 +87,27 @@ namespace editor {
                                         indent: 0,
                                     },
                                     {
+                                        type: 'case',
+                                        args: {
+                                            content: '0',
+                                        },
+                                        indent: 1,
+                                    },
+                                    {
+                                        type: 'case',
+                                        args: {
+                                            content: '1',
+                                        },
+                                        indent: 1,
+                                    },
+                                    {
+                                        type: 'case',
+                                        args: {
+                                            content: '2',
+                                        },
+                                        indent: 1,
+                                    },
+                                    {
                                         type: 'showMessageWindow',
                                         args: {
                                             content: '隴西の李徴は博学才穎、天宝の末年、若くして名を\n虎榜に連ね、ついで江南尉に補せられたが、\n性、狷介、自から恃むところ頗る厚く、\n賤吏に甘んずるを潔しとしなかった。',
