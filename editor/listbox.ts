@@ -27,7 +27,7 @@ namespace editor {
 
             let template = <HTMLTemplateElement>document.getElementById('listbox-template');
             let fragment = <DocumentFragment>document.importNode(template.content, true);
-            this.element_ = <HTMLElement>fragment.querySelector('div.listbox');
+            this.element_ = <HTMLElement>fragment.querySelector('div.listBox');
 
             let ul = <HTMLUListElement>this.element_.querySelector('ul');
             this.element_.addEventListener('contextmenu', (e: MouseEvent) => {
