@@ -89,21 +89,21 @@ namespace editor {
                                     {
                                         type: 'case',
                                         args: {
-                                            content: '0',
+                                            content: 0,
                                         },
                                         indent: 1,
                                     },
                                     {
                                         type: 'case',
                                         args: {
-                                            content: '1',
+                                            content: 1,
                                         },
                                         indent: 1,
                                     },
                                     {
                                         type: 'case',
                                         args: {
-                                            content: '2',
+                                            content: 2,
                                         },
                                         indent: 1,
                                     },

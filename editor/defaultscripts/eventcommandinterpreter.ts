@@ -9,7 +9,7 @@ namespace game {
         private messageWindowWaiting_: () => void = null;
         private selectionWindow_: SelectionWindow = null;
         private selectionIndex_: number = 0;
-        private selectionWindowClosed_: () => void = null;
+        private selectionWindowClosed_: (selectionIndex: number) => void = null;
         private isMessageWindowWaiting_: boolean = false;
 
         public dispose() {
@@ -21,10 +21,6 @@ namespace game {
                 this.selectionWindow_.dispose();
                 this.selectionWindow_ = null;
             }
-        }
-
-        public get selectionIndex(): number {
-            return this.selectionIndex_;
         }
 
         public get isTerminated(): boolean {
@@ -72,10 +68,10 @@ namespace game {
             if (this.selectionWindow_.isClosed) {
                 this.selectionWindow_.dispose();
                 this.selectionWindow_ = null;
-                this.selectionIndex_ = 0;
                 if (this.selectionWindowClosed_) {
-                    this.selectionWindowClosed_();
+                    this.selectionWindowClosed_(this.selectionIndex_);
                 }
+                this.selectionIndex_ = 0;
                 return;
             }
             if ($input.isTrigger(Key.ENTER)) {
@@ -95,7 +91,7 @@ namespace game {
             this.messageWindow_.content = content;
         }
 
-        public setSelectionWindowOptions(options: string[], closed: () => void) {
+        public setSelectionWindowOptions(options: string[], closed: (index: number) => void) {
             this.selectionWindowClosed_ = closed;
             if (this.selectionWindow_) {
                 throw 'this.selectionWindow_ should be null';
@@ -186,10 +182,25 @@ namespace game {
             }
             case 'showSelectionWindow': {
                 let options = command.data.args['options'];
-                this.windowManager_.setSelectionWindowOptions(options, () => {
-                    let index = this.windowManager_.selectionIndex;
-                    console.log(index);
-                    this.nextIndex_ = this.index_ + 1; // fix this
+                this.windowManager_.setSelectionWindowOptions(options, (selectionIndex: number) => {
+                    let nextIndent = command.data.indent + 1;
+                    for (let commandIndex = this.index_ + 1;
+                         commandIndex < this.commands_.length;
+                         commandIndex++) {
+                        let nextCommand = this.commands_[commandIndex]
+                        if (nextCommand.data.indent !== nextIndent) {
+                            continue;
+                        }
+                        if (nextCommand.data.type !== 'case') {
+                            continue;
+                        }
+                        if (nextCommand.data.args['content'] !== selectionIndex) {
+                            continue;
+                        }
+                        this.nextIndex_ = commandIndex;
+                        return;
+                    }
+                    throw `case ${selectionIndex} must exist for showSelectionWindow but not`;
                 });
                 break;
             }
