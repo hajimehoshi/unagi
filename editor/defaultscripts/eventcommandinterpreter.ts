@@ -267,6 +267,8 @@ namespace game {
                 case 'showNumberInputWindow':
                 case 'showSelectingItemWindow':
                 case 'showScrollingMessage':
+                    console.log('not implemented');
+                    break;
                 case 'modifySwitch':
                 case 'modifyVariables':
                 case 'modifySelfSwitch':
