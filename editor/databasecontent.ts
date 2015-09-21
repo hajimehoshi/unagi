@@ -21,7 +21,8 @@ namespace editor {
             this.element_ = element;
 
             this.list_ = new ListBox();
-            this.element_.querySelector('.list').appendChild(this.list_.element);
+            let listBox = this.element_.querySelector('.listBox');
+            listBox.parentNode.replaceChild(this.list_.element, listBox);
 
             this.list.element.setAttribute('groupname', this.groupName);
             this.list.element.addEventListener('selectedItemChanged', (e: CustomEvent) => {

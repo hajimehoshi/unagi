@@ -116,12 +116,9 @@
       padding: 0;
       width: 512px;
     }
-    dialog .list {
+    dialog .listBox {
       height: 100%;
       width: 128px;
-    }
-    dialog .list .listBox {
-      height: 100%;
     }
     dialog canvas {
       display: block;
@@ -135,7 +132,7 @@
   </style>
   <canvas class="current"></canvas>
   <dialog>
-    <div class="list"></div>
+    <div class="listBox"><!-- Will be replaced at imageselectorelement.ts --></div>
     <canvas></canvas>
   </dialog>
 </template>
@@ -265,13 +262,10 @@
 </style>
 <style>
   /* TODO: better class name */
-  .databaseContent > .list {
+  .databaseContent > .listBox {
     height: 100%;
     position: absolute;
     width: 192px;
-  }
-  .databaseContent > .list > .listBox {
-    height: 100%;
   }
   .databaseContent > .databaseEditor {
     background-color: #f5f5f5;
@@ -413,7 +407,7 @@
       </div>
       <div class="content">
         <div class="databaseContent" data-group-name="actors">
-          <div class="list"></div>
+          <div class="listBox"><!-- Will be replaced at databasecontent.ts --></div>
           <div class="databaseEditor">
             <ul>
               <li><label>Name: <input type="text" name="name"></label></li>
@@ -423,7 +417,7 @@
           </div>
         </div>
         <div class="databaseContent" data-group-name="enemies">
-          <div class="list"></div>
+          <div class="listBox"><!-- Will be replaced at databasecontent.ts --></div>
           <div class="databaseEditor">
             <ul>
               <li><label>Name: <input type="text" name="name"></label></li>
@@ -440,7 +434,7 @@
           </div>
         </div>
         <div class="databaseContent" data-group-name="images">
-          <div class="list"></div>
+          <div class="listBox"><!-- Will be replaced at databasecontent.ts --></div>
           <div class="databaseEditor">
             <ul>
               <li><label>Name: <input type="text" name="name"></label></li>
