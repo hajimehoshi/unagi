@@ -6,11 +6,13 @@ namespace game {
 
     class WindowManager {
         private messageWindow_: MessageWindow = null;
-        private messageWindowWaiting_: () => void = null;
         private selectionWindow_: SelectionWindow = null;
         private selectionIndex_: number = 0;
-        private selectionWindowClosed_: (selectionIndex: number) => void = null;
         private isMessageWindowWaiting_: boolean = false;
+
+        private messageWindowWaiting_: () => void = null;
+        private selectionWindowClosed_: (selectionIndex: number) => void = null;
+        private messageWindowClosed_: () => void = null;
 
         public dispose() {
             if (this.messageWindow_) {
@@ -47,6 +49,9 @@ namespace game {
             if (this.messageWindow_.isClosed) {
                 this.messageWindow_.dispose();
                 this.messageWindow_ = null;
+                if (this.messageWindowClosed_) {
+                    this.messageWindowClosed_();
+                }
                 return;
             }
             if ($input.isTrigger(Key.ENTER)) {
@@ -100,7 +105,8 @@ namespace game {
             this.selectionWindow_.open();
         }
 
-        public closeMessageWindowIfNeeded() {
+        public closeMessageWindowIfNeeded(closed: () => void) {
+            this.messageWindowClosed_ = closed;
             this.isMessageWindowWaiting_ = false;
             if (this.messageWindow_) {
                 this.messageWindow_.close();
@@ -164,105 +170,106 @@ namespace game {
             if (!this.windowManager_.isWaitingForNextCommand) {
                 return;
             }
-            if (this.nextIndex_ === this.index_) {
-                return;
-            }
-            this.index_ = this.nextIndex_;
-            if (this.isTerminated) {
-                return;
-            }
-            let command = this.commands_[this.index_];
-            switch (command.data.type) {
-            case 'showMessageWindow': {
-                let content = command.data.args['content'];
-                this.windowManager_.setMessageWindowContent(content, () => {
+            let command: EventCommand = null;
+            while (this.index_ !== this.nextIndex_) {
+                this.index_ = this.nextIndex_;
+                if (this.isTerminated) {
+                    break;
+                }
+                command = this.commands_[this.index_];
+                switch (command.data.type) {
+                case 'showMessageWindow': {
+                    let content = command.data.args['content'];
+                    this.windowManager_.setMessageWindowContent(content, () => {
+                        this.nextIndex_ = this.index_ + 1;
+                    });
+                    break;
+                }
+                case 'showSelectionWindow': {
+                    let options = command.data.args['options'];
+                    this.windowManager_.setSelectionWindowOptions(options, (selectionIndex: number) => {
+                        let nextIndent = command.data.indent + 1;
+                        for (let commandIndex = this.index_ + 1;
+                             commandIndex < this.commands_.length;
+                             commandIndex++) {
+                            let nextCommand = this.commands_[commandIndex]
+                            if (nextCommand.data.indent !== nextIndent) {
+                                continue;
+                            }
+                            if (nextCommand.data.type !== 'case') {
+                                continue;
+                            }
+                            if (nextCommand.data.args['content'] !== selectionIndex) {
+                                continue;
+                            }
+                            this.nextIndex_ = commandIndex;
+                            return;
+                        }
+                        throw `case ${selectionIndex} must exist for showSelectionWindow but not`;
+                    });
+                    break;
+                }
+                case 'case':
+                case 'showNumberInputWindow':
+                case 'showSelectingItemWindow':
+                case 'showScrollingMessage':
+                case 'modifySwitch':
+                case 'modifyVariables':
+                case 'modifySelfSwitch':
+                case 'useTimer':
+                case 'if':
+                case 'loop':
+                case 'break':
+                case 'exit':
+                case 'callCommonEvent':
+                case 'goto':
+                case 'label':
+                case 'comment':
+                case 'modifyMoney':
+                case 'modifyItems':
+                case 'modifyParty':
+                case 'modifyActors':
+                case 'movePlayer':
+                case 'setVehiclePosition':
+                case 'setEventPosition':
+                case 'scrollMap': // move camera?
+                case 'movePlayerOrEvent': //?
+                case 'useVechicle':
+                case 'modifyPlayer':
+                case 'showAnimation':
+                case 'showPopUp':
+                case 'hideEventTemporarily':
+                case 'modifyScreen':
+                case 'sleep':
+                case 'showPicture':
+                case 'modifyPicture':
+                case 'hidePicture':
+                case 'showWeather':
+                case 'startBattleScene':
+                case 'startShopScene':
+                case 'startNameInputScene':
+                case 'startMenuScene':
+                case 'startSaveScene':
+                case 'startGameOverScene':
+                case 'startTitleScene':
+                case 'modifySystem':
+                case 'modifyMap':
+                case 'eval':
+                    console.log(`not implemented command: ${command.data.type}`);
                     this.nextIndex_ = this.index_ + 1;
-                });
-                break;
-            }
-            case 'showSelectionWindow': {
-                let options = command.data.args['options'];
-                this.windowManager_.setSelectionWindowOptions(options, (selectionIndex: number) => {
-                    let nextIndent = command.data.indent + 1;
-                    for (let commandIndex = this.index_ + 1;
-                         commandIndex < this.commands_.length;
-                         commandIndex++) {
-                        let nextCommand = this.commands_[commandIndex]
-                        if (nextCommand.data.indent !== nextIndent) {
-                            continue;
-                        }
-                        if (nextCommand.data.type !== 'case') {
-                            continue;
-                        }
-                        if (nextCommand.data.args['content'] !== selectionIndex) {
-                            continue;
-                        }
-                        this.nextIndex_ = commandIndex;
-                        return;
-                    }
-                    throw `case ${selectionIndex} must exist for showSelectionWindow but not`;
-                });
-                break;
-            }
-            case 'case':
-            case 'showNumberInputWindow':
-            case 'showSelectingItemWindow':
-            case 'showScrollingMessage':
-            case 'modifySwitch':
-            case 'modifyVariables':
-            case 'modifySelfSwitch':
-            case 'useTimer':
-            case 'if':
-            case 'loop':
-            case 'break':
-            case 'exit':
-            case 'callCommonEvent':
-            case 'goto':
-            case 'label':
-            case 'comment':
-            case 'modifyMoney':
-            case 'modifyItems':
-            case 'modifyParty':
-            case 'modifyActors':
-            case 'movePlayer':
-            case 'setVehiclePosition':
-            case 'setEventPosition':
-            case 'scrollMap': // move camera?
-            case 'movePlayerOrEvent': //?
-            case 'useVechicle':
-            case 'modifyPlayer':
-            case 'showAnimation':
-            case 'showPopUp':
-            case 'hideEventTemporarily':
-            case 'modifyScreen':
-            case 'sleep':
-            case 'showPicture':
-            case 'modifyPicture':
-            case 'hidePicture':
-            case 'showWeather':
-            case 'startBattleScene':
-            case 'startShopScene':
-            case 'startNameInputScene':
-            case 'startMenuScene':
-            case 'startSaveScene':
-            case 'startGameOverScene':
-            case 'startTitleScene':
-            case 'modifySystem':
-            case 'modifyMap':
-            case 'eval':
-                console.log(`not implemented command: ${command.data.type}`);
-                this.nextIndex_ = this.index_ + 1;
-                break;
-            case '_cleanUp':
-                this.windowManager_.closeMessageWindowIfNeeded();
-                // TODO: What if the event turns another direction in event commands?
-                let originalDirection = command.data.args['originalDirection'];
-                command.sender.turn(originalDirection);
-                this.nextIndex_ = this.index_ + 1;
-                break;
-            default:
-                throw `invalid event command type ${command.data.type}`;
-                break;
+                    break;
+                case '_cleanUp':
+                    this.windowManager_.closeMessageWindowIfNeeded(() => {
+                        this.nextIndex_ = this.index_ + 1;
+                    });
+                    // TODO: What if the event turns another direction in event commands?
+                    let originalDirection = command.data.args['originalDirection'];
+                    command.sender.turn(originalDirection);
+                    break;
+                default:
+                    throw `invalid event command type ${command.data.type}`;
+                    break;
+                }
             }
         }
 
