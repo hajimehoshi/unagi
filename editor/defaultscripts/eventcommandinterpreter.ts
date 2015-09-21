@@ -193,6 +193,12 @@ namespace game {
                 }
                 command = this.commands_[this.index_];
                 switch (command.data.type) {
+                case 'comment':
+                    this.goNextCommand();
+                    break;
+                case 'exit':
+                    this.nextIndex_ = this.commands_.length;
+                    break;
                 case 'if': {
                     // TODO: This is not symmetric.
                     let lhs = this.variables_[command.data.args['lhs']];
@@ -232,11 +238,16 @@ namespace game {
                     this.goNextCommand();
                     break;
                 case 'loop':
+                    console.log('not implemented');
                     break;
                 case 'break':
+                    console.log('not implemented');
                     break;
-                case 'exit':
-                    this.nextIndex_ = this.commands_.length;
+                case 'goto':
+                    console.log('not implemented');
+                    break;
+                case 'label':
+                    console.log('not implemented');
                     break;
                 case 'showMessageWindow': {
                     let content = command.data.args['content'];
@@ -261,9 +272,6 @@ namespace game {
                 case 'modifySelfSwitch':
                 case 'useTimer':
                 case 'callCommonEvent':
-                case 'goto':
-                case 'label':
-                case 'comment':
                 case 'modifyMoney':
                 case 'modifyItems':
                 case 'modifyParty':
