@@ -143,6 +143,7 @@ namespace game {
         private index_: number = -1;
         private nextIndex_: number = 0;
         private windowManager_: WindowManager = new WindowManager();
+        private variables_: {[id: string]: any} = {};
 
         constructor(sender: EventCharacter, commands: data.EventCommand[]) {
             // TODO: Compile to asm-like language?
@@ -165,6 +166,20 @@ namespace game {
             return this.commands_.length <= this.index_;
         }
 
+        private goNextCommand() {
+            this.nextIndex_ = this.index_ + 1;
+            if (this.commands_.length <= this.nextIndex_) {
+                return;
+            }
+            let command = this.commands_[this.index_];
+            let nextCommand = this.commands_[this.nextIndex_];
+            let indent = command.data.indent;
+            let nextIndent = nextCommand.data.indent;
+            if (indent < nextIndent) {
+                throw `invalid indentation: ${indent} -> ${nextIndent}`;
+            }
+        }
+
         public update() {
             this.windowManager_.update();
             if (!this.windowManager_.isWaitingForNextCommand) {
@@ -178,38 +193,66 @@ namespace game {
                 }
                 command = this.commands_[this.index_];
                 switch (command.data.type) {
+                case 'if': {
+                    // TODO: This is not symmetric.
+                    let lhs = this.variables_[command.data.args['lhs']];
+                    let operator = command.data.args['operator'];
+                    let rhs = command.data.args['rhs'];
+                    let result = false;
+                    switch (operator) {
+                    case 'equals':
+                        result = (lhs === rhs);
+                        break;
+                    }
+                    if (result) {
+                        this.nextIndex_ = this.index_ + 1;
+                        // TODO: Indentation check?
+                        break;
+                    }
+                    let indent = command.data.indent;
+                    for (let commandIndex = this.index_ + 1;
+                         commandIndex < this.commands_.length;
+                         commandIndex++) {
+                        let nextCommand = this.commands_[commandIndex];
+                        if (nextCommand.data.type !== 'end') {
+                            continue;
+                        }
+                        if (nextCommand.data.indent !== indent) {
+                            continue;
+                        }
+                        this.nextIndex_ = commandIndex;
+                        break;
+                    }
+                    if (this.nextIndex_ === this.index_) {
+                        throw `'end' command not found for 'if' command`
+                    }
+                    break;
+                }
+                case 'end':
+                    this.goNextCommand();
+                    break;
+                case 'loop':
+                    break;
+                case 'break':
+                    break;
+                case 'exit':
+                    this.nextIndex_ = this.commands_.length;
+                    break;
                 case 'showMessageWindow': {
                     let content = command.data.args['content'];
                     this.windowManager_.setMessageWindowContent(content, () => {
-                        this.nextIndex_ = this.index_ + 1;
+                        this.goNextCommand();
                     });
                     break;
                 }
                 case 'showSelectionWindow': {
                     let options = command.data.args['options'];
                     this.windowManager_.setSelectionWindowOptions(options, (selectionIndex: number) => {
-                        let nextIndent = command.data.indent + 1;
-                        for (let commandIndex = this.index_ + 1;
-                             commandIndex < this.commands_.length;
-                             commandIndex++) {
-                            let nextCommand = this.commands_[commandIndex]
-                            if (nextCommand.data.indent !== nextIndent) {
-                                continue;
-                            }
-                            if (nextCommand.data.type !== 'case') {
-                                continue;
-                            }
-                            if (nextCommand.data.args['content'] !== selectionIndex) {
-                                continue;
-                            }
-                            this.nextIndex_ = commandIndex;
-                            return;
-                        }
-                        throw `case ${selectionIndex} must exist for showSelectionWindow but not`;
+                        this.variables_[command.data.args['result']] = selectionIndex;
+                        this.goNextCommand();
                     });
                     break;
                 }
-                case 'case':
                 case 'showNumberInputWindow':
                 case 'showSelectingItemWindow':
                 case 'showScrollingMessage':
@@ -217,10 +260,6 @@ namespace game {
                 case 'modifyVariables':
                 case 'modifySelfSwitch':
                 case 'useTimer':
-                case 'if':
-                case 'loop':
-                case 'break':
-                case 'exit':
                 case 'callCommonEvent':
                 case 'goto':
                 case 'label':
@@ -256,11 +295,11 @@ namespace game {
                 case 'modifyMap':
                 case 'eval':
                     console.log(`not implemented command: ${command.data.type}`);
-                    this.nextIndex_ = this.index_ + 1;
+                    this.goNextCommand();
                     break;
                 case '_cleanUp':
                     this.windowManager_.closeMessageWindowIfNeeded(() => {
-                        this.nextIndex_ = this.index_ + 1;
+                        this.goNextCommand();
                     });
                     // TODO: What if the event turns another direction in event commands?
                     let originalDirection = command.data.args['originalDirection'];

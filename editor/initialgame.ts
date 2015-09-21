@@ -51,6 +51,8 @@ namespace editor {
         return arr;
     }
 
+    var variableId = data.UUID.generate();
+
     export const initialGame: data.Game = {
         id: data.UUID.generate(),
         maps: [
@@ -82,30 +84,73 @@ namespace editor {
                                     {
                                         type: 'showSelectionWindow',
                                         args: {
-                                            options: ['Yes', 'No', 'I don\'t know'],
+                                            options: ['Yes', 'No', 'I don\'t know', '(Skip)'],
+                                            result:  variableId,
                                         },
                                         indent: 0,
                                     },
                                     {
-                                        type: 'case',
+                                        type: 'if',
                                         args: {
-                                            content: 0,
+                                            lhs:      variableId,
+                                            operator: 'equals',
+                                            rhs:      0,
+                                        },
+                                        indent: 0,
+                                    },
+                                    {
+                                        type: 'showMessageWindow',
+                                        args: {
+                                            content: 'You\'ve chosen \'Yes\'.',
                                         },
                                         indent: 1,
                                     },
                                     {
-                                        type: 'case',
+                                        type: 'end',
+                                        args: {},
+                                        indent: 0,
+                                    },
+                                    {
+                                        type: 'if',
                                         args: {
-                                            content: 1,
+                                            lhs:      variableId,
+                                            operator: 'equals',
+                                            rhs:      1,
+                                        },
+                                        indent: 0,
+                                    },
+                                    {
+                                        type: 'showMessageWindow',
+                                        args: {
+                                            content: 'You\'ve chosen \'No\'.',
                                         },
                                         indent: 1,
                                     },
                                     {
-                                        type: 'case',
+                                        type: 'end',
+                                        args: {},
+                                        indent: 0,
+                                    },
+                                    {
+                                        type: 'if',
                                         args: {
-                                            content: 2,
+                                            lhs:      variableId,
+                                            operator: 'equals',
+                                            rhs:      2,
+                                        },
+                                        indent: 0,
+                                    },
+                                    {
+                                        type: 'showMessageWindow',
+                                        args: {
+                                            content: 'You\'ve chosen "I don\'t know".',
                                         },
                                         indent: 1,
+                                    },
+                                    {
+                                        type: 'end',
+                                        args: {},
+                                        indent: 0,
                                     },
                                     {
                                         type: 'showMessageWindow',
