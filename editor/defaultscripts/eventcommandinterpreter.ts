@@ -6,8 +6,10 @@ namespace game {
 
     class WindowManager {
         private messageWindow_: MessageWindow = null;
+        private messageWindowWaiting_: () => void = null;
         private selectionWindow_: SelectionWindow = null;
         private selectionIndex_: number = 0;
+        private selectionWindowClosed_: () => void = null;
         private isMessageWindowWaiting_: boolean = false;
 
         public dispose() {
@@ -53,6 +55,9 @@ namespace game {
             }
             if ($input.isTrigger(Key.ENTER)) {
                 this.isMessageWindowWaiting_ = true;
+                if (this.messageWindowWaiting_) {
+                    this.messageWindowWaiting_();
+                }
             }
         }
 
@@ -68,6 +73,9 @@ namespace game {
                 this.selectionWindow_.dispose();
                 this.selectionWindow_ = null;
                 this.selectionIndex_ = 0;
+                if (this.selectionWindowClosed_) {
+                    this.selectionWindowClosed_();
+                }
                 return;
             }
             if ($input.isTrigger(Key.ENTER)) {
@@ -76,8 +84,9 @@ namespace game {
             }
         }
 
-        public setMessageWindowContent(content: string) {
+        public setMessageWindowContent(content: string, waiting: () => void) {
             this.isMessageWindowWaiting_ = false;
+            this.messageWindowWaiting_ = waiting;
             if (!this.messageWindow_) {
                 this.messageWindow_ = new MessageWindow(content);
                 this.messageWindow_.open();
@@ -86,7 +95,8 @@ namespace game {
             this.messageWindow_.content = content;
         }
 
-        public setSelectionWindowOptions(options: string[]) {
+        public setSelectionWindowOptions(options: string[], closed: () => void) {
+            this.selectionWindowClosed_ = closed;
             if (this.selectionWindow_) {
                 throw 'this.selectionWindow_ should be null';
             }
@@ -128,7 +138,7 @@ namespace game {
 
     export class EventCommandInterpreter {
         private commands_: EventCommand[] = [];
-        private index_: number = 0;
+        private index_: number = -1;
         private nextIndex_: number = 0;
         private windowManager_: WindowManager = new WindowManager();
 
@@ -158,6 +168,9 @@ namespace game {
             if (!this.windowManager_.isWaitingForNextCommand) {
                 return;
             }
+            if (this.nextIndex_ === this.index_) {
+                return;
+            }
             this.index_ = this.nextIndex_;
             if (this.isTerminated) {
                 return;
@@ -166,14 +179,18 @@ namespace game {
             switch (command.data.type) {
             case 'showMessageWindow': {
                 let content = command.data.args['content'];
-                this.windowManager_.setMessageWindowContent(content);
-                this.nextIndex_ = this.index_ + 1;
+                this.windowManager_.setMessageWindowContent(content, () => {
+                    this.nextIndex_ = this.index_ + 1;
+                });
                 break;
             }
             case 'showSelectionWindow': {
                 let options = command.data.args['options'];
-                this.windowManager_.setSelectionWindowOptions(options);
-                this.nextIndex_ = this.index_ + 1; // fix this.
+                this.windowManager_.setSelectionWindowOptions(options, () => {
+                    let index = this.windowManager_.selectionIndex;
+                    console.log(index);
+                    this.nextIndex_ = this.index_ + 1; // fix this
+                });
                 break;
             }
             case 'case':
