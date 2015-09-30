@@ -15,7 +15,7 @@
 namespace editor {
     export declare type ListBoxItem = {
         title: string,
-        tag:  string,
+        tag?:  string,
     }
 
     export class ListBox {
@@ -87,32 +87,43 @@ namespace editor {
             return '(No Name)';
         }
 
+        // NOTE: If a tag is different, the hash must be different.
+        // So actually this is not pure hash'.
+        private itemHash(origTitle: string, tag?: string): string {
+            // JSON.stringify doesn't gurantee an object's key order.
+            // Let's use an array instead.
+            if (typeof(tag) !== 'undefined') {
+                return JSON.stringify([origTitle, tag]);
+            }
+            return JSON.stringify([origTitle]);
+        }
+
         public replaceItems(items: ListBoxItem[]): void {
             let ul = this.element_.querySelector('ul');
-            // TODO: tag will be optional: when tag is null?
-            let tagToLi: {[tag: string]: HTMLLIElement[]} = {};
+            let hashToLi: {[hash: string]: HTMLLIElement[]} = {};
             while (ul.hasChildNodes()) {
                 let li = <HTMLLIElement>ul.firstChild;
-                let tag = li.dataset['tag'];
-                if (!tagToLi[tag]) {
-                    tagToLi[tag] = [];
+                let hash = this.itemHash(li.dataset['origTitle'], li.dataset['tag']);
+                if (!hashToLi[hash]) {
+                    hashToLi[hash] = [];
                 }
-                tagToLi[tag].push(li);
+                hashToLi[hash].push(li);
                 ul.removeChild(li);
             }
             for (let item of items) {
-                let tag = item.tag;
-                if (tagToLi[tag]) {
-                    let li = tagToLi[tag].shift();
+                let hash = this.itemHash(item.title, item.tag);
+                if (hashToLi[hash]) {
+                    let li = hashToLi[hash].shift();
                     if (li) {
                         let span = li.querySelector('span');
                         span.textContent = this.toItemTitle(item);
                         ul.appendChild(li);
-                        tagToLi[tag].shift();
+                        hashToLi[hash].shift();
                         continue;
                     }
                 }
                 let li = document.createElement('li');
+                li.dataset['origTitle'] = item.title;
                 li.dataset['tag'] = item.tag;
                 let label = document.createElement('label');
 
