@@ -134,11 +134,5 @@ namespace editor {
                 ul.appendChild(li);
             }
         }
-
-        public select(id: string): void {
-            // TODO: Check id's syntax
-            let input = <HTMLInputElement>this.element_.querySelector(`input[value="${id}"]`);
-            input.checked = true;
-        }
     }
 }

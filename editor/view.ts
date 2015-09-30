@@ -93,7 +93,15 @@ namespace editor {
             });
             this.mapList.replaceItems(items);
             if (info.mapId) {
-                this.mapList.select(info.mapId);
+                let index = -1;
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].id !== info.mapId) {
+                        continue;
+                    }
+                    index = i;
+                    break;
+                }
+                this.mapList.selectedIndex = index;
             }
 
             // TODO: Move this to store?

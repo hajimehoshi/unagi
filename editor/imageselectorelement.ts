@@ -153,6 +153,7 @@ namespace editor {
                     continue;
                 }
                 index = i;
+                break;
             }
             this.list_.selectedIndex = index;
 
