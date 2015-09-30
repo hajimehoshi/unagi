@@ -22,8 +22,6 @@ namespace editor {
 
             let items = <HTMLElement>this.element_.querySelector('.listBox');
             this.list_ = new ListBox(items);
-            // TODO: Don't use groupname attribute
-            items.setAttribute('groupname', this.groupName);
             items.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentDataItem();
             });
