@@ -15,7 +15,7 @@
 namespace editor {
     export declare type ListBoxItem = {
         title: string,
-        id:    string,
+        tag:  string,
     }
 
     export class ListBox {
@@ -88,39 +88,49 @@ namespace editor {
         }
 
         public replaceItems(items: ListBoxItem[]): void {
-            // TODO: Fix implementation to update items that are only needed
             let ul = this.element_.querySelector('ul');
-            let idToLi: {[id: string]: HTMLLIElement} = {};
+            // TODO: tag will be optional: when tag is null?
+            let tagToLi: {[tag: string]: HTMLLIElement[]} = {};
             while (ul.hasChildNodes()) {
                 let li = <HTMLLIElement>ul.firstChild;
-                let id = li.dataset['id'];
-                idToLi[id] = li;
+                let tag = li.dataset['tag'];
+                if (!tagToLi[tag]) {
+                    tagToLi[tag] = [];
+                }
+                tagToLi[tag].push(li);
                 ul.removeChild(li);
             }
             for (let item of items) {
-                let li = idToLi[item.id];
-                if (li) {
-                    let span = li.querySelector('span');
-                    span.textContent = this.toItemTitle(item);
-                    ul.appendChild(li);
-                    continue;
+                let tag = item.tag;
+                if (tagToLi[tag]) {
+                    let li = tagToLi[tag].shift();
+                    if (li) {
+                        let span = li.querySelector('span');
+                        span.textContent = this.toItemTitle(item);
+                        ul.appendChild(li);
+                        tagToLi[tag].shift();
+                        continue;
+                    }
                 }
-                li = document.createElement('li');
-                li.dataset['id'] = item.id;
+                let li = document.createElement('li');
+                li.dataset['tag'] = item.tag;
                 let label = document.createElement('label');
 
                 let input = document.createElement('input');
                 input.type = 'radio';
                 input.name = `selectedItem-${this.namePostfix_}`;
-                input.value = item.id;
                 input.addEventListener('change', (e) => {
                     let input = <HTMLInputElement>e.target;
                     if (!input.checked) {
                         return;
                     }
+                    let li = <HTMLElement>input;
+                    while (li && li.nodeName !== 'LI') {
+                        li = <HTMLElement>li.parentNode;
+                    }
                     let ce = new CustomEvent('selectedItemChanged', {
                         detail: {
-                            id: input.value,
+                            tag: li.dataset['tag'],
                         },
                     });
                     this.element_.dispatchEvent(ce);

@@ -70,7 +70,7 @@ namespace editor {
             let listElement = <HTMLElement>shadowRoot.querySelector('.listBox');
             this.list_ = new ListBox(listElement);
             listElement.addEventListener('selectedItemChanged', (e: CustomEvent) => {
-                Store.instance.updateGameData(this.path, e.detail.id);
+                Store.instance.updateGameData(this.path, e.detail.tag);
             });
 
             let dialogCanvas = <HTMLCanvasElement>dialog.querySelector('dialog canvas');
@@ -140,16 +140,16 @@ namespace editor {
             let types = typesAttr.split(' ');
             let items = game.images.filter(i => types.indexOf(i.type) >= 0).map(i => ({
                 title: i.name,
-                id:    i.id,
+                tag:   i.id,
             }));
             items.unshift({
                 title: '(None)',
-                id:    data.NullImage.id,
+                tag:    data.NullImage.id,
             });
             this.list_.replaceItems(items);
             let index = 0;
             for (let i = 0; i < items.length; i++) {
-                if (items[i].id !== imageId) {
+                if (items[i].tag !== imageId) {
                     continue;
                 }
                 index = i;

@@ -49,7 +49,7 @@ namespace editor {
             let mapListElement = <HTMLElement>document.querySelector('.maps .listBox');
             this.mapList_ = new ListBox(mapListElement);
             mapListElement.addEventListener('selectedItemChanged', (e: CustomEvent) => {
-                Store.instance.updateCurrentMap(e.detail.id);
+                Store.instance.updateCurrentMap(e.detail.tag);
             });
             mapListElement.addEventListener('contextMenuNew', (e: CustomEvent) => {
                 console.log('New Map: not implemented yet');
@@ -88,14 +88,14 @@ namespace editor {
             let items = maps.map((map: data.Map): ListBoxItem => {
                 return {
                     title: map.name,
-                    id:    map.id,
+                    tag:   map.id,
                 };
             });
             this.mapList.replaceItems(items);
             if (info.mapId) {
                 let index = -1;
                 for (let i = 0; i < items.length; i++) {
-                    if (items[i].id !== info.mapId) {
+                    if (items[i].tag !== info.mapId) {
                         continue;
                     }
                     index = i;

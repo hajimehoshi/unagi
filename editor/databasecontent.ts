@@ -55,7 +55,7 @@ namespace editor {
             return game[this.groupName].map((item: {id: string, name: string}): ListBoxItem => {
                 return {
                     title: item.name,
-                    id:    item.id,
+                    tag:   item.id,
                 };
             })
         }
@@ -65,7 +65,7 @@ namespace editor {
             if (index === -1) {
                 return null;
             }
-            let id = this.listBoxItems(game)[index].id;
+            let id = this.listBoxItems(game)[index].tag;
             for (let item of game[this.groupName]) {
                 if (id === item.id) {
                     return item;
