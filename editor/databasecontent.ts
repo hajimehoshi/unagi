@@ -20,12 +20,12 @@ namespace editor {
         constructor(element: HTMLElement) {
             this.element_ = element;
 
-            let items = <HTMLElement>this.element_.querySelector('.listBox');
-            this.list_ = new ListBox(items);
-            items.addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            let listElement = <HTMLElement>this.element_.querySelector('.listBox');
+            this.list_ = new ListBox(listElement);
+            listElement.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentDataItem();
             });
-            items.addEventListener('contextMenuNew', (e: CustomEvent) => {
+            listElement.addEventListener('contextMenuNew', (e: CustomEvent) => {
                 Store.instance.addGameData(this.groupName);
             });
 

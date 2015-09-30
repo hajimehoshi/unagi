@@ -31,7 +31,7 @@ namespace editor {
             };
         }
 
-        // TODO: Use HTMLDialogElement in the future
+        // TODO: Use HTMLDialogElement class in the future
         private element_: any;
         private pagePath_: string;
         private commands_: ListBox;
@@ -48,12 +48,13 @@ namespace editor {
                 this.element_.close();
             });
 
-            this.commands_ = new ListBox(<HTMLElement>this.element_.querySelector('.commands'));
             let passableCheckbox = <HTMLInputElement>this.element_.querySelector("input[name='passable']");
             passableCheckbox.addEventListener('change', () => {
                 let path = `${this.pagePath_}.passable`
                 Store.instance.updateGameData(path, passableCheckbox.checked);
             });
+
+            this.commands_ = new ListBox(<HTMLElement>this.element_.querySelector('.commands'));
         }
 
         public get open(): boolean {

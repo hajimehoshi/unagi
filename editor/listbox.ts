@@ -65,18 +65,18 @@ namespace editor {
             return [].indexOf.call(this.element_.querySelectorAll('ul li'), li);
         }
 
+        public set selectedIndex(index: number) {
+            let li = this.element_.querySelectorAll(`li`)[index];
+            let input = <HTMLInputElement>li.querySelector('input');
+            input.checked = true;
+        }
+
         public get selectedId(): string {
             let input = <HTMLInputElement>this.element_.querySelector('input:checked');
             if (!input) {
                 return null;
             }
             return input.value;
-        }
-
-        public set selectedId(id: string) {
-            let li = this.element_.querySelector(`li[data-id="${id}"]`);
-            let input = <HTMLInputElement>li.querySelector('input');
-            input.checked = true;
         }
 
         private toItemTitle(item: ListBoxItem): string {
@@ -90,7 +90,7 @@ namespace editor {
             // TODO: Fix implementation to update items that are only needed
             let ul = this.element_.querySelector('ul');
             let idToLi: {[id: string]: HTMLLIElement} = {};
-            while (ul.firstChild) {
+            while (ul.hasChildNodes()) {
                 if (ul.firstChild.nodeType !== Node.ELEMENT_NODE) {
                     ul.removeChild(ul.firstChild);
                     continue;

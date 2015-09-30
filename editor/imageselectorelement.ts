@@ -147,7 +147,14 @@ namespace editor {
                 id:    data.NullImage.id,
             });
             this.list_.replaceItems(items);
-            this.list_.selectedId = imageId;
+            let index = 0;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].id !== imageId) {
+                    continue;
+                }
+                index = i;
+            }
+            this.list_.selectedIndex = index;
 
             let dialogCanvas = <HTMLCanvasElement>dialog.querySelector('dialog canvas');
             this.drawAtCenter(dialogCanvas, img, 0, 0, img.width, img.height);
