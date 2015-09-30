@@ -33,6 +33,12 @@ namespace editor {
             }
 
             let ul = <HTMLUListElement>this.element_.querySelector('ul');
+            // Remove unneeded nodes like an empty text node.
+            while (ul.hasChildNodes()) {
+                ul.removeChild(ul.firstChild);
+                continue;
+            }
+
             this.element_.addEventListener('contextmenu', (e: MouseEvent) => {
                 e.preventDefault();
                 if (this.element_.getAttribute('contextmenu') === 'none') {
@@ -86,10 +92,6 @@ namespace editor {
             let ul = this.element_.querySelector('ul');
             let idToLi: {[id: string]: HTMLLIElement} = {};
             while (ul.hasChildNodes()) {
-                if (ul.firstChild.nodeType !== Node.ELEMENT_NODE) {
-                    ul.removeChild(ul.firstChild);
-                    continue;
-                }
                 let li = <HTMLLIElement>ul.firstChild;
                 let id = li.dataset['id'];
                 idToLi[id] = li;
