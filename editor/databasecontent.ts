@@ -20,12 +20,14 @@ namespace editor {
         constructor(element: HTMLElement) {
             this.element_ = element;
 
-            this.list_ = new ListBox(<HTMLElement>this.element_.querySelector('.listBox'));
-            this.list_.element.setAttribute('groupname', this.groupName);
-            this.list_.element.addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            let items = <HTMLElement>this.element_.querySelector('.listBox');
+            this.list_ = new ListBox(items);
+            // TODO: Don't use groupname attribute
+            items.setAttribute('groupname', this.groupName);
+            items.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentDataItem();
             });
-            this.list_.element.addEventListener('contextMenuNew', (e: CustomEvent) => {
+            items.addEventListener('contextMenuNew', (e: CustomEvent) => {
                 Store.instance.addGameData(this.groupName);
             });
 

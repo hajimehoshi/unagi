@@ -56,10 +56,6 @@ namespace editor {
             });
         }
 
-        public get element(): HTMLElement {
-            return this.element_;
-        }
-
         public get selectedIndex(): number {
             let input = <Node>this.element_.querySelector('input:checked');
             let li = input;

@@ -41,7 +41,6 @@ namespace editor {
             styleClone = document.importNode(styleTemplate.content, true);
             shadowRoot.appendChild(styleClone);
 
-            this.list_ = new ListBox(<HTMLElement>shadowRoot.querySelector('.listBox'));
             let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas.current');
             canvas.addEventListener('click', (e: MouseEvent) => {
                 let dialog = <any>shadowRoot.querySelector('dialog');
@@ -68,7 +67,9 @@ namespace editor {
                 dialog.close();
             });
 
-            this.list_.element.addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            let listElement = <HTMLElement>shadowRoot.querySelector('.listBox');
+            this.list_ = new ListBox(listElement);
+            listElement.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateGameData(this.path, e.detail.id);
             });
 

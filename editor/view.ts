@@ -46,11 +46,12 @@ namespace editor {
                 }
             });
 
-            this.mapList_ = new ListBox(<HTMLElement>document.querySelector('.maps .listBox'));
-            this.mapList_.element.addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            let mapListElement = <HTMLElement>document.querySelector('.maps .listBox');
+            this.mapList_ = new ListBox(mapListElement);
+            mapListElement.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentMap(e.detail.id);
             });
-            this.mapList_.element.addEventListener('contextMenuNew', (e: CustomEvent) => {
+            mapListElement.addEventListener('contextMenuNew', (e: CustomEvent) => {
                 console.log('New Map: not implemented yet');
             });
 
