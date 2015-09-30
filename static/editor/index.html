@@ -159,6 +159,14 @@
     position: relative;
     width: 100%;
   }
+  dialog {
+    background-color: #f5f5f5;
+    font-size: 14px;
+    line-height: 18px;
+    height: 80%;
+    overflow: auto;
+    width: 80%;
+  }
   #toolbar {
     background-color: #fffde7;
     height: 32px;
@@ -212,15 +220,7 @@
     width: 100%;
     position: absolute;
   }
-  #tiles dialog {
-    background-color: #f5f5f5;
-    font-size: 14px;
-    line-height: 18px;
-    height: 80%;
-    overflow: auto;
-    width: 80%;
-  }
-  #tiles dialog.event .commands {
+  #eventDialog .commands {
     height: 60%;
     width: 60%;
   }
@@ -391,14 +391,6 @@
     </div>
     <div id="tiles">
       <canvas></canvas>
-      <dialog class="event">
-        <ul>
-          <li>Image: <unagi-image-selector name="image" width="48" height="48" types="character"></unagi-image-selector></li>
-          <li>Passable: <input type="checkbox" name="passable"></li>
-          <li>Commands: <div class="listBox commands"></div></li>
-          <!--li>Event Commands: <textarea class="commands" name="commands">[]</textarea></li-->
-        </ul>
-      </dialog>
     </div>
     <div id="database">
       <div id="databaseToolbar">
@@ -464,4 +456,12 @@
     <iframe class="player" sandbox="allow-scripts"></iframe>
   </div>
 </main>
+<dialog id="eventDialog">
+  <ul>
+    <li>Image: <unagi-image-selector name="image" width="48" height="48" types="character"></unagi-image-selector></li>
+    <li>Passable: <input type="checkbox" name="passable"></li>
+    <li>Commands: <div class="listBox commands"></div></li>
+    <!--li>Event Commands: <textarea class="commands" name="commands">[]</textarea></li-->
+  </ul>
+</dialog>
 <script src="editor.js" charset="utf-8"></script>

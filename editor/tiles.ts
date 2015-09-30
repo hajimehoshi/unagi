@@ -30,7 +30,7 @@ namespace editor {
             this.offsetX_ = 0;
             this.offsetY_ = 0;
 
-            let eventDialogElement = <any>this.element_.querySelector('dialog.event');
+            let eventDialogElement = <HTMLElement>document.querySelector('#eventDialog');
             this.eventDialog_ = new EventDialog(eventDialogElement);
 
             let canvas = this.canvas;
