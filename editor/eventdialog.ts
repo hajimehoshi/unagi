@@ -17,7 +17,7 @@ namespace editor {
         private static commandToString(command: data.EventCommand): string {
             let indent = '';
             for (let i = 0; i < command.indent; i++) {
-                indent += '  ';
+                indent += '    ';
             }
             return `${indent}${command.type} ${JSON.stringify(command.args)}`;
         }
@@ -87,25 +87,14 @@ namespace editor {
             let passableCheckbox = <HTMLInputElement>this.element_.querySelector("input[name='passable']");
             passableCheckbox.checked = page.passable;
 
-            /*// TODO: TextArea is a temporaly thing. Replace this with a listbox.
-            let commandsTextArea = <HTMLTextAreaElement>this.element_.querySelector('textarea.commands');
-            //commandsTextArea.value = JSON.stringify(page.commands, null, '  ');
-            commandsTextArea.value = page.commands.map(c => EventDialog.commandToString(c)).join('\n')
-            commandsTextArea.onchange = (e) => {
-                try {
-                    let commands = commandsTextArea.value.split('\n').filter(l => {
-                        return l.trim() != "";
-                    }).map(l => EventDialog.stringToCommand(l));
-                    let path = `${this.pagePath_}.commands`;
-                    Store.instance.updateGameData(path, commands);
-                } catch (e) {
-                    if (e instanceof SyntaxError) {
-                        console.error(e);
-                        return;
-                    }
-                    throw e;
-                }
-            };*/
+            let commandItems = [];
+            for (let i = 0; i < page.commands.length; i++) {
+                commandItems.push({
+                    title: EventDialog.commandToString(page.commands[i]),
+                    tag:   i,
+                });
+            }
+            this.commands_.replaceItems(commandItems);
         }
     }
 }
