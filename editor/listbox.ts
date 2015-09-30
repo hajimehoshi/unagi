@@ -22,12 +22,15 @@ namespace editor {
         private element_: HTMLElement;
         private namePostfix_: string;
 
-        constructor() {
+        constructor(element: HTMLElement) {
+            this.element_ = element;
             this.namePostfix_ = data.UUID.generate();
 
             let template = <HTMLTemplateElement>document.getElementById('listbox-template');
             let fragment = <DocumentFragment>document.importNode(template.content, true);
-            this.element_ = <HTMLElement>fragment.querySelector('div.listBox');
+            while (fragment.hasChildNodes()) {
+                this.element_.appendChild(fragment.firstChild);
+            }
 
             let ul = <HTMLUListElement>this.element_.querySelector('ul');
             this.element_.addEventListener('contextmenu', (e: MouseEvent) => {

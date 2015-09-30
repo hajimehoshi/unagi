@@ -34,6 +34,7 @@ namespace editor {
         // TODO: Use HTMLDialogElement in the future
         private element_: any;
         private pagePath_: string;
+        private commands_: ListBox;
 
         constructor(element: any) {
             this.element_ = element;
@@ -47,6 +48,7 @@ namespace editor {
                 this.element_.close();
             });
 
+            this.commands_ = new ListBox(<HTMLElement>this.element_.querySelector('.commands'));
             let passableCheckbox = <HTMLInputElement>this.element_.querySelector("input[name='passable']");
             passableCheckbox.addEventListener('change', () => {
                 let path = `${this.pagePath_}.passable`
@@ -84,7 +86,7 @@ namespace editor {
             let passableCheckbox = <HTMLInputElement>this.element_.querySelector("input[name='passable']");
             passableCheckbox.checked = page.passable;
 
-            // TODO: TextArea is a temporaly thing. Replace this with a listbox.
+            /*// TODO: TextArea is a temporaly thing. Replace this with a listbox.
             let commandsTextArea = <HTMLTextAreaElement>this.element_.querySelector('textarea.commands');
             //commandsTextArea.value = JSON.stringify(page.commands, null, '  ');
             commandsTextArea.value = page.commands.map(c => EventDialog.commandToString(c)).join('\n')
@@ -102,7 +104,7 @@ namespace editor {
                     }
                     throw e;
                 }
-            };
+            };*/
         }
     }
 }

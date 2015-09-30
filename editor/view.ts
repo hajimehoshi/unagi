@@ -46,7 +46,7 @@ namespace editor {
                 }
             });
 
-            this.mapList_ = new ListBox();
+            this.mapList_ = new ListBox(<HTMLElement>document.querySelector('.maps .listBox'));
             this.mapList_.element.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentMap(e.detail.id);
             });
@@ -68,7 +68,6 @@ namespace editor {
             palette.style.width = `calc(256px + ${scrollBarWidth}px)`;
 
             let maps = <HTMLElement>document.querySelector('.maps');
-            maps.appendChild(this.mapList_.element);
             maps.style.width = `calc(256px + ${scrollBarWidth}px)`;
 
             let tiles = <HTMLElement>document.querySelector('#tiles')

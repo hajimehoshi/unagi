@@ -41,10 +41,7 @@ namespace editor {
             styleClone = document.importNode(styleTemplate.content, true);
             shadowRoot.appendChild(styleClone);
 
-            this.list_ = new ListBox();
-            let listBox = shadowRoot.querySelector('.listBox');
-            listBox.parentNode.replaceChild(this.list_.element, listBox);
-
+            this.list_ = new ListBox(<HTMLElement>shadowRoot.querySelector('.listBox'));
             let canvas = <HTMLCanvasElement>shadowRoot.querySelector('canvas.current');
             canvas.addEventListener('click', (e: MouseEvent) => {
                 let dialog = <any>shadowRoot.querySelector('dialog');

@@ -20,15 +20,12 @@ namespace editor {
         constructor(element: HTMLElement) {
             this.element_ = element;
 
-            this.list_ = new ListBox();
-            let listBox = this.element_.querySelector('.listBox');
-            listBox.parentNode.replaceChild(this.list_.element, listBox);
-
-            this.list.element.setAttribute('groupname', this.groupName);
-            this.list.element.addEventListener('selectedItemChanged', (e: CustomEvent) => {
+            this.list_ = new ListBox(<HTMLElement>this.element_.querySelector('.listBox'));
+            this.list_.element.setAttribute('groupname', this.groupName);
+            this.list_.element.addEventListener('selectedItemChanged', (e: CustomEvent) => {
                 Store.instance.updateCurrentDataItem();
             });
-            this.list.element.addEventListener('contextMenuNew', (e: CustomEvent) => {
+            this.list_.element.addEventListener('contextMenuNew', (e: CustomEvent) => {
                 Store.instance.addGameData(this.groupName);
             });
 
@@ -39,15 +36,11 @@ namespace editor {
                     if (e instanceof HTMLInputElement && e.type === 'number') {
                         value = parseInt(value, 10);
                     }
-                    let index = this.list.selectedIndex;
+                    let index = this.list_.selectedIndex;
                     let path = `${this.groupName}[${index}].${(<any>e).name}`;
                     Store.instance.updateGameData(path, value);
                 });
             });
-        }
-
-        private get list(): ListBox {
-            return this.list_;
         }
 
         private get groupName(): string {
@@ -59,7 +52,7 @@ namespace editor {
         }
 
         private currentItem(game: data.Game): any {
-            let id = this.list.selectedId;
+            let id = this.list_.selectedId;
             for (let item of game[this.groupName]) {
                 if (id === item.id) {
                     return item;
@@ -69,13 +62,13 @@ namespace editor {
         }
 
         public render(game: data.Game): void {
-            this.list.replaceItems(game[this.groupName].map((item: {id: string, name: string}): ListBoxItem => {
+            this.list_.replaceItems(game[this.groupName].map((item: {id: string, name: string}): ListBoxItem => {
                 return {
                     title: item.name,
                     id:    item.id,
                 };
             }));
-            let id = this.list.selectedId;
+            let id = this.list_.selectedId;
             let editor = this.element_.querySelector('.databaseEditor');
             if (!id) {
                 editor.classList.add('disabled');
@@ -95,7 +88,7 @@ namespace editor {
                 }
                 let imageSelector = <ImageSelectorElement><any>this.element_.querySelector(`unagi-image-selector[name="${key}"]`);
                 if (imageSelector) {
-                    let index = this.list.selectedIndex;
+                    let index = this.list_.selectedIndex;
                     imageSelector.path = `${this.groupName}[${index}].${key}`;
                     imageSelector.render(game, item[key], 0, 0);
                     continue;
