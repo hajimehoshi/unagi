@@ -51,8 +51,21 @@ namespace editor {
             return [].slice.call(this.element_.querySelectorAll('.databaseEditor input'));
         }
 
+        private listBoxItems(game: data.Game): ListBoxItem[] {
+            return game[this.groupName].map((item: {id: string, name: string}): ListBoxItem => {
+                return {
+                    title: item.name,
+                    id:    item.id,
+                };
+            })
+        }
+
         private currentItem(game: data.Game): any {
-            let id = this.list_.selectedId;
+            let index = this.list_.selectedIndex;
+            if (index === -1) {
+                return null;
+            }
+            let id = this.listBoxItems(game)[index].id;
             for (let item of game[this.groupName]) {
                 if (id === item.id) {
                     return item;
@@ -62,15 +75,10 @@ namespace editor {
         }
 
         public render(game: data.Game): void {
-            this.list_.replaceItems(game[this.groupName].map((item: {id: string, name: string}): ListBoxItem => {
-                return {
-                    title: item.name,
-                    id:    item.id,
-                };
-            }));
-            let id = this.list_.selectedId;
+            this.list_.replaceItems(this.listBoxItems(game));
+            let item = this.currentItem(game);
             let editor = this.element_.querySelector('.databaseEditor');
-            if (!id) {
+            if (!item) {
                 editor.classList.add('disabled');
                 for (let input of this.inputs) {
                     input.value = null;
@@ -79,7 +87,6 @@ namespace editor {
             }
             editor.classList.remove('disabled');
 
-            let item = this.currentItem(game);
             for (let key in item) {
                 let input = <HTMLInputElement>this.element_.querySelector(`.databaseEditor input[name="${key}"]`);
                 if (input) {

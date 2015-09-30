@@ -58,6 +58,9 @@ namespace editor {
 
         public get selectedIndex(): number {
             let input = <Node>this.element_.querySelector('input:checked');
+            if (!input) {
+                return -1;
+            }
             let li = input;
             while (li && li.nodeName !== 'LI') {
                 li = li.parentNode;
@@ -66,17 +69,9 @@ namespace editor {
         }
 
         public set selectedIndex(index: number) {
-            let li = this.element_.querySelectorAll(`li`)[index];
+            let li = this.element_.querySelectorAll('li')[index];
             let input = <HTMLInputElement>li.querySelector('input');
             input.checked = true;
-        }
-
-        public get selectedId(): string {
-            let input = <HTMLInputElement>this.element_.querySelector('input:checked');
-            if (!input) {
-                return null;
-            }
-            return input.value;
         }
 
         private toItemTitle(item: ListBoxItem): string {
